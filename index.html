@@ -22,7 +22,7 @@
     <meta name="author" content="Rebornian48" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rebornian48 - Data</title>
+    <title>Rebornian48 - Rekap Keseruan</title>
     <!-- Favicon -->
     <link
       rel="icon"
@@ -32,630 +32,84 @@
     <!-- Font Awesome icons -->
     <link
       rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v6.5.2/css/all.css"
+      href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./assets/js/data.js"></script>
   </head>
-  <body class="bg-gray-800 text-white">
-    <div class="container mx-auto">
-      <h1 class="text-3xl font-bold text-center">Data JKT48</h1>
+  <body>
+    <div class="bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          Data Member JKT48
+        </h2>
+        <p class="mt-6 text-lg leading-8 text-gray-300">
+          Merupakan bentuk grafik dari thread Rebornian48 yang berisi data member JKT48 dengan tujuan agar lebih mudah dipahami.
+        </p>
+      </div>
       <div
         class="mt-10 grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-4"
       >
-        <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-          <p class="text-sm font-medium leading-6 text-gray-400">Total Fans</p>
-          <p class="mt-2 flex items-baseline gap-x-2">
-            <span class="text-4xl font-semibold tracking-tight text-white"
-              >15 <span class="text-sm text-gray-400">juta</span>
-            </span>
-          </p>
-        </div>
-        <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-          <p class="text-sm font-medium leading-6 text-gray-400">Single</p>
-          <p class="mt-2 flex items-baseline gap-x-2">
-            <span class="text-4xl font-semibold tracking-tight text-white"
-              >25
-            </span>
-          </p>
-        </div>
-        <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-          <p class="text-sm font-medium leading-6 text-gray-400">
-            Total Member
-          </p>
-          <p class="mt-2 flex items-baseline gap-x-2">
-            <span class="text-4xl font-semibold tracking-tight text-white"
-              >230
-            </span>
-          </p>
-        </div>
-        <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-          <p class="text-sm font-medium leading-6 text-gray-400">
-            Member Aktif
-          </p>
-          <p class="mt-2 flex items-baseline gap-x-2">
-            <span class="text-4xl font-semibold tracking-tight text-white"
-              >55
-            </span>
-          </p>
-        </div>
+      <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+        <p class="text-sm font-medium leading-6 text-gray-400">Total Fans<span class="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-gray-800">
+            <svg class="h-1.5 w-1.5 fill-red-400" viewBox="0 0 6 6" aria-hidden="true">
+              <circle cx="3" cy="3" r="3" />
+            </svg>
+            IDN
+          </span></p>
+        <p class="mt-2 flex items-baseline gap-x-2">
+          <span class="text-4xl font-semibold tracking-tight text-white"
+            >15 <span class="text-sm text-gray-400">juta</span>
+          </span>
+        </p>
       </div>
-      <h2
-        class="mt-10 px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8"
-      >
-        Data Jumlah Member per Generasi
-      </h2>
-      <table class="mt-6 w-full whitespace-nowrap text-left">
-        <colgroup>
-          <col class="w-full sm:w-4/12" />
-          <col class="lg:w-4/12" />
-          <col class="lg:w-2/12" />
-          <col class="lg:w-1/12" />
-          <col class="lg:w-1/12" />
-        </colgroup>
-        <thead class="border-b border-white/10 text-sm leading-6 text-white">
-          <tr style="height: 13px">
-            <th
-              class="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8"
-              style="height: 13px"
-              scope="col"
-            >
-              Generasi
-            </th>
-            <th
-              class="hidden py-2 pl-0 pr-8 font-semibold sm:table-cell"
-              style="height: 13px"
-              scope="col"
-            >
-              Tanggal Masuk
-            </th>
-            <th
-              class="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20"
-              style="height: 13px"
-              scope="col"
-            >
-              Total Member
-            </th>
-            <th
-              class="hidden py-2 pl-0 pr-8 font-semibold md:table-cell lg:pr-20"
-              style="height: 13px"
-              scope="col"
-            >
-              Member Aktif
-            </th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-white/5">
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 1
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  2 November 2011
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                <div
-                  class="flex-none rounded-full p-1"
-                >
-                  28
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              0
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              0
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 2
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  3 November 2012
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                31
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              0
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              0
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 3
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  15 Maret 2014
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                32
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              2
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 4
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  16 Mei 2015
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                12
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              0
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 5
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  28 Mei 2016
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                17
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              0
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 6
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  8 April 2018
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-              14
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              1
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 7
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  29 September 2018
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                <time
-                  class="text-gray-400 sm:hidden"
-                  datetime="2023-01-16T11:31"
-                  ><time
-                    class="text-gray-400 sm:hidden"
-                    datetime="2023-01-16T11:31"
-                  ></time></time
-                >20
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              6
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 8
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  27 April 2019
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                <time
-                  class="text-gray-400 sm:hidden"
-                  datetime="2023-01-09T08:45"
-                  ><time
-                    class="text-gray-400 sm:hidden"
-                    datetime="2023-01-09T08:45"
-                  ></time></time
-                >18
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              5
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 9
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  1 Desember 2019
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                <time
-                  class="text-gray-400 sm:hidden"
-                  datetime="2023-01-09T08:45"
-                  ><time
-                    class="text-gray-400 sm:hidden"
-                    datetime="2023-01-09T08:45"
-                  ></time></time
-                >13
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              3
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 10
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  27 Agustus 2020
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              11
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              7
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 26px">
-            <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8" style="height: 26px">
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 11
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 26px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  31 Oktober 2022
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 26px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                14
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 26px"
-            >
-              12
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 26px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-          <tr style="height: 40.8542px">
-            <td
-              class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8"
-              style="height: 40.8542px"
-            >
-              <div class="flex items-center gap-x-4">
-                <div class="truncate text-sm font-medium leading-6 text-white">
-                  Generasi 12
-                </div>
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8"
-              style="height: 40.8542px"
-            >
-              <div class="flex gap-x-3">
-                <div class="font-mono text-sm leading-6 text-gray-400">
-                  18 November 2023
-                </div>
-                
-              </div>
-            </td>
-            <td
-              class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20"
-              style="height: 40.8542px"
-            >
-              <div
-                class="flex items-center justify-end gap-x-2 sm:justify-start"
-              >
-                17
-              </div>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20"
-              style="height: 40.8542px"
-            >
-              16
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8"
-              style="height: 40.8542px"
-            >
-              &nbsp;
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+        <p class="text-sm font-medium leading-6 text-gray-400">Generasi</p>
+        <p class="mt-2 flex items-baseline gap-x-2">
+          <span class="text-4xl font-semibold tracking-tight text-white"
+            >13 <span class="text-sm text-gray-400">termasuk JKT48V</span>
+          </span>
+        </p>
+      </div>
+      <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+        <p class="text-sm font-medium leading-6 text-gray-400">
+          Total Member
+        </p>
+        <p class="mt-2 flex items-baseline gap-x-2">
+          <span class="text-4xl font-semibold tracking-tight text-white"
+            >230
+          </span>
+        </p>
+      </div>
+      <div class="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+        <p class="text-sm font-medium leading-6 text-gray-400">
+          Member Aktif
+        </p>
+        <p class="mt-2 flex items-baseline gap-x-2">
+          <span class="text-4xl font-semibold tracking-tight text-white"
+            >55
+          </span>
+        </p>
+      </div>
+      </div>
+      <h4 class="text-xl font-bold tracking-tight text-white sm:text-2xl">
+        Member JKT48
+      </h4>
+      <canvas id="total"></canvas>
+      <h4 class="text-xl font-bold tracking-tight text-white sm:text-2xl">
+        Member JKT48 New Era (33 member)
+      </h4>
+      <p class="mt-6 text-lg leading-8 text-gray-300">
+        JKT48 New Era dimulai setelah terjadinya restrukturisasi pada tahun 2021. Dari 59 member yang tersisa pada awal tahun 2021, 26 member harus lulus (yang diumumkan pada tanggal 11 Januari 2021) dan menyisakan 33 member, tepatnya dimulai pada tanggal 16 Maret 2021.
+      </p>
+      <canvas id="newera"></canvas>
     </div>
-    <script src="./assets/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./assets/js/data.js"></script>
   </body>
 </html>
