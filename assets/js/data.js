@@ -23,7 +23,7 @@ new Chart(document.getElementById("total"), {
       },
       {
         label: "Member Aktif",
-        data: [0, 0, 2, 0, 0, 1, 6, 5, 3, 7, 12, 16, 3],
+        data: [0, 0, 2, 0, 0, 1, 6, 4, 3, 7, 12, 16, 3],
       },
     ],
   },
@@ -66,7 +66,7 @@ new Chart(document.getElementById("newera"), {
         },
         {
           label: "Member Aktif",
-          data: [0, 2, 0, 0, 1, 6, 5, 3],
+          data: [0, 2, 0, 0, 1, 6, 4, 3],
         },
       ],
   },
