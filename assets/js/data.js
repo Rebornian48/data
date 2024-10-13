@@ -1,4 +1,6 @@
-new Chart(document.getElementById("total"), {
+const ctx = document.getElementById("total");
+Chart.register(ChartDataLabels);
+new Chart(ctx, {
   type: "bar",
   data: {
     labels: [
@@ -28,9 +30,36 @@ new Chart(document.getElementById("total"), {
     ],
   },
   options: {
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          color: "white",
+        },
+      },
+      datalabels: {
+        anchor: "end", // Position of the labels (start, end, center, etc.)
+        align: "end", // Alignment of the labels (start, end, center, etc.)
+        color: "white", // Color of the labels
+        font: {
+          weight: "bold",
+        },
+        formatter: function (value, ctx) {
+          return value; // Display the actual data value
+        },
+      },
+    },
     indexAxis: "y",
     scales: {
+      x: {
+        ticks: {
+          color: 'white',
+        }
+      },
       y: {
+        ticks: {
+          color: 'white',
+        },
         beginAtZero: true,
       },
     },
@@ -38,15 +67,12 @@ new Chart(document.getElementById("total"), {
       borderWidth: 4,
     },
     responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-    },
   },
 });
 
-new Chart(document.getElementById("newera"), {
+const ctx1 = document.getElementById("newera");
+Chart.register(ChartDataLabels);
+new Chart(ctx1, {
   type: "bar",
   data: {
     labels: [
@@ -73,7 +99,15 @@ new Chart(document.getElementById("newera"), {
   options: {
     indexAxis: "y",
     scales: {
+      x: {
+        ticks: {
+          color: 'white',
+        }
+      },
       y: {
+        ticks: {
+          color: 'white',
+        },
         beginAtZero: true,
       },
     },
@@ -82,8 +116,22 @@ new Chart(document.getElementById("newera"), {
     },
     responsive: true,
     plugins: {
+      datalabels: {
+        anchor: "end", // Position of the labels (start, end, center, etc.)
+        align: "end", // Alignment of the labels (start, end, center, etc.)
+        color: "white", // Color of the labels
+        font: {
+          weight: "bold",
+        },
+        formatter: function (value, ctx1) {
+          return value; // Display the actual data value
+        },
+      },
       legend: {
         position: "top",
+        labels: {
+          color: "white",
+        },
       },
     },
   },
