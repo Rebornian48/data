@@ -16,16 +16,17 @@ new Chart(ctx, {
       "Generasi 10",
       "Generasi 11",
       "Generasi 12",
+      "Generasi 13",
       "JKT48V",
     ],
     datasets: [
       {
         label: "Total Member",
-        data: [28, 31, 32, 12, 17, 14, 20, 18, 13, 11, 14, 17, 3],
+        data: [28, 31, 32, 12, 17, 14, 20, 18, 13, 11, 14, 17, 9, 3],
       },
       {
         label: "Member Aktif",
-        data: [0, 0, 2, 0, 0, 1, 6, 4, 3, 7, 12, 16, 3],
+        data: [0, 0, 2, 0, 0, 1, 6, 4, 3, 7, 12, 16, 9, 3],
       },
     ],
   },
