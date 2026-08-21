@@ -90,6 +90,15 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
+        $currentYear = (int) now()->format('Y');
+        $memberGrowth = [];
+        for ($year = 2011; $year <= $currentYear; $year++) {
+            $total = Member::whereNotNull('join_date')
+                ->where('join_date', '<=', "$year-12-31")
+                ->count();
+            $memberGrowth[] = ['year' => $year, 'total' => $total];
+        }
+
         return view('dashboard.index', compact(
             'stats',
             'membersByGeneration',
@@ -98,7 +107,8 @@ class DashboardController extends Controller
             'topCenter',
             'activeCaptains',
             'ageDistribution',
-            'birthPlaces'
+            'birthPlaces',
+            'memberGrowth'
         ));
     }
 
@@ -131,5 +141,11 @@ class DashboardController extends Controller
         $generations = Generation::orderBy('id')->get();
 
         return view('dashboard.members', compact('members', 'generations'));
+    }
+
+    public function singles()
+    {
+        $singles = Single::withCount('members')->orderBy('sequence')->get();
+        return view('dashboard.singles', compact('singles'));
     }
 }

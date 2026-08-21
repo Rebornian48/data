@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/members', [DashboardController::class, 'members'])->name('members.index');
 Route::get('/members/{member}', [DashboardController::class, 'member'])->name('members.show');
+Route::get('/singles', [DashboardController::class, 'singles'])->name('singles.index');
 
 // ---------- Auth ----------
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
