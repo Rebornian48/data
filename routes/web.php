@@ -19,7 +19,7 @@ Route::get('/members', [DashboardController::class, 'members'])->name('members.i
 Route::get('/members/{member}', [DashboardController::class, 'member'])->name('members.show');
 
 // ---------- Admin ----------
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         return redirect()->route('admin.members.index');
     })->name('home');
