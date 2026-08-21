@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient-brand {
+    background: linear-gradient(135deg, #E60012 0%, #FF1744 100%);
+}
+
+.text-brand {
+    color: #E60012;
+}
+
+.bg-brand {
+    background-color: #E60012;
+}
+
+.border-brand {
+    border-color: #E60012;
+}
+
+.hover\:text-brand:hover {
+    color: #E60012;
+}
+
+.hover\:bg-brand:hover {
+    background-color: #E60012;
+}
+
+.hover\:border-brand:hover {
+    border-color: #E60012;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
