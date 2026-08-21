@@ -90,13 +90,27 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        $currentYear = (int) now()->format('Y');
+        $allMembers = Member::whereNotNull('join_date')->select('join_date', 'graduation_date', 'cancelled_date')->get();
+        $events = [];
+        foreach ($allMembers as $m) {
+            $events[] = ['date' => $m->join_date->toDateString(), 'type' => 'join'];
+            if ($m->graduation_date) $events[] = ['date' => $m->graduation_date->toDateString(), 'type' => 'leave'];
+            if ($m->cancelled_date) $events[] = ['date' => $m->cancelled_date->toDateString(), 'type' => 'leave'];
+        }
+        usort($events, fn ($a, $b) => $a['date'] <=> $b['date'] ?: $a['type'] <=> $b['type']);
+
+        $active = 0;
         $memberGrowth = [];
-        for ($year = 2011; $year <= $currentYear; $year++) {
-            $total = Member::whereNotNull('join_date')
-                ->where('join_date', '<=', "$year-12-31")
-                ->count();
-            $memberGrowth[] = ['year' => $year, 'total' => $total];
+        $lastDate = null;
+        foreach ($events as $e) {
+            if ($lastDate && $lastDate !== $e['date']) {
+                $memberGrowth[] = ['date' => $lastDate, 'total' => $active];
+            }
+            $active += $e['type'] === 'join' ? 1 : -1;
+            $lastDate = $e['date'];
+        }
+        if ($lastDate) {
+            $memberGrowth[] = ['date' => $lastDate, 'total' => $active];
         }
 
         return view('dashboard.index', compact(

@@ -35,10 +35,10 @@
 
     <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-8">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Perkembangan JKT48</h2>
-            <span class="text-xs text-slate-500 dark:text-slate-400">Total kumulatif member</span>
+            <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Perkembangan Member Aktif</h2>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Jumlah member aktif harian</span>
         </div>
-        <div class="h-72">
+        <div class="h-80">
             <canvas id="growthChart"></canvas>
         </div>
     </div>
@@ -182,28 +182,45 @@
     new Chart(growthCtx, {
         type: 'line',
         data: {
-            labels: growthData.map(d => d.year),
+            labels: growthData.map(d => d.date),
             datasets: [{
-                label: 'Total Member',
+                label: 'Member Aktif',
                 data: growthData.map(d => d.total),
                 borderColor: '#E60012',
-                backgroundColor: 'rgba(230, 0, 18, 0.1)',
+                backgroundColor: 'rgba(230, 0, 18, 0.08)',
                 fill: true,
-                tension: 0.3,
+                tension: 0.2,
+                pointRadius: 0,
+                pointHoverRadius: 4,
                 pointBackgroundColor: '#E60012',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 4
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
             scales: {
-                x: { grid: { display: false } },
+                x: {
+                    type: 'category',
+                    ticks: {
+                        maxTicksLimit: 12,
+                        maxRotation: 0
+                    },
+                    grid: { display: false }
+                },
                 y: { beginAtZero: true }
             },
-            plugins: { legend: { display: false } }
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        title: function(items) {
+                            return new Date(items[0].label).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                        }
+                    }
+                }
+            }
         }
     });
 
