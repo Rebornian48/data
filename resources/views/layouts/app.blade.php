@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -40,6 +41,10 @@
                         <a href="{{ route('singles.index') }}"
                            class="text-sm font-medium {{ request()->routeIs('singles.*') ? 'text-brand' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                             Singles
+                        </a>
+                        <a href="{{ route('captains.index') }}"
+                           class="text-sm font-medium {{ request()->routeIs('captains.*') ? 'text-brand' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
+                            Captains
                         </a>
                     </div>
                 </div>

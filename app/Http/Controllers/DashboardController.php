@@ -162,4 +162,24 @@ class DashboardController extends Controller
         $singles = Single::withCount('members')->orderBy('sequence')->get();
         return view('dashboard.singles', compact('singles'));
     }
+
+    public function captains()
+    {
+        $captains = Captain::with('member.generation')
+            ->orderBy('position')
+            ->orderBy('start_date')
+            ->get();
+
+        $positions = $captains->groupBy('position')->map(fn ($g) => $g->sortBy('start_date')->values());
+
+        $timelineData = $captains->map(fn ($c) => [
+            'position' => $c->position,
+            'member' => $c->member->name,
+            'start' => $c->start_date->format('Y-m-d'),
+            'end' => $c->end_date ? $c->end_date->format('Y-m-d') : now()->format('Y-m-d'),
+            'active' => $c->end_date === null,
+        ])->sortBy('start')->values();
+
+        return view('dashboard.captains', compact('captains', 'positions', 'timelineData'));
+    }
 }
