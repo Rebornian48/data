@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
+    private string $username = 'admin';
+    private string $password = 'data_jkt48';
+
     public function showLoginForm()
     {
-        if (Auth::guard('admin')->check()) {
+        if (session('admin_logged_in')) {
             return redirect()->route('admin.home');
         }
         return view('auth.login');
@@ -17,12 +20,13 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'username' => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::guard('admin')->attempt($credentials)) {
+        if ($request->input('username') === $this->username && $request->input('password') === $this->password) {
+            session(['admin_logged_in' => true]);
             $request->session()->regenerate();
             return redirect()->intended(route('admin.home'));
         }
@@ -34,7 +38,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        session()->forget('admin_logged_in');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');
