@@ -4,8 +4,7 @@
     "description": "JKT48 Member Database - Laravel Application",
     "require": {
         "php": "^8.3",
-        "laravel/framework": "^13.0",
-        "laravel/tinker": "^2.10"
+        "laravel/framework": "^13.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
