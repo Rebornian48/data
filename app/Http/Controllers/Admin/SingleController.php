@@ -22,7 +22,8 @@ class SingleController extends Controller
 
     public function create()
     {
-        return view('admin.singles.create');
+        $single = new Single;
+        return view('admin.singles.create', compact('single'));
     }
 
     public function store(Request $request)

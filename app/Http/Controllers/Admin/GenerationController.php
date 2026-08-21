@@ -22,7 +22,8 @@ class GenerationController extends Controller
 
     public function create()
     {
-        return view('admin.generations.create');
+        $generation = new Generation;
+        return view('admin.generations.create', compact('generation'));
     }
 
     public function store(Request $request)

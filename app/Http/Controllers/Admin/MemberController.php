@@ -30,7 +30,8 @@ class MemberController extends Controller
     {
         $generations = Generation::orderBy('id')->get();
         $singles = Single::orderBy('sequence')->get();
-        return view('admin.members.create', compact('generations', 'singles'));
+        $member = new Member;
+        return view('admin.members.create', compact('generations', 'singles', 'member'));
     }
 
     public function store(Request $request)

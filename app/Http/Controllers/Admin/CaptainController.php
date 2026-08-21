@@ -22,7 +22,8 @@ class CaptainController extends Controller
     public function create()
     {
         $members = Member::orderBy('name')->get();
-        return view('admin.captains.create', compact('members'));
+        $captain = new Captain;
+        return view('admin.captains.create', compact('members', 'captain'));
     }
 
     public function store(Request $request)
