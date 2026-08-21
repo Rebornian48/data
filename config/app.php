@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facade;
-
 return [
 
     'name' => env('APP_NAME', 'JKT48 Database'),
@@ -33,13 +31,5 @@ return [
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
     ],
-
-    'providers' => [
-        // Laravel Framework Service Providers...
-    ],
-
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
-    ])->toArray(),
 
 ];
