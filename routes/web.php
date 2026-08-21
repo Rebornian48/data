@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\GenerationController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\SingleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,13 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/members', [DashboardController::class, 'members'])->name('members.index');
 Route::get('/members/{member}', [DashboardController::class, 'member'])->name('members.show');
 
+// ---------- Auth ----------
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 // ---------- Admin ----------
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
     Route::get('/', function () {
         return redirect()->route('admin.members.index');
     })->name('home');
