@@ -355,7 +355,7 @@ mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql
 | `https://jkt48.rebornian48.my.id/data/members` | Daftar Member |
 | `https://jkt48.rebornian48.my.id/data/members/{id}` | Detail Member |
 | `https://jkt48.rebornian48.my.id/data/admin` | Admin Panel |
-| `https://jkt48.rebornian48.id/data/admin/members` | Kelola Member |
+| `https://jkt48.rebornian48.my.id/data/admin/members` | Kelola Member |
 
 ---
 
