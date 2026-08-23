@@ -46,6 +46,10 @@
                            class="text-sm font-medium {{ request()->routeIs('captains.*') ? 'text-brand' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                             Captains
                         </a>
+                        <a href="{{ route('sorter.index') }}"
+                           class="text-sm font-medium {{ request()->routeIs('sorter.*') ? 'text-brand' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
+                            Sorter
+                        </a>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">

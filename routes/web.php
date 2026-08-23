@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\SingleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SorterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,10 @@ Route::get('/members', [DashboardController::class, 'members'])->name('members.i
 Route::get('/members/{member}', [DashboardController::class, 'member'])->name('members.show');
 Route::get('/singles', [DashboardController::class, 'singles'])->name('singles.index');
 Route::get('/captains', [DashboardController::class, 'captains'])->name('captains.index');
+
+// ---------- Sorter ----------
+Route::get('/sorter', [SorterController::class, 'index'])->name('sorter.index');
+Route::get('/sorter/{type}', [SorterController::class, 'show'])->name('sorter.show');
 
 // ---------- Auth ----------
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
