@@ -99,6 +99,9 @@
                 </button>
 
                 <div class="flex md:flex-col items-center justify-center gap-3">
+                    <button type="button" id="card-undo" class="px-5 py-2.5 rounded-lg border-2 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:border-brand hover:text-brand transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-slate-300 disabled:hover:text-slate-600 dark:disabled:hover:border-slate-600 dark:disabled:hover:text-slate-300" disabled>
+                        Undo
+                    </button>
                     <button type="button" id="card-tie" class="px-5 py-2.5 rounded-lg border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:border-brand hover:text-brand transition">
                         Seri
                     </button>
@@ -153,6 +156,6 @@
 <script>
     window.SORTER_ITEMS = @json($items);
 </script>
-<script src="{{ asset('js/sorter-member.js') }}?v=1"></script>
+<script src="{{ asset('js/sorter-member.js') }}?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 @endsection

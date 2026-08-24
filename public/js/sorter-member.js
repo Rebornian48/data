@@ -20,6 +20,7 @@
     const cardLeft = $('card-left');
     const cardRight = $('card-right');
     const cardTie = $('card-tie');
+    const cardUndo = $('card-undo');
     const btnUndo = $('btn-undo');
     const btnRestart = $('btn-restart');
 
@@ -289,6 +290,7 @@
         battleNum.textContent = state.battles + 1;
 
         btnUndo.disabled = !backup;
+        cardUndo.disabled = !backup;
     }
 
     // Ranking modes:
@@ -383,6 +385,7 @@
     cardLeft.addEventListener('click', () => sortStep(-1));
     cardRight.addEventListener('click', () => sortStep(1));
     cardTie.addEventListener('click', () => sortStep(0));
+    cardUndo.addEventListener('click', undo);
     btnUndo.addEventListener('click', undo);
     btnRestart.addEventListener('click', () => {
         if (!confirm('Restart? Progres saat ini akan hilang.')) return;

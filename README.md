@@ -32,7 +32,7 @@ Live: <https://jkt48.rebornian48.my.id>
 - **Member sorter** (`/sorter/member`) — merge sort interaktif berbasis perbandingan berpasangan.
   - Filter status (Aktif/Lulus) + generasi.
   - Pilih Kiri / Kanan / Seri; keyboard shortcut ← → ↓ U.
-  - Progress bar + undo 1 langkah.
+  - Progress bar + undo 1 langkah (tombol di header & di kolom tengah, dekat Seri).
   - Hasil: toggle ranking Unik / Tie 1,1,2,3 / Tie 1,1,3,4.
   - Salin teks, screenshot PNG (html2canvas).
 - Arsitektur extensible — tinggal tambah tipe (`song`, `setlist`, dst) di `SorterController`.

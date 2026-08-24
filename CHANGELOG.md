@@ -24,6 +24,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 
 ### Changed
 - Arsitektur controller sorter type-dispatched via `data{Type}()` methods — plug-in sorter baru tanpa duplikasi.
+- Tombol **Undo** kedua ditambahkan di kolom tengah panel sorter (di atas tombol Seri) — akses lebih dekat ke area comparison, tanpa menghilangkan Undo di header.
 
 ---
 
