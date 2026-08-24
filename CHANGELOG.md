@@ -13,6 +13,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 - **`Generation` model observer** — saat `Generation.join_date` di-set/di-ubah (via admin edit atau seeder), semua member generasi tsb yg `join_date` masih null otomatis di-backfill dgn tanggal generasi. Member yg join_date-nya sudah di-set eksplisit tidak diganggu.
 - **`Member` saving hook** — otomatis set `status = 'Lulus'` saat `graduation_date` sudah <= hari ini. Member dgn `graduation_date` di masa depan tetap `Aktif` (announced-but-not-yet).
 - **`php artisan members:sync-status`** — backfill: flip semua member `Aktif` yg `graduation_date` sudah lewat menjadi `Lulus`. Aman di-rerun.
+- **`GraduationUpdateSeeder`** — update data kelulusan 9 member: Shani Indira Natio, Azizi Asadel, Reva Fidela, Indira Seruni, Shania Gracia, Amanda Sukma, Chelsea Davina, Cathleen Nixie, Alya Amanda. Isi `restructure_status` (JKT48/Team Dream/Team Love), `graduation_announce_date`, `graduation_announce_event`, `graduation_date`. Status Lulus di-flip otomatis via saving hook.
 - Halaman **JKT48 Member Sorter** di `/sorter/member` — merge sort interaktif dgn:
   - Filter status (Aktif/Lulus) + generasi.
   - Undo 1 langkah, keyboard shortcut ← → ↓ (seri) U (undo).
