@@ -8,6 +8,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 ## [Unreleased]
 
 ### Added
+- **Generasi 14** — seeder `Generation14MemberSeeder` menambahkan 11 trainee (Afera Thalia, Carissa Dini, Christabella Bonita, Fahira Putri, Fatimah Azzahra, Heidi Suyangga, Maegan Jovanka, Maxine Faye, Putry Jazyta, Ralyne Van Irwan, Sona Kalyana). Status: `Aktif` + `restructure_status: Trainee`. `GenerationSeeder` juga di-update mencakup kode `14`.
 - Halaman **JKT48 Member Sorter** di `/sorter/member` — merge sort interaktif dgn:
   - Filter status (Aktif/Lulus) + generasi.
   - Undo 1 langkah, keyboard shortcut ← → ↓ (seri) U (undo).

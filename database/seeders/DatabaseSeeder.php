@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             GenerationSeeder::class,
             SingleSeeder::class,
             MemberSeeder::class,
+            Generation14MemberSeeder::class,
             CaptainSeeder::class,
         ]);
 

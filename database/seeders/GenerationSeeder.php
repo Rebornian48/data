@@ -23,6 +23,7 @@ class GenerationSeeder extends Seeder
             ['code' => '11',       'name' => 'Generasi 11',         'join_date' => '2022-10-31'],
             ['code' => '12',       'name' => 'Generasi 12',         'join_date' => '2023-11-18'],
             ['code' => '13',       'name' => 'Generasi 13',         'join_date' => '2024-10-31'],
+            ['code' => '14',       'name' => 'Generasi 14',         'join_date' => null],
             ['code' => 'Kaigai 1', 'name' => 'Kaigai Generasi 1',   'join_date' => '2012-11-01'],
             ['code' => 'Kaigai 2', 'name' => 'Kaigai Generasi 2',   'join_date' => '2014-04-24'],
             ['code' => 'Transfer', 'name' => 'Transfer',            'join_date' => '2018-09-17'],
