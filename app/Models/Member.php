@@ -96,6 +96,24 @@ class Member extends Model
     }
 
     // ------------------------------------------------------------------
+    // Model events
+    // ------------------------------------------------------------------
+
+    /**
+     * Auto-sync status = 'Lulus' when graduation_date has arrived (or passed).
+     * Members whose graduation_date is in the future keep their existing status
+     * (typically Aktif with graduation_announce_date filled).
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (Member $m) {
+            if ($m->graduation_date && $m->graduation_date->lte(now())) {
+                $m->status = 'Lulus';
+            }
+        });
+    }
+
+    // ------------------------------------------------------------------
     // Computed accessors
     // ------------------------------------------------------------------
 

@@ -11,6 +11,8 @@ Tanggal dalam format `YYYY-MM-DD`.
 - **Generasi 14** — seeder `Generation14MemberSeeder` menambahkan 11 trainee (Afera Thalia, Carissa Dini, Christabella Bonita, Fahira Putri, Fatimah Azzahra, Heidi Suyangga, Maegan Jovanka, Maxine Faye, Putry Jazyta, Ralyne Van Irwan, Sona Kalyana). Status: `Aktif` + `restructure_status: Trainee`. `GenerationSeeder` juga di-update mencakup kode `14`. Member `join_date` di-inherit dari generasi (`gen->join_date`) saat seed.
 - **`Member::effective_join_date` accessor** — fallback ke `generation.join_date` kalau kolom `join_date` member null. `ageAtJoin` & `daysInJkt48` sekarang pakai accessor ini — statistik tenure otomatis benar untuk member yang belum di-set join_date manual.
 - **`Generation` model observer** — saat `Generation.join_date` di-set/di-ubah (via admin edit atau seeder), semua member generasi tsb yg `join_date` masih null otomatis di-backfill dgn tanggal generasi. Member yg join_date-nya sudah di-set eksplisit tidak diganggu.
+- **`Member` saving hook** — otomatis set `status = 'Lulus'` saat `graduation_date` sudah <= hari ini. Member dgn `graduation_date` di masa depan tetap `Aktif` (announced-but-not-yet).
+- **`php artisan members:sync-status`** — backfill: flip semua member `Aktif` yg `graduation_date` sudah lewat menjadi `Lulus`. Aman di-rerun.
 - Halaman **JKT48 Member Sorter** di `/sorter/member` — merge sort interaktif dgn:
   - Filter status (Aktif/Lulus) + generasi.
   - Undo 1 langkah, keyboard shortcut ← → ↓ (seri) U (undo).
