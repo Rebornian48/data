@@ -1,0 +1,150 @@
+/* ====================================================================
+   Neobrutalism global surface for JKT48 Database
+   Applied on top of Tailwind CDN — light-only, cream ground, chunky.
+   ==================================================================== */
+
+:root {
+    --neo-ground: #fef2d0;
+    --neo-ink: #000;
+    --neo-yellow: #ffd23f;
+    --neo-pink: #ff6b9d;
+    --neo-lime: #a3e635;
+    --neo-red: #ef4444;
+    --neo-cyan: #22d3ee;
+    --neo-white: #ffffff;
+}
+
+/* Force light color scheme regardless of dark-mode class */
+html.dark, .dark { color-scheme: light; }
+
+body {
+    background: var(--neo-ground) !important;
+    color: var(--neo-ink) !important;
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+}
+
+h1, h2, h3, .display {
+    font-family: 'Archivo Black', 'Space Grotesk', sans-serif !important;
+    letter-spacing: -0.02em;
+}
+h1, h2 { text-transform: uppercase; }
+
+/* --- neutralize dark backgrounds and shadows on structural cards --- */
+.bg-white, .bg-slate-50, .bg-slate-100, .bg-slate-200,
+[class*="dark:bg-slate-"], [class*="dark:bg-slate-700"], [class*="dark:bg-slate-800"], [class*="dark:bg-slate-900"] {
+    background-color: var(--neo-white) !important;
+}
+
+/* Body wrapper stays cream */
+body.neo-body { background: var(--neo-ground) !important; }
+
+/* --- flatten rounding (except avatar circles) --- */
+.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl {
+    border-radius: 0 !important;
+}
+.rounded-full { border-radius: 9999px !important; }
+
+/* --- borders: 3px black wherever tailwind put a border --- */
+[class*="border-slate-"], [class*="dark:border-slate-"],
+.border, .border-t, .border-b, .border-l, .border-r {
+    border-color: var(--neo-ink) !important;
+}
+.border { border-width: 3px !important; }
+.border-t { border-top-width: 3px !important; }
+.border-b { border-bottom-width: 3px !important; }
+.border-l { border-left-width: 3px !important; }
+.border-r { border-right-width: 3px !important; }
+
+/* --- shadows: hard offset, no blur --- */
+.shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: 4px 4px 0 var(--neo-ink) !important;
+}
+.hover\:shadow-lg:hover { box-shadow: 6px 6px 0 var(--neo-ink) !important; }
+
+/* --- text colors: force black --- */
+[class*="text-slate-"], [class*="dark:text-slate-"], [class*="dark:text-white"] {
+    color: var(--neo-ink) !important;
+}
+
+/* --- brand accents mapped to pink --- */
+.bg-brand, .gradient-brand {
+    background: var(--neo-pink) !important;
+    background-image: none !important;
+    color: var(--neo-ink) !important;
+}
+.text-brand { color: var(--neo-ink) !important; text-decoration: underline; text-underline-offset: 3px; }
+.border-brand { border-color: var(--neo-ink) !important; }
+.hover\:bg-brand-dark:hover { background-color: #d1477a !important; }
+
+/* --- status color chips: keep hue, force black text + neo borders --- */
+[class*="bg-green-"] { background-color: var(--neo-lime) !important; color: var(--neo-ink) !important; }
+[class*="bg-red-"] { background-color: var(--neo-red) !important; color: var(--neo-ink) !important; }
+[class*="bg-yellow-"] { background-color: var(--neo-yellow) !important; color: var(--neo-ink) !important; }
+[class*="text-green-"], [class*="text-red-"], [class*="text-yellow-"] { color: var(--neo-ink) !important; }
+
+/* --- form controls --- */
+input[type="text"], input[type="password"], input[type="email"], input[type="date"],
+input[type="number"], input[type="search"], input[type="url"], input[type="tel"],
+select, textarea {
+    border: 3px solid var(--neo-ink) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: var(--neo-white) !important;
+    color: var(--neo-ink) !important;
+    font-weight: 600;
+}
+input:focus, select:focus, textarea:focus {
+    outline: 3px dashed var(--neo-cyan) !important;
+    outline-offset: 3px !important;
+    box-shadow: 4px 4px 0 var(--neo-ink) !important;
+}
+
+/* --- buttons: universal neo treatment --- */
+button:not(.no-neo), .btn, a.btn,
+a[class*="bg-brand"], a[class*="bg-slate-900"], a[class*="bg-slate-800"] {
+    border: 3px solid var(--neo-ink) !important;
+    border-radius: 0 !important;
+    box-shadow: 4px 4px 0 var(--neo-ink) !important;
+    font-weight: 700 !important;
+    transition: transform .08s ease, box-shadow .08s ease;
+    color: var(--neo-ink) !important;
+}
+button:not(.no-neo):hover, .btn:hover, a.btn:hover,
+a[class*="bg-brand"]:hover, a[class*="bg-slate-900"]:hover {
+    transform: translate(-1px,-1px);
+    box-shadow: 5px 5px 0 var(--neo-ink) !important;
+}
+button:not(.no-neo):active, .btn:active, a.btn:active,
+a[class*="bg-brand"]:active, a[class*="bg-slate-900"]:active {
+    transform: translate(4px,4px);
+    box-shadow: 0 0 0 var(--neo-ink) !important;
+}
+button:disabled { opacity: .45; cursor: not-allowed; transform: none !important; box-shadow: 4px 4px 0 var(--neo-ink) !important; }
+
+/* Icon-only nav/toggle buttons — smaller shadow, still bordered */
+button.icon-btn {
+    box-shadow: 2px 2px 0 var(--neo-ink) !important;
+}
+
+/* Focus ring — visible & distinct from decorative borders */
+:focus-visible {
+    outline: 3px dashed var(--neo-cyan) !important;
+    outline-offset: 4px !important;
+}
+
+/* Pagination */
+nav[aria-label="Pagination"] span, nav[aria-label="Pagination"] a {
+    border: 3px solid var(--neo-ink) !important;
+    border-radius: 0 !important;
+    background: var(--neo-white) !important;
+    color: var(--neo-ink) !important;
+    font-weight: 700;
+}
+
+/* Reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    button, .btn, a.btn, a[class*="bg-brand"], a[class*="bg-slate-900"] {
+        transition: none !important;
+        transform: none !important;
+    }
+}

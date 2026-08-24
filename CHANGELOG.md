@@ -25,7 +25,14 @@ Tanggal dalam format `YYYY-MM-DD`.
 ### Changed
 - Arsitektur controller sorter type-dispatched via `data{Type}()` methods — plug-in sorter baru tanpa duplikasi.
 - Tombol **Undo** kedua ditambahkan di kolom tengah panel sorter (di atas tombol Seri) — akses lebih dekat ke area comparison, tanpa menghilangkan Undo di header.
-- **Neobrutalism UI** untuk halaman sorter (`/sorter` & `/sorter/member`) — border hitam 3px seragam, hard offset shadow `6px 6px 0 #000`, palet cream/kuning/pink/lime tanpa gradien, tipografi display *Archivo Black*, press-animation `translate(4/6px)` dgn shadow hilang, focus ring cyan dashed distinct dari border dekoratif, dukungan `prefers-reduced-motion`. Dashboard & admin tidak berubah.
+- **Neobrutalism UI** diterapkan ke **semua halaman** (dashboard, members, singles, captains, admin, login, sorter):
+  - Global stylesheet `public/css/neo.css` — di-load dari `layouts/app.blade.php`, `layouts/admin.blade.php`, dan `auth/login.blade.php`.
+  - Border hitam 3px seragam, hard offset shadow `4-6px 0 #000`, palet cream/kuning/pink/lime tanpa gradien.
+  - Tipografi display *Archivo Black* (uppercase headings) + body *Space Grotesk*.
+  - Press-animation `translate(4/6px)` dgn shadow hilang; reduced-motion honored.
+  - Focus ring cyan dashed 3px distinct dari border dekoratif.
+  - Dark mode toggle dihapus (design light-only).
+  - Kontras teks 4.5:1+: teks hitam di semua fill saturated.
 
 ---
 

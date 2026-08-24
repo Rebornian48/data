@@ -47,7 +47,8 @@ Live: <https://jkt48.rebornian48.my.id>
 ## Tech Stack
 
 - **Backend**: Laravel 13 (PHP 8.3+)
-- **Frontend**: Blade + Tailwind CSS (CDN) + Alpine.js + Chart.js
+- **Frontend**: Blade + Tailwind CSS (CDN) + Chart.js
+- **Style**: Neobrutalism global (`public/css/neo.css`) — cream ground, chunky borders, hard offset shadows, *Archivo Black* headings.
 - **DB**: MySQL
 - **Deployment**: Hostinger shared hosting via Git auto-deploy
 
@@ -75,6 +76,7 @@ jkt48_data/
 │   ├── auth/            login
 │   └── sorter/          index / member
 ├── public/
+│   ├── css/neo.css                     # global Neobrutalism overrides
 │   ├── js/sorter-member.js             # algoritma merge sort interaktif
 │   └── .htaccess                       # Laravel front-controller
 ├── routes/web.php
