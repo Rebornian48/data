@@ -14,6 +14,8 @@ Tanggal dalam format `YYYY-MM-DD`.
 - **`Member` saving hook** — otomatis set `status = 'Lulus'` saat `graduation_date` sudah <= hari ini. Member dgn `graduation_date` di masa depan tetap `Aktif` (announced-but-not-yet).
 - **`php artisan members:sync-status`** — backfill: flip semua member `Aktif` yg `graduation_date` sudah lewat menjadi `Lulus`. Aman di-rerun.
 - **`GraduationUpdateSeeder`** — update data kelulusan 9 member: Shani Indira Natio, Azizi Asadel, Reva Fidela, Indira Seruni, Shania Gracia, Amanda Sukma, Chelsea Davina, Cathleen Nixie, Alya Amanda. Isi `restructure_status` (JKT48/Team Dream/Team Love), `graduation_announce_date`, `graduation_announce_event`, `graduation_date`. Status Lulus di-flip otomatis via saving hook.
+- **Foto member** (`public/img/*.jpg|webp|png`) — 257 file di-commit ke repo.
+- **`php artisan members:match-photos`** — auto-match file di `public/img/` ke member berdasarkan tokens nama (case-insensitive, ignore prefix `Gen{N}_`). Set `photo_url = /img/FILENAME`. Opsi: `--dry-run` (report saja), `--overwrite` (replace existing), `--dir=X` (folder lain). Report: orphan files (no member match), ambiguous matches, member tanpa foto.
 - Halaman **JKT48 Member Sorter** di `/sorter/member` — merge sort interaktif dgn:
   - Filter status (Aktif/Lulus) + generasi.
   - Undo 1 langkah, keyboard shortcut ← → ↓ (seri) U (undo).
