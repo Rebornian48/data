@@ -42,4 +42,21 @@ class Generation extends Model
     {
         return $this->join_date?->diffInDays(now());
     }
+
+    /**
+     * Whenever a generation's join_date changes, backfill member.join_date
+     * for every member of that generation whose column is still null.
+     * Explicitly-set member join_date is left untouched.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (Generation $gen) {
+            if (! $gen->join_date) return;
+            if (! $gen->wasChanged('join_date') && ! $gen->wasRecentlyCreated) return;
+
+            Member::where('generation_id', $gen->id)
+                ->whereNull('join_date')
+                ->update(['join_date' => $gen->join_date]);
+        });
+    }
 }
