@@ -38,6 +38,7 @@ class Generation14MemberSeeder extends Seeder
                     'birth_place'        => $birthPlace,
                     'birth_date'         => $birthDate,
                     'generation_id'      => $gen14->id,
+                    'join_date'          => $gen14->join_date,
                     'status'             => 'Aktif',
                     'restructure_status' => 'Trainee',
                 ]

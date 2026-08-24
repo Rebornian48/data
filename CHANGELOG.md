@@ -8,7 +8,8 @@ Tanggal dalam format `YYYY-MM-DD`.
 ## [Unreleased]
 
 ### Added
-- **Generasi 14** — seeder `Generation14MemberSeeder` menambahkan 11 trainee (Afera Thalia, Carissa Dini, Christabella Bonita, Fahira Putri, Fatimah Azzahra, Heidi Suyangga, Maegan Jovanka, Maxine Faye, Putry Jazyta, Ralyne Van Irwan, Sona Kalyana). Status: `Aktif` + `restructure_status: Trainee`. `GenerationSeeder` juga di-update mencakup kode `14`.
+- **Generasi 14** — seeder `Generation14MemberSeeder` menambahkan 11 trainee (Afera Thalia, Carissa Dini, Christabella Bonita, Fahira Putri, Fatimah Azzahra, Heidi Suyangga, Maegan Jovanka, Maxine Faye, Putry Jazyta, Ralyne Van Irwan, Sona Kalyana). Status: `Aktif` + `restructure_status: Trainee`. `GenerationSeeder` juga di-update mencakup kode `14`. Member `join_date` di-inherit dari generasi (`gen->join_date`) saat seed.
+- **`Member::effective_join_date` accessor** — fallback ke `generation.join_date` kalau kolom `join_date` member null. `ageAtJoin` & `daysInJkt48` sekarang pakai accessor ini — statistik tenure otomatis benar untuk member yang belum di-set join_date manual.
 - Halaman **JKT48 Member Sorter** di `/sorter/member` — merge sort interaktif dgn:
   - Filter status (Aktif/Lulus) + generasi.
   - Undo 1 langkah, keyboard shortcut ← → ↓ (seri) U (undo).

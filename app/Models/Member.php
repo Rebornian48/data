@@ -100,6 +100,17 @@ class Member extends Model
     // ------------------------------------------------------------------
 
     /**
+     * Effective join date — falls back to the member's generation join_date
+     * when the member row itself has none.
+     */
+    protected function effectiveJoinDate(): Attribute
+    {
+        return Attribute::get(function () {
+            return $this->join_date ?? $this->generation?->join_date;
+        });
+    }
+
+    /**
      * Current age in years (or age at graduation for graduated members).
      */
     protected function currentAge(): Attribute
@@ -119,8 +130,9 @@ class Member extends Model
     protected function ageAtJoin(): Attribute
     {
         return Attribute::get(function () {
-            if (! $this->birth_date || ! $this->join_date) return null;
-            return $this->birth_date->diffInYears($this->join_date);
+            $join = $this->effective_join_date;
+            if (! $this->birth_date || ! $join) return null;
+            return $this->birth_date->diffInYears($join);
         });
     }
 
@@ -130,9 +142,10 @@ class Member extends Model
     protected function daysInJkt48(): Attribute
     {
         return Attribute::get(function () {
-            if (! $this->join_date) return null;
+            $join = $this->effective_join_date;
+            if (! $join) return null;
             $endDate = $this->graduation_date ?? now();
-            return $this->join_date->diffInDays($endDate);
+            return $join->diffInDays($endDate);
         });
     }
 
