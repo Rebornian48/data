@@ -29,6 +29,7 @@ Live: <https://jkt48.rebornian48.my.id>
 - Timeline kapten per posisi (chart) + riwayat berurutan.
 
 ### Sorter interaktif (`/sorter`)
+- **Neobrutalism UI** — border hitam tebal, hard shadow, palet cream/kuning/pink/lime, tipografi display *Archivo Black*.
 - **Member sorter** (`/sorter/member`) — merge sort interaktif berbasis perbandingan berpasangan.
   - Filter status (Aktif/Lulus) + generasi.
   - Pilih Kiri / Kanan / Seri; keyboard shortcut ← → ↓ U.

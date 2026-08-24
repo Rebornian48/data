@@ -25,6 +25,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 ### Changed
 - Arsitektur controller sorter type-dispatched via `data{Type}()` methods — plug-in sorter baru tanpa duplikasi.
 - Tombol **Undo** kedua ditambahkan di kolom tengah panel sorter (di atas tombol Seri) — akses lebih dekat ke area comparison, tanpa menghilangkan Undo di header.
+- **Neobrutalism UI** untuk halaman sorter (`/sorter` & `/sorter/member`) — border hitam 3px seragam, hard offset shadow `6px 6px 0 #000`, palet cream/kuning/pink/lime tanpa gradien, tipografi display *Archivo Black*, press-animation `translate(4/6px)` dgn shadow hilang, focus ring cyan dashed distinct dari border dekoratif, dukungan `prefers-reduced-motion`. Dashboard & admin tidak berubah.
 
 ---
 

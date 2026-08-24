@@ -342,19 +342,21 @@
             const isTiePrev = i > 0 && ranks[i - 1] === rank;
             const photoBlock = item.photo
                 ? `<img src="${escapeAttr(item.photo)}" alt="" class="w-full h-full object-cover">`
-                : `<div class="w-full h-full flex items-center justify-center text-white text-lg font-bold gradient-brand">${escapeHtml(initialsBg(item))}</div>`;
+                : `<div class="w-full h-full flex items-center justify-center text-lg display text-black">${escapeHtml(initialsBg(item))}</div>`;
+            const rowBg = isTiePrev ? 'background:#ff6b9d;' : (i % 2 === 0 ? 'background:#fff;' : 'background:#fef2d0;');
+            const badgeClass = item.status === 'Aktif' ? 'neo-badge-aktif' : 'neo-badge-lulus';
             return `
-                <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-700/40 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
-                    <div class="w-10 text-center font-bold text-slate-900 dark:text-slate-100 ${isTiePrev ? 'text-brand' : ''}">${rank}</div>
-                    <div class="w-14 h-14 rounded-full overflow-hidden bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-600 dark:to-slate-700 shrink-0">${photoBlock}</div>
+                <div class="flex items-center gap-4 p-3 neo-card" style="${rowBg}">
+                    <div class="w-12 text-center display text-2xl text-black">${rank}</div>
+                    <div class="w-14 h-14 rounded-full overflow-hidden neo-avatar shrink-0">${photoBlock}</div>
                     <div class="min-w-0 flex-1">
-                        <div class="font-semibold text-slate-900 dark:text-slate-100 truncate">${escapeHtml(item.name)}</div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400 truncate">
+                        <div class="display text-black truncate">${escapeHtml(item.name)}</div>
+                        <div class="text-xs font-bold truncate">
                             ${item.generation ? escapeHtml(item.generation.name) : ''}
                             ${item.full_name && item.full_name !== item.name ? ' • ' + escapeHtml(item.full_name) : ''}
                         </div>
                     </div>
-                    <div class="text-xs px-2 py-0.5 rounded ${item.status === 'Aktif' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300'}">${escapeHtml(item.status)}</div>
+                    <div class="text-xs ${badgeClass}">${escapeHtml(item.status).toUpperCase()}</div>
                 </div>
             `;
         }).join('');
@@ -414,12 +416,8 @@
     document.querySelectorAll('.rank-toggle').forEach(btn => {
         btn.addEventListener('click', () => {
             rankMode = btn.dataset.rank;
-            document.querySelectorAll('.rank-toggle').forEach(b => {
-                b.classList.remove('bg-brand', 'text-white');
-                b.classList.add('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-700');
-            });
-            btn.classList.add('bg-brand', 'text-white');
-            btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-700');
+            document.querySelectorAll('.rank-toggle').forEach(b => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
             renderResult();
         });
     });
@@ -431,14 +429,14 @@
         const text = finalOrder.map((idx, i) => `${ranks[i]}. ${state.pool[idx].name}`).join('\n');
         try {
             await navigator.clipboard.writeText(text);
-            btnCopy.textContent = 'Tersalin ✓';
-            setTimeout(() => btnCopy.textContent = 'Salin Teks', 1500);
+            btnCopy.textContent = 'TERSALIN ✓';
+            setTimeout(() => btnCopy.textContent = 'SALIN TEKS', 1500);
         } catch {
             const ta = document.createElement('textarea');
             ta.value = text; document.body.appendChild(ta); ta.select();
             document.execCommand('copy'); document.body.removeChild(ta);
-            btnCopy.textContent = 'Tersalin ✓';
-            setTimeout(() => btnCopy.textContent = 'Salin Teks', 1500);
+            btnCopy.textContent = 'TERSALIN ✓';
+            setTimeout(() => btnCopy.textContent = 'SALIN TEKS', 1500);
         }
     });
 
@@ -446,7 +444,7 @@
     btnShot.addEventListener('click', async () => {
         if (typeof html2canvas === 'undefined') { alert('Modul screenshot belum ter-load, coba lagi sebentar.'); return; }
         const target = resultList;
-        const canvas = await html2canvas(target, { backgroundColor: null, scale: 2 });
+        const canvas = await html2canvas(target, { backgroundColor: '#fef2d0', scale: 2 });
         const link = document.createElement('a');
         link.download = 'jkt48-sorter-result.png';
         link.href = canvas.toDataURL('image/png');

@@ -3,159 +3,222 @@
 @section('title', $sorterTitle . ' - JKT48 Database')
 
 @section('content')
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+    .neo {
+        --ground: #fef2d0; --ink: #000;
+        --yellow: #ffd23f; --pink: #ff6b9d; --lime: #a3e635; --cyan: #22d3ee; --red: #ef4444;
+        font-family: 'Space Grotesk', 'Inter', sans-serif;
+        background: var(--ground); color: var(--ink);
+        min-height: calc(100vh - 4rem);
+    }
+    .neo h1, .neo h2, .neo .display { font-family: 'Archivo Black', 'Space Grotesk', sans-serif; letter-spacing: -0.02em; text-transform: uppercase; }
+    .neo-card { border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); background: #fff; }
+    .neo-chip { border: 3px solid var(--ink); background: #fff; font-weight: 700; }
+    .neo-btn {
+        border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+        font-weight: 700; color: #000; background: #fff;
+        transition: transform .08s ease, box-shadow .08s ease;
+        display: inline-flex; align-items: center; justify-content: center;
+    }
+    .neo-btn:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+    .neo-btn:active, .neo-btn.is-pressed { transform: translate(4px,4px); box-shadow: 0 0 0 var(--ink); }
+    .neo-btn:focus-visible { outline: 3px dashed var(--cyan); outline-offset: 4px; }
+    .neo-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0 var(--ink); }
+    .neo-btn:disabled:hover { transform: none; box-shadow: 4px 4px 0 var(--ink); }
+
+    .neo-btn-yellow { background: var(--yellow); }
+    .neo-btn-pink { background: var(--pink); }
+    .neo-btn-lime { background: var(--lime); }
+    .neo-btn-red { background: var(--red); color: #000; }
+    .neo-btn-black { background: #000; color: #fff; }
+
+    .neo-tile {
+        border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
+        background: #fff; transition: transform .08s ease, box-shadow .08s ease;
+        cursor: pointer;
+    }
+    .neo-tile:hover { transform: translate(-1px,-1px); box-shadow: 7px 7px 0 var(--ink); }
+    .neo-tile:active, .neo-tile.is-pressed { transform: translate(6px,6px); box-shadow: 0 0 0 var(--ink); }
+    .neo-tile:focus-visible { outline: 3px dashed var(--cyan); outline-offset: 4px; }
+
+    .neo-avatar { border: 3px solid var(--ink); background: var(--yellow); }
+    .neo-input { border: 3px solid var(--ink); background: #fff; font-weight: 600; color: #000; padding: .6rem .8rem; }
+    .neo-input:focus-visible { outline: 3px dashed var(--cyan); outline-offset: 3px; }
+
+    .neo-check { appearance: none; width: 22px; height: 22px; border: 3px solid var(--ink); background: #fff; display: inline-grid; place-content: center; cursor: pointer; flex-shrink: 0; }
+    .neo-check:checked { background: var(--pink); }
+    .neo-check:checked::before { content: ''; width: 10px; height: 10px; background: #000; }
+    .neo-check:focus-visible { outline: 3px dashed var(--cyan); outline-offset: 3px; }
+
+    .neo-progress-outer { border: 3px solid var(--ink); background: #fff; height: 22px; padding: 3px; }
+    .neo-progress-inner { background: var(--lime); height: 100%; transition: width .2s ease; }
+
+    .neo-kbd { border: 3px solid var(--ink); background: #fff; padding: 2px 8px; font-weight: 700; font-family: 'Space Grotesk', monospace; font-size: 11px; box-shadow: 2px 2px 0 var(--ink); }
+
+    .neo-rank-toggle { border: 3px solid var(--ink); font-weight: 700; background: #fff; padding: .4rem .8rem; }
+    .neo-rank-toggle.is-active { background: var(--pink); color: #000; }
+    .neo-rank-toggle:focus-visible { outline: 3px dashed var(--cyan); outline-offset: 3px; }
+
+    .neo-badge-aktif { background: var(--lime); border: 3px solid var(--ink); font-weight: 700; padding: 2px 8px; color: #000; }
+    .neo-badge-lulus { background: #fff; border: 3px solid var(--ink); font-weight: 700; padding: 2px 8px; color: #000; }
+
+    @media (prefers-reduced-motion: reduce) {
+        .neo-tile, .neo-tile:hover, .neo-tile:active, .neo-tile.is-pressed,
+        .neo-btn, .neo-btn:hover, .neo-btn:active, .neo-btn.is-pressed,
+        .neo-progress-inner {
+            transition: none; transform: none;
+        }
+        .neo-tile { box-shadow: 6px 6px 0 var(--ink); }
+        .neo-btn { box-shadow: 4px 4px 0 var(--ink); }
+    }
+</style>
+
+<div class="neo">
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <div class="mb-6">
-        <div class="text-xs text-slate-500 dark:text-slate-400 mb-1">
-            <a href="{{ route('sorter.index') }}" class="hover:text-brand">Sorter</a>
+        <div class="text-xs font-bold mb-2">
+            <a href="{{ route('sorter.index') }}" class="underline">SORTER</a>
             <span class="mx-1">/</span>
-            <span>Member</span>
+            <span>MEMBER</span>
         </div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">{{ $sorterTitle }}</h1>
-        <p class="text-slate-500 dark:text-slate-400">{{ $sorterSubtitle }}</p>
+        <h1 class="text-4xl sm:text-5xl mb-2">{{ $sorterTitle }}</h1>
+        <p class="font-medium">{{ $sorterSubtitle }}</p>
     </div>
 
     {{-- ============ STAGE: FILTER ============ --}}
-    <section id="stage-filter" class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-        <h2 class="font-semibold text-slate-900 dark:text-slate-100 mb-4">Pilih member yang ikut di-sort</h2>
+    <section id="stage-filter" class="neo-card p-6">
+        <h2 class="text-xl mb-5">PILIH MEMBER YANG IKUT DI-SORT</h2>
 
         <div class="mb-5">
-            <div class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Status</div>
-            <div class="flex flex-wrap gap-4">
-                <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <input type="checkbox" id="filter-status-aktif" class="filter-status w-4 h-4 accent-red-600" value="Aktif" checked>
-                    Aktif
+            <div class="display text-sm mb-3">STATUS</div>
+            <div class="flex flex-wrap gap-3">
+                <label class="inline-flex items-center gap-2 cursor-pointer neo-chip px-3 py-2">
+                    <input type="checkbox" id="filter-status-aktif" class="filter-status neo-check" value="Aktif" checked>
+                    <span class="font-bold">AKTIF</span>
                 </label>
-                <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <input type="checkbox" id="filter-status-lulus" class="filter-status w-4 h-4 accent-red-600" value="Lulus">
-                    Lulus
+                <label class="inline-flex items-center gap-2 cursor-pointer neo-chip px-3 py-2">
+                    <input type="checkbox" id="filter-status-lulus" class="filter-status neo-check" value="Lulus">
+                    <span class="font-bold">LULUS</span>
                 </label>
             </div>
         </div>
 
         <div class="mb-5">
-            <div class="flex items-center justify-between mb-2">
-                <div class="text-sm font-medium text-slate-700 dark:text-slate-300">Generasi</div>
-                <div class="flex gap-2 text-xs">
-                    <button type="button" id="gen-all" class="text-brand hover:underline">Pilih semua</button>
-                    <span class="text-slate-300 dark:text-slate-600">|</span>
-                    <button type="button" id="gen-none" class="text-slate-600 dark:text-slate-400 hover:underline">Kosongkan</button>
+            <div class="flex items-center justify-between mb-3">
+                <div class="display text-sm">GENERASI</div>
+                <div class="flex gap-2">
+                    <button type="button" id="gen-all" class="neo-btn neo-btn-lime px-3 py-1 text-xs">PILIH SEMUA</button>
+                    <button type="button" id="gen-none" class="neo-btn px-3 py-1 text-xs">KOSONGKAN</button>
                 </div>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 @foreach ($generations as $gen)
-                    <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 hover:border-brand">
-                        <input type="checkbox" class="filter-gen w-4 h-4 accent-red-600" value="{{ $gen->id }}" checked>
-                        <span class="truncate">{{ $gen->name }}</span>
+                    <label class="inline-flex items-center gap-2 cursor-pointer neo-chip px-3 py-2">
+                        <input type="checkbox" class="filter-gen neo-check" value="{{ $gen->id }}" checked>
+                        <span class="truncate font-bold">{{ $gen->name }}</span>
                     </label>
                 @endforeach
             </div>
         </div>
 
-        <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-700 pt-4">
-            <div class="text-sm text-slate-600 dark:text-slate-400">
-                <span id="filter-count" class="font-semibold text-slate-900 dark:text-slate-100">0</span> member terpilih
-                <span id="filter-hint" class="text-xs text-slate-400 ml-2">(minimal 2)</span>
+        <div class="flex items-center justify-between border-t-[3px] border-black pt-4">
+            <div class="font-bold">
+                <span id="filter-count" class="display text-2xl">0</span> MEMBER TERPILIH
+                <span id="filter-hint" class="text-xs font-medium ml-2">(minimal 2)</span>
             </div>
-            <button type="button" id="btn-start"
-                    class="bg-brand text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled>
-                Mulai Sorter
+            <button type="button" id="btn-start" class="neo-btn neo-btn-pink px-6 py-3 text-sm" disabled>
+                MULAI SORTER
             </button>
         </div>
     </section>
 
     {{-- ============ STAGE: SORTING ============ --}}
     <section id="stage-sort" class="hidden">
-        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-            <div class="flex items-center justify-between mb-4">
-                <div class="text-sm text-slate-600 dark:text-slate-400">
-                    Perbandingan #<span id="battle-num">1</span>
+        <div class="neo-card p-6">
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <div class="display text-sm">
+                    PERBANDINGAN #<span id="battle-num">1</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button type="button" id="btn-undo" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed" disabled>Undo</button>
-                    <button type="button" id="btn-restart" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Restart</button>
+                    <button type="button" id="btn-undo" class="neo-btn px-3 py-1.5 text-xs" disabled>UNDO</button>
+                    <button type="button" id="btn-restart" class="neo-btn neo-btn-red px-3 py-1.5 text-xs">RESTART</button>
                 </div>
             </div>
 
             <div class="mb-6">
-                <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
-                    <span>Progress</span>
+                <div class="flex justify-between text-xs font-bold mb-2">
+                    <span>PROGRESS</span>
                     <span><span id="progress-pct">0</span>%</span>
                 </div>
-                <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                    <div id="progress-bar" class="h-full gradient-brand transition-all" style="width: 0%"></div>
+                <div class="neo-progress-outer">
+                    <div id="progress-bar" class="neo-progress-inner" style="width: 0%"></div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
-                <button type="button" id="card-left" class="group flex flex-col items-center p-5 bg-slate-50 dark:bg-slate-700/40 border-2 border-slate-200 dark:border-slate-700 rounded-xl hover:border-brand hover:shadow-lg transition">
-                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-600 dark:to-slate-700 mb-3">
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 items-stretch">
+                <button type="button" id="card-left" class="neo-tile p-5 flex flex-col items-center">
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden neo-avatar mb-3">
                         <img id="img-left" alt="" class="w-full h-full object-cover hidden">
-                        <div id="ph-left" class="w-full h-full flex items-center justify-center text-3xl font-bold text-white gradient-brand"></div>
+                        <div id="ph-left" class="w-full h-full flex items-center justify-center text-4xl display text-black"></div>
                     </div>
-                    <div id="name-left" class="font-semibold text-slate-900 dark:text-slate-100 text-center"></div>
-                    <div id="sub-left" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5"></div>
+                    <div id="name-left" class="display text-lg text-center"></div>
+                    <div id="sub-left" class="text-xs font-bold mt-1"></div>
                 </button>
 
                 <div class="flex md:flex-col items-center justify-center gap-3">
-                    <button type="button" id="card-undo" class="px-5 py-2.5 rounded-lg border-2 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:border-brand hover:text-brand transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-slate-300 disabled:hover:text-slate-600 dark:disabled:hover:border-slate-600 dark:disabled:hover:text-slate-300" disabled>
-                        Undo
-                    </button>
-                    <button type="button" id="card-tie" class="px-5 py-2.5 rounded-lg border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:border-brand hover:text-brand transition">
-                        Seri
-                    </button>
-                    <div class="text-xs text-slate-400 hidden md:block">VS</div>
+                    <button type="button" id="card-undo" class="neo-btn px-5 py-2.5 text-sm" disabled>UNDO</button>
+                    <button type="button" id="card-tie" class="neo-btn neo-btn-yellow px-5 py-2.5 text-sm">SERI</button>
+                    <div class="display text-xs hidden md:block">VS</div>
                 </div>
 
-                <button type="button" id="card-right" class="group flex flex-col items-center p-5 bg-slate-50 dark:bg-slate-700/40 border-2 border-slate-200 dark:border-slate-700 rounded-xl hover:border-brand hover:shadow-lg transition">
-                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-600 dark:to-slate-700 mb-3">
+                <button type="button" id="card-right" class="neo-tile p-5 flex flex-col items-center">
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden neo-avatar mb-3">
                         <img id="img-right" alt="" class="w-full h-full object-cover hidden">
-                        <div id="ph-right" class="w-full h-full flex items-center justify-center text-3xl font-bold text-white gradient-brand"></div>
+                        <div id="ph-right" class="w-full h-full flex items-center justify-center text-4xl display text-black"></div>
                     </div>
-                    <div id="name-right" class="font-semibold text-slate-900 dark:text-slate-100 text-center"></div>
-                    <div id="sub-right" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5"></div>
+                    <div id="name-right" class="display text-lg text-center"></div>
+                    <div id="sub-right" class="text-xs font-bold mt-1"></div>
                 </button>
             </div>
 
-            <div class="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
-                Tip: gunakan tombol <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-600 text-xs">←</kbd>
-                / <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-600 text-xs">→</kbd>
-                / <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-600 text-xs">↓</kbd> (seri)
-                atau <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-600 text-xs">U</kbd> (undo).
+            <div class="mt-5 text-center text-xs font-bold">
+                Tip: <kbd class="neo-kbd">←</kbd> <kbd class="neo-kbd">→</kbd> <kbd class="neo-kbd">↓</kbd> (seri) <kbd class="neo-kbd">U</kbd> (undo)
             </div>
         </div>
     </section>
 
     {{-- ============ STAGE: RESULT ============ --}}
     <section id="stage-result" class="hidden">
-        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div class="neo-card p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">Hasil Peringkat</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Berdasarkan pilihan yang kamu buat.</p>
+                    <h2 class="text-2xl">HASIL PERINGKAT</h2>
+                    <p class="text-xs font-bold mt-1">Berdasarkan pilihan yang kamu buat.</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
-                    <div class="inline-flex rounded-lg border border-slate-300 dark:border-slate-600 overflow-hidden text-xs">
-                        <button type="button" data-rank="unique"  class="rank-toggle px-3 py-1.5 font-medium bg-brand text-white">Unik</button>
-                        <button type="button" data-rank="seq"     class="rank-toggle px-3 py-1.5 font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Tie 1,1,2,3</button>
-                        <button type="button" data-rank="skip"    class="rank-toggle px-3 py-1.5 font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Tie 1,1,3,4</button>
+                    <div class="inline-flex text-xs">
+                        <button type="button" data-rank="unique" class="rank-toggle neo-rank-toggle is-active">UNIK</button>
+                        <button type="button" data-rank="seq"    class="rank-toggle neo-rank-toggle" style="border-left: 0;">TIE 1,1,2,3</button>
+                        <button type="button" data-rank="skip"   class="rank-toggle neo-rank-toggle" style="border-left: 0;">TIE 1,1,3,4</button>
                     </div>
-                    <button type="button" id="btn-copy" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Salin Teks</button>
-                    <button type="button" id="btn-shot" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Screenshot</button>
-                    <button type="button" id="btn-again" class="text-xs px-3 py-1.5 rounded-lg bg-brand text-white hover:bg-red-700">Sort Lagi</button>
+                    <button type="button" id="btn-copy" class="neo-btn neo-btn-lime px-3 py-1.5 text-xs">SALIN TEKS</button>
+                    <button type="button" id="btn-shot" class="neo-btn neo-btn-yellow px-3 py-1.5 text-xs">SCREENSHOT</button>
+                    <button type="button" id="btn-again" class="neo-btn neo-btn-pink px-3 py-1.5 text-xs">SORT LAGI</button>
                 </div>
             </div>
 
-            <div id="result-list" class="space-y-2"></div>
+            <div id="result-list" class="space-y-3"></div>
         </div>
     </section>
 
+</div>
 </div>
 
 <script>
     window.SORTER_ITEMS = @json($items);
 </script>
-<script src="{{ asset('js/sorter-member.js') }}?v=2"></script>
+<script src="{{ asset('js/sorter-member.js') }}?v=3"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 @endsection
