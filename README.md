@@ -1,220 +1,154 @@
-# JKT48 Database - Laravel Application
+# JKT48 Database
 
-Aplikasi web lengkap untuk mengelola database JKT48 (member, generasi, single, dan riwayat kapten) dengan dashboard publik dan panel admin.
+Aplikasi web berbasis Laravel untuk mengelola database JKT48 — member, generasi, single (senbatsu), dan riwayat kapten — dengan dashboard publik, panel admin, serta sorter interaktif.
 
-## Struktur File
+Live: <https://jkt48.rebornian48.my.id>
+
+---
+
+## Fitur
+
+### Dashboard publik (`/`)
+- Statistik ringkas: total member, aktif, lulus, generasi, singles.
+- Chart pertumbuhan member harian (Chart.js).
+- Top 10 tenure, top senbatsu, top center.
+- Distribusi usia & birthplace.
+- Kapten aktif per posisi.
+
+### Daftar member (`/members`)
+- Grid kartu member dgn foto, generasi, status.
+- Filter: search text, generasi, status. Pagination.
+
+### Detail member (`/members/{id}`)
+- Profil lengkap, timeline karier, daftar single, riwayat kapten.
+
+### Singles (`/singles`)
+- List semua single dgn jumlah member per single.
+
+### Captains (`/captains`)
+- Timeline kapten per posisi (chart) + riwayat berurutan.
+
+### Sorter interaktif (`/sorter`)
+- **Member sorter** (`/sorter/member`) — merge sort interaktif berbasis perbandingan berpasangan.
+  - Filter status (Aktif/Lulus) + generasi.
+  - Pilih Kiri / Kanan / Seri; keyboard shortcut ← → ↓ U.
+  - Progress bar + undo 1 langkah.
+  - Hasil: toggle ranking Unik / Tie 1,1,2,3 / Tie 1,1,3,4.
+  - Salin teks, screenshot PNG (html2canvas).
+- Arsitektur extensible — tinggal tambah tipe (`song`, `setlist`, dst) di `SorterController`.
+
+### Panel admin (`/admin`)
+- Auth berbasis session (admin/data_jkt48 default).
+- CRUD members, singles, generations, captains.
+
+---
+
+## Tech Stack
+
+- **Backend**: Laravel 13 (PHP 8.3+)
+- **Frontend**: Blade + Tailwind CSS (CDN) + Alpine.js + Chart.js
+- **DB**: MySQL
+- **Deployment**: Hostinger shared hosting via Git auto-deploy
+
+---
+
+## Struktur Proyek
 
 ```
-jkt48-app/
-├── schema.sql                          # Raw SQL schema (untuk setup manual)
-├── database/
-│   ├── migrations/                     # Laravel migrations
-│   │   ├── ..._create_generations_table.php
-│   │   ├── ..._create_singles_table.php
-│   │   ├── ..._create_members_table.php
-│   │   ├── ..._create_member_singles_table.php
-│   │   └── ..._create_captains_table.php
-│   └── seeders/
-│       └── DatabaseSeeder.php          # Import dari Excel
+jkt48_data/
 ├── app/
-│   ├── Models/
-│   │   ├── Generation.php
-│   │   ├── Single.php
-│   │   ├── Member.php
-│   │   └── Captain.php
-│   └── Http/Controllers/
-│       ├── DashboardController.php     # Public dashboard
-│       ├── Controller.php
-│       └── Admin/
-│           ├── MemberController.php
-│           ├── SingleController.php
-│           ├── GenerationController.php
-│           └── CaptainController.php
+│   ├── Http/Controllers/
+│   │   ├── DashboardController.php     # halaman publik
+│   │   ├── LoginController.php
+│   │   ├── SorterController.php        # sorter (extensible per type)
+│   │   └── Admin/                      # CRUD admin
+│   └── Models/
+│       ├── Member.php   Generation.php   Single.php   Captain.php
+├── database/
+│   ├── migrations/                     # schema Laravel
+│   └── seeders/                        # import dari Excel
 ├── resources/views/
-│   ├── layouts/
-│   │   ├── app.blade.php               # Layout dashboard publik
-│   │   └── admin.blade.php             # Layout admin dengan sidebar
-│   ├── dashboard/
-│   │   ├── index.blade.php             # Main dashboard (stats + chart)
-│   │   ├── members.blade.php           # Public members list
-│   │   └── member.blade.php            # Public member detail
-│   └── admin/
-│       ├── members/                    # Admin CRUD members
-│       ├── singles/                    # Admin CRUD singles
-│       ├── generations/                # Admin CRUD generations
-│       └── captains/                   # Admin CRUD captains
-└── routes/
-    └── web.php
+│   ├── layouts/         app.blade.php   admin.blade.php
+│   ├── dashboard/       index / members / member / singles / captains
+│   ├── admin/           CRUD per entitas
+│   ├── auth/            login
+│   └── sorter/          index / member
+├── public/
+│   ├── js/sorter-member.js             # algoritma merge sort interaktif
+│   └── .htaccess                       # Laravel front-controller
+├── routes/web.php
+├── composer.json  composer.lock
+├── schema.sql                          # raw SQL (setup manual)
+├── DEPLOY.md                           # panduan deploy Hostinger
+├── INSTALL.md                          # setup lokal
+└── CHANGELOG.md
 ```
 
-## Setup Instructions
+---
 
-### 1. Buat proyek Laravel baru
+## Setup Lokal
+
+Lihat [INSTALL.md](INSTALL.md).
+
+Ringkas:
 
 ```bash
-composer create-project laravel/laravel jkt48-app
-cd jkt48-app
-```
-
-### 2. Copy file dari paket ini
-
-Copy folder `app/`, `database/`, `resources/`, dan `routes/` ke proyek Laravel-mu (overwrite yang ada).
-
-### 3. Install dependency untuk Excel seeder
-
-```bash
-composer require phpoffice/phpspreadsheet
-```
-
-### 4. Setup database (`.env`)
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=jkt48_db
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Buat database dulu:
-```sql
-CREATE DATABASE jkt48_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-### 5. Jalankan migration
-
-```bash
-php artisan migrate
-```
-
-### 6. Seed dari Excel
-
-Copy file Excel ke `database/seeders/data/JKT48_Database.xlsx`, lalu:
-
-```bash
-php artisan db:seed
-```
-
-### 7. (Opsional) Setup auth
-
-Route admin dilindungi middleware `auth`. Install starter kit:
-
-```bash
-composer require laravel/breeze --dev
-php artisan breeze:install blade
-npm install && npm run build
-php artisan migrate
-```
-
-Buat user admin lewat `php artisan tinker`:
-
-```php
-User::create([
-    'name' => 'Admin',
-    'email' => 'admin@jkt48.local',
-    'password' => bcrypt('password'),
-]);
-```
-
-### 8. Jalankan server
-
-```bash
+git clone git@github.com:Rebornian48/data.git jkt48_data
+cd jkt48_data
+composer install
+cp .env.example .env
+php artisan key:generate
+# edit .env: DB_DATABASE, DB_USERNAME, DB_PASSWORD
+php artisan migrate --seed
 php artisan serve
 ```
 
-Buka `http://localhost:8000` untuk dashboard publik dan `http://localhost:8000/admin` untuk panel admin (login dulu).
+---
 
-## Setup Alternatif (Tanpa Laravel)
+## Deploy
 
-Kalau cuma butuh database saja, jalankan `schema.sql` langsung di MySQL/MariaDB:
+Lihat [DEPLOY.md](DEPLOY.md).
 
-```bash
-mysql -u root -p jkt48_db < schema.sql
+Ringkas:
+1. Hostinger hPanel → Git → connect repo GitHub `Rebornian48/data`.
+2. Branch `main`, deploy path `public_html`.
+3. Setelah first deploy, SSH ke server:
+   ```bash
+   cd ~/domains/jkt48.rebornian48.my.id/public_html
+   cp .env.example .env
+   php artisan key:generate --force
+   # edit .env: DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD, APP_URL, APP_ENV=production, APP_DEBUG=false
+   mkdir -p storage/framework/{cache/data,sessions,views} storage/logs bootstrap/cache
+   chmod -R 775 storage bootstrap/cache
+   php artisan migrate
+   php artisan config:clear
+   ```
+4. Enable **Deploy otomatis** — push berikutnya trigger sendiri.
+
+---
+
+## Extensibility Sorter
+
+Nambah sorter baru (contoh `song`):
+
+1. `SorterController.php` — tambah `'song'` ke `SUPPORTED_TYPES`, buat method `dataSong()` yang return array dgn key: `sorterTitle`, `sorterSubtitle`, `items` (schema `{id, name, photo, ...}`).
+2. Copy `resources/views/sorter/member.blade.php` → `song.blade.php`, sesuaikan filter panel.
+3. Reuse `public/js/sorter-member.js` (atau generalize jadi `sorter-core.js` kalau logic sama persis).
+4. URL `/sorter/song` otomatis jalan lewat route dinamis existing.
+
+---
+
+## Kredensial Admin Default
+
+```
+username: admin
+password: data_jkt48
 ```
 
-File ini sudah berisi view `v_member_stats` dan `v_generation_summary` yang siap dipakai untuk reporting.
+Ganti setelah deploy pertama — lihat `LoginController`.
 
-## Fitur Utama
+---
 
-### Dashboard Publik (`/`)
-- Statistik total member, aktif, lulus, generasi, single
-- Chart member per generasi (stacked bar: aktif vs lulus)
-- Chart distribusi usia (donut)
-- Kapten yang sedang menjabat
-- Top 10 tenure terlama
-- Top 10 senbatsu terbanyak
-- Top center
-- Top 10 kota kelahiran (progress bar)
+## Lisensi
 
-### Halaman Member Publik (`/members`)
-- Filter berdasarkan nama, generasi, status
-- Grid cards dengan foto/inisial
-- Pagination
-
-### Detail Member (`/members/{id}`)
-- Profil lengkap
-- Timeline karier visual (masuk, promosi, umumkan lulus, lulus)
-- Daftar partisipasi single (dengan label center)
-- Riwayat kapten
-- Statistik: tahun aktif, jumlah senbatsu, center
-
-### Admin Panel (`/admin`)
-- **Members**: CRUD lengkap dengan form 2-kolom (identitas + karier + kelulusan), pilih partisipasi single per member dengan role member/center
-- **Generasi**: CRUD dengan info tanggal masuk, deskripsi
-- **Single**: CRUD dengan info judul, kode, tanggal rilis, jumlah senbatsu & center
-- **Kapten**: CRUD riwayat kapten dengan durasi otomatis
-
-## Model Relationships
-
-```php
-// Member belongs to Generation
-$member->generation;
-
-// Member has many Singles (many-to-many)
-$member->singles;
-$member->centerSingles;
-
-// Member has many Captain records
-$member->captains;
-
-// Generation has many Members
-$generation->members;
-$generation->activeMembers;
-$generation->graduatedMembers;
-
-// Single has many Members (many-to-many)
-$single->members;
-$single->centers;
-
-// Captain belongs to Member
-$captain->member;
-```
-
-## Computed Attributes
-
-Model `Member` punya accessor otomatis:
-- `$member->current_age` — usia saat ini (atau saat lulus)
-- `$member->age_at_join` — usia saat masuk
-- `$member->days_in_jkt48` — total hari sebagai member
-- `$member->years_in_jkt48` — total tahun (rounded 1 desimal)
-- `$member->totalSenbatsu()` — jumlah single yang diikuti
-- `$member->totalCenter()` — jumlah center
-
-## Scopes
-
-```php
-// Members
-Member::active()->get();                       // Semua yang aktif
-Member::graduated()->get();                    // Semua yang lulus
-Member::search('freya')->get();                // Cari nama/panggilan/kota
-Member::byGeneration($genId)->get();           // Filter by generation
-
-// Captains
-Captain::active()->get();                      // Yang masih menjabat
-Captain::position('Kapten JKT48')->get();      // Filter posisi
-```
-
-## Styling
-
-Semua view pakai **Tailwind CSS via CDN** (untuk kemudahan setup), dengan font Inter. Brand color JKT48 merah `#E60012`. Chart pakai **Chart.js**. Kalau mau produksi, sebaiknya install Tailwind lokal via `npm`.
+Proyek internal — tidak untuk redistribusi tanpa izin.
