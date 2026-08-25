@@ -34,13 +34,109 @@
         font-weight: 700; font-size: .75rem;
         border: 1px solid #e2e8f0;
     }
+    .restruk-header {
+        display: flex; align-items: center; gap: 1.25rem; margin-bottom: 2rem;
+    }
+    .restruk-sakura {
+        width: 88px; height: 88px; flex-shrink: 0;
+        object-fit: contain;
+    }
+    .restruk-title {
+        font-size: 3rem; line-height: 1.05; font-weight: 900;
+        color: #831843; letter-spacing: -0.02em; margin: 0;
+    }
+    .restruk-subtitle {
+        font-size: 1.5rem; font-weight: 700; color: #475569; margin-top: .25rem;
+    }
+    @media (max-width: 640px) {
+        .restruk-sakura { width: 56px; height: 56px; }
+        .restruk-title { font-size: 2rem; }
+        .restruk-subtitle { font-size: 1.05rem; }
+    }
+    .carousel {
+        position: relative; overflow: hidden; border: 3px solid #000;
+        border-radius: 1rem; background: #000; box-shadow: 6px 6px 0 #000;
+        margin-bottom: 2.5rem;
+    }
+    .carousel-track {
+        display: flex; transition: transform .5s ease;
+    }
+    .carousel-slide {
+        flex: 0 0 100%; position: relative;
+    }
+    .carousel-slide img {
+        display: block; width: 100%; height: auto; max-height: 70vh; object-fit: cover;
+    }
+    .carousel-caption {
+        position: absolute; left: 0; right: 0; bottom: 0;
+        padding: 1.25rem 1.5rem;
+        background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
+        color: #fff;
+        font-family: 'Archivo Black', 'Space Grotesk', sans-serif;
+        font-size: 2.5rem; letter-spacing: .04em; text-transform: uppercase;
+    }
+    @media (max-width: 640px) {
+        .carousel-caption { font-size: 1.35rem; padding: .75rem 1rem; }
+    }
+    .carousel-btn {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        width: 48px; height: 48px; border-radius: 9999px;
+        background: rgba(255,255,255,.9); color: #000; font-weight: 900;
+        border: 3px solid #000; cursor: pointer; z-index: 3;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+    }
+    .carousel-btn:hover { background: #ff6b9d; color: #fff; }
+    .carousel-btn.prev { left: 1rem; }
+    .carousel-btn.next { right: 1rem; }
+    .carousel-dots {
+        position: absolute; bottom: .75rem; left: 50%; transform: translateX(-50%);
+        display: flex; gap: .5rem; z-index: 2;
+    }
+    .carousel-dot {
+        width: 12px; height: 12px; border-radius: 9999px;
+        background: rgba(255,255,255,.5); border: 2px solid #000; cursor: pointer;
+    }
+    .carousel-dot.active { background: #ff6b9d; }
 </style>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold text-slate-900 mb-1">Restrukturisasi</h1>
-        <p class="text-slate-500">Member yang lulus pada 11 Maret 2021 &ndash; 14 Maret 2021.</p>
+    <div class="restruk-header">
+        <img src="{{ asset('img/restrukturisasi/sakura.png') }}" alt="Sakura" class="restruk-sakura"
+             onerror="this.style.display='none'">
+        <div>
+            <h1 class="restruk-title">RESTRUKTURISASI</h1>
+            <p class="restruk-subtitle">Upacara Kelulusan Khusus JKT48 &middot; 11&ndash;14 Maret 2021</p>
+        </div>
+    </div>
+
+    {{-- Carousel --}}
+    @php
+        $slides = [
+            ['file' => 'restrukturisasi-1.jpg', 'caption' => 'Semua Member'],
+            ['file' => 'restrukturisasi-2.jpg', 'caption' => 'Team J'],
+            ['file' => 'restrukturisasi-3.jpg', 'caption' => 'Team KIII'],
+            ['file' => 'restrukturisasi-4.jpg', 'caption' => 'Team T'],
+            ['file' => 'restrukturisasi-5.jpg', 'caption' => 'Academy Class A'],
+        ];
+    @endphp
+    <div class="carousel" id="restrukCarousel" data-count="{{ count($slides) }}">
+        <div class="carousel-track">
+            @foreach ($slides as $s)
+                <div class="carousel-slide">
+                    <img src="{{ asset('img/restrukturisasi/' . $s['file']) }}" alt="{{ $s['caption'] }}">
+                    <div class="carousel-caption">{{ $s['caption'] }}</div>
+                </div>
+            @endforeach
+        </div>
+        <button type="button" class="carousel-btn prev" aria-label="Sebelumnya">&#10094;</button>
+        <button type="button" class="carousel-btn next" aria-label="Berikutnya">&#10095;</button>
+        <div class="carousel-dots">
+            @foreach ($slides as $i => $s)
+                <span class="carousel-dot {{ $i === 0 ? 'active' : '' }}" data-idx="{{ $i }}"></span>
+            @endforeach
+        </div>
     </div>
 
     {{-- Stats per generation --}}
@@ -117,6 +213,36 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        (function () {
+            var car = document.getElementById('restrukCarousel');
+            if (!car) return;
+            var track = car.querySelector('.carousel-track');
+            var slides = car.querySelectorAll('.carousel-slide');
+            var dots = car.querySelectorAll('.carousel-dot');
+            var count = slides.length;
+            var idx = 0;
+            var timer = null;
+
+            function go(i) {
+                idx = (i + count) % count;
+                track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+                dots.forEach(function (d, di) { d.classList.toggle('active', di === idx); });
+            }
+            function next() { go(idx + 1); }
+            function prev() { go(idx - 1); }
+            function restart() {
+                if (timer) clearInterval(timer);
+                timer = setInterval(next, 5000);
+            }
+
+            car.querySelector('.carousel-btn.next').addEventListener('click', function () { next(); restart(); });
+            car.querySelector('.carousel-btn.prev').addEventListener('click', function () { prev(); restart(); });
+            dots.forEach(function (d) {
+                d.addEventListener('click', function () { go(parseInt(d.dataset.idx, 10)); restart(); });
+            });
+            restart();
+        })();
+
         document.querySelectorAll('table.sortable').forEach(function (table) {
             var ths = table.querySelectorAll('thead th');
             ths.forEach(function (th, idx) {
