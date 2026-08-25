@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class MatchMemberPhotos extends Command
 {
     protected $signature = 'members:match-photos {--dir=img : Public sub-directory containing the photos}
+                                                  {--url-prefix= : URL prefix written to photo_url (default: /{dir}). Use e.g. /public/img when the app is served from a /public sub-path.}
                                                   {--dry-run : Only report; do not write to DB}
                                                   {--overwrite : Replace existing photo_url values}';
     protected $description = 'Match files in public/{dir} to members by name and set photo_url.';
@@ -109,7 +110,8 @@ class MatchMemberPhotos extends Command
 
             /** @var Member $picked */
             $matches[$filename] = $picked;
-            $newUrl = '/'.$dir.'/'.$filename;
+            $prefix = rtrim($this->option('url-prefix') ?: ('/'.$dir), '/');
+            $newUrl = $prefix.'/'.$filename;
             $current = $picked->photo_url;
 
             if ($current === $newUrl) { $skipped++; continue; }
