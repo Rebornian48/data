@@ -138,7 +138,7 @@ class Member extends Model
             $endDate = $this->status === 'Lulus' && $this->graduation_date
                 ? $this->graduation_date
                 : now();
-            return $this->birth_date->diffInYears($endDate);
+            return round($this->birth_date->diffInDays($endDate) / 365.25, 2);
         });
     }
 

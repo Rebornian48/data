@@ -53,7 +53,7 @@
                         @if ($member->current_age)
                             <div class="flex justify-between">
                                 <dt class="text-slate-500 dark:text-slate-400">Umur</dt>
-                                <dd class="font-semibold text-slate-900 dark:text-slate-100">{{ $member->current_age }} tahun</dd>
+                                <dd class="font-semibold text-slate-900 dark:text-slate-100">{{ number_format($member->current_age, 2, ',', '.') }} tahun</dd>
                             </div>
                         @endif
                     </dl>
@@ -64,8 +64,8 @@
         <div class="md:col-span-2 space-y-6">
             <div class="grid grid-cols-3 gap-3">
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 text-center">
-                    <div class="text-3xl font-bold text-brand">{{ $member->years_in_jkt48 ?? '-' }}</div>
-                    <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Tahun di JKT48</div>
+                    <div class="text-3xl font-bold text-brand">{{ $member->days_in_jkt48 !== null ? number_format($member->days_in_jkt48, 0, ',', '.') : '-' }}</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Hari di JKT48</div>
                 </div>
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 text-center">
                     <div class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ $member->totalSenbatsu() }}</div>
