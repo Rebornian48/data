@@ -14,6 +14,31 @@ class MatchMemberPhotos extends Command
                                                   {--overwrite : Replace existing photo_url values}';
     protected $description = 'Match files in public/{dir} to members by name and set photo_url.';
 
+    /**
+     * Explicit filename -> exact member name overrides.
+     * Use these when tokenized matching cannot bridge a spelling gap
+     * (Celline Thefani vs Thefannie, Gabriella vs Gabriela …) or when
+     * two members share every token from a filename.
+     */
+    private array $overrides = [
+        // Spelling / prefix / generation-code mismatches
+        'CELLINE_THEFANI.jpg'            => 'Celline Thefannie',
+        'Gen1_aki_takajo.jpg'            => 'Aki Takajo',
+        'Gen1_gabriella.jpg'             => 'Gabriela Margareth Warouw',
+        'Gen1_haruka_nakagawa.jpg'       => 'Haruka Nakagawa',
+        'Gen2_rina_chikano.jpg'          => 'Rina Chikano',
+        'Gen6_Saya_Kawamoto.webp'        => 'Saya Kawamoto',
+        'Gen9_iris_vevina_prasetio.webp' => 'Iris Vevina Prasetio',
+        'JKT48VGen1_Kanaia_Asa.webp'     => 'Kanaia Asa',
+        'JKT48VGen1_Tana_Nona.jpg'       => 'Tana Nona',
+        'JKT48VGen2_Sami_Maono.png'      => 'Sami Maono',
+
+        // Ambiguous — force preferred candidate
+        'AURELLIA.jpg'                   => 'Aurellia',
+        'DESY_NATALIA.jpg'               => 'Desy Natalia Ang',
+        'Gen2_thalia.webp'               => 'Thalia',
+    ];
+
     public function handle(): int
     {
         $dir = trim($this->option('dir'), '/');
@@ -29,60 +54,78 @@ class MatchMemberPhotos extends Command
 
         $members = Member::with('generation:id,code')->get(['id', 'name', 'nickname', 'photo_url', 'generation_id']);
 
-        $matches   = [];   // filename => Member
-        $orphans   = [];   // filenames with no member match
-        $ambiguous = [];   // filenames with >1 match
+        $matches   = [];
+        $orphans   = [];
+        $ambiguous = [];
         $updated   = 0;
         $skipped   = 0;
 
         foreach ($files as $file) {
             $filename = $file->getFilename();
-            $tokens = $this->fileTokens($filename);
-            $genHint = $this->extractGenHint($filename);
 
-            $candidates = $members->filter(function (Member $m) use ($tokens, $genHint) {
-                $nameNorm = $this->normalize($m->name . ' ' . ($m->nickname ?: ''));
-                foreach ($tokens as $t) {
-                    if (! Str::contains($nameNorm, $t)) return false;
+            // ---- 1. explicit override ----
+            $picked = null;
+            if (isset($this->overrides[$filename])) {
+                $picked = $members->firstWhere('name', $this->overrides[$filename]);
+                if (! $picked) {
+                    $orphans[] = "{$filename}  (override target '{$this->overrides[$filename]}' not in DB)";
+                    continue;
                 }
-                if ($genHint !== null && $m->generation && $m->generation->code !== $genHint) {
-                    return false;
-                }
-                return true;
-            });
-
-            if ($candidates->isEmpty()) {
-                $orphans[] = $filename;
-                continue;
-            }
-            if ($candidates->count() > 1) {
-                $ambiguous[$filename] = $candidates->pluck('name')->all();
-                continue;
             }
 
-            /** @var Member $m */
-            $m = $candidates->first();
-            $matches[$filename] = $m;
+            // ---- 2. tokenized name match ----
+            if (! $picked) {
+                $tokens = $this->fileTokens($filename);
+                if (! $tokens) { $orphans[] = $filename; continue; }
+                $genHint = $this->extractGenHint($filename);
 
+                $scored = $members->map(function (Member $m) use ($tokens, $genHint) {
+                    $nameNorm = $this->normalize($m->name . ' ' . ($m->nickname ?: ''));
+                    $nameWords = preg_split('/\s+/', $nameNorm);
+
+                    foreach ($tokens as $t) {
+                        if (! Str::contains($nameNorm, $t)) return null;
+                    }
+
+                    // Score: fewer extra name words = better; gen hint match = bonus
+                    $extraWords = max(0, count($nameWords) - count($tokens));
+                    $score = -$extraWords;
+                    if ($genHint !== null && $m->generation && stripos($m->generation->code, $genHint) !== false) {
+                        $score += 5;
+                    }
+                    return ['member' => $m, 'score' => $score];
+                })->filter()->sortByDesc('score')->values();
+
+                if ($scored->isEmpty()) { $orphans[] = $filename; continue; }
+
+                $top = $scored->first();
+                $tie = $scored->where('score', $top['score']);
+                if ($tie->count() > 1) {
+                    $ambiguous[$filename] = $tie->pluck('member.name')->all();
+                    continue;
+                }
+                $picked = $top['member'];
+            }
+
+            /** @var Member $picked */
+            $matches[$filename] = $picked;
             $newUrl = '/'.$dir.'/'.$filename;
-            $current = $m->photo_url;
+            $current = $picked->photo_url;
 
             if ($current === $newUrl) { $skipped++; continue; }
             if ($current && ! $this->option('overwrite')) { $skipped++; continue; }
 
             if (! $this->option('dry-run')) {
-                $m->photo_url = $newUrl;
-                $m->save();
+                $picked->photo_url = $newUrl;
+                $picked->save();
             }
             $updated++;
         }
 
-        // Members without a matched file
+        // Members without any photo (neither matched nor pre-existing)
         $matchedIds = collect($matches)->pluck('id')->all();
         $membersWithoutPhoto = $members->filter(function (Member $m) use ($matchedIds) {
-            $hasFileMatch = in_array($m->id, $matchedIds, true);
-            $hasStoredPhoto = ! empty($m->photo_url);
-            return ! $hasFileMatch && ! $hasStoredPhoto;
+            return ! in_array($m->id, $matchedIds, true) && empty($m->photo_url);
         });
 
         // ---------- Report ----------
@@ -94,7 +137,7 @@ class MatchMemberPhotos extends Command
         $this->warn("Orphan files (no member match): " . count($orphans));
         foreach ($orphans as $o) $this->line("   - {$o}");
         if ($ambiguous) {
-            $this->warn("Ambiguous files (matched multiple members):");
+            $this->warn("Ambiguous files (matched multiple members with equal score):");
             foreach ($ambiguous as $f => $names) {
                 $this->line("   - {$f}  ->  " . implode(' | ', $names));
             }
@@ -108,12 +151,11 @@ class MatchMemberPhotos extends Command
         return self::SUCCESS;
     }
 
-    /** Extract meaningful name tokens from a filename. */
     private function fileTokens(string $filename): array
     {
         $base = pathinfo($filename, PATHINFO_FILENAME);
-        // strip generation prefix like Gen1_ / Gen10_ / GenV1_
-        $base = preg_replace('/^Gen[A-Za-z0-9]+_/i', '', $base);
+        // Strip common generation prefixes: Gen1_, Gen10_, GenV1_, JKT48VGen1_, JKT48VGen2_, etc.
+        $base = preg_replace('/^(?:JKT48)?V?Gen[A-Za-z0-9]+_/i', '', $base);
         $base = strtolower($base);
         $base = str_replace(['-', '.'], '_', $base);
         $tokens = array_filter(explode('_', $base), fn ($t) => $t !== '' && strlen($t) >= 2);
@@ -122,9 +164,8 @@ class MatchMemberPhotos extends Command
 
     private function extractGenHint(string $filename): ?string
     {
-        if (preg_match('/^Gen([A-Za-z0-9]+)_/i', $filename, $m)) {
+        if (preg_match('/^(?:JKT48)?V?Gen([A-Za-z0-9]+)_/i', $filename, $m)) {
             $code = $m[1];
-            // Normalize numeric strings (e.g. "01" -> "1")
             if (ctype_digit($code)) $code = (string) intval($code);
             return $code;
         }
