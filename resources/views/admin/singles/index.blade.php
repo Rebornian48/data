@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Singles')
+@section('title', 'Single')
 @section('page_title', 'Kelola Single')
 
 @section('content')
@@ -13,15 +13,15 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+        <table class="w-full text-sm sortable">
+            <thead class="text-xs uppercase">
                 <tr>
                     <th class="px-4 py-3 text-left">Kode</th>
                     <th class="px-4 py-3 text-left">Judul</th>
                     <th class="px-4 py-3 text-left">Rilis</th>
                     <th class="px-4 py-3 text-center">Senbatsu</th>
                     <th class="px-4 py-3 text-center">Center</th>
-                    <th class="px-4 py-3 text-right">Aksi</th>
+                    <th class="px-4 py-3 text-right" data-nosort>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -33,7 +33,7 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 font-medium text-slate-900">{{ $single->title }}</td>
-                        <td class="px-4 py-3 text-slate-600">{{ $single->release_date?->format('d M Y') ?? '-' }}</td>
+                        <td class="px-4 py-3 text-slate-600" data-sort="{{ $single->release_date?->format('Y-m-d') ?? '' }}">{{ $single->release_date?->format('d M Y') ?? '-' }}</td>
                         <td class="px-4 py-3 text-center font-semibold text-slate-900">{{ $single->members_count }}</td>
                         <td class="px-4 py-3 text-center">
                             @if ($single->center_count > 0)

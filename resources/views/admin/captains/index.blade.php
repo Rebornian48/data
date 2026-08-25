@@ -12,15 +12,15 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+        <table class="w-full text-sm sortable">
+            <thead class="text-xs uppercase">
                 <tr>
                     <th class="px-4 py-3 text-left">Nama</th>
                     <th class="px-4 py-3 text-left">Posisi</th>
                     <th class="px-4 py-3 text-left">Mulai</th>
                     <th class="px-4 py-3 text-left">Berakhir</th>
                     <th class="px-4 py-3 text-center">Durasi</th>
-                    <th class="px-4 py-3 text-right">Aksi</th>
+                    <th class="px-4 py-3 text-right" data-nosort>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -32,11 +32,11 @@
                                 {{ $captain->position }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-slate-600">{{ $captain->start_date->format('d M Y') }}</td>
-                        <td class="px-4 py-3 text-slate-600">
+                        <td class="px-4 py-3 text-slate-600" data-sort="{{ $captain->start_date->format('Y-m-d') }}">{{ $captain->start_date->format('d M Y') }}</td>
+                        <td class="px-4 py-3 text-slate-600" data-sort="{{ $captain->end_date?->format('Y-m-d') ?? '9999-12-31' }}">
                             {{ $captain->end_date?->format('d M Y') ?? 'Sekarang' }}
                         </td>
-                        <td class="px-4 py-3 text-center font-semibold">
+                        <td class="px-4 py-3 text-center font-semibold" data-sort="{{ $captain->duration_days }}">
                             {{ number_format($captain->duration_days) }}
                             <span class="text-xs text-slate-500 font-normal">hari</span>
                         </td>

@@ -24,19 +24,23 @@
                     <div class="hidden md:flex items-center gap-6">
                         <a href="{{ route('dashboard') }}"
                            class="text-sm font-bold {{ request()->routeIs('dashboard') ? 'underline' : 'hover:underline' }}">
-                            DASHBOARD
+                            BERANDA
                         </a>
                         <a href="{{ route('members.index') }}"
                            class="text-sm font-bold {{ request()->routeIs('members.*') ? 'underline' : 'hover:underline' }}">
-                            MEMBERS
+                            MEMBER
                         </a>
                         <a href="{{ route('singles.index') }}"
                            class="text-sm font-bold {{ request()->routeIs('singles.*') ? 'underline' : 'hover:underline' }}">
-                            SINGLES
+                            SINGLE
                         </a>
                         <a href="{{ route('captains.index') }}"
                            class="text-sm font-bold {{ request()->routeIs('captains.*') ? 'underline' : 'hover:underline' }}">
-                            CAPTAINS
+                            KAPTEN
+                        </a>
+                        <a href="{{ route('restrukturisasi.index') }}"
+                           class="text-sm font-bold {{ request()->routeIs('restrukturisasi.*') ? 'underline' : 'hover:underline' }}">
+                            RESTRUKTURISASI
                         </a>
                         <a href="{{ route('sorter.index') }}"
                            class="text-sm font-bold {{ request()->routeIs('sorter.*') ? 'underline' : 'hover:underline' }}">

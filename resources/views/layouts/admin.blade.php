@@ -13,7 +13,64 @@
             color: #000 !important;
             border-right: 6px solid #000 !important;
         }
+        table.sortable thead th {
+            background: #fce7f3 !important;
+            color: #831843 !important;
+            font-weight: 700;
+        }
+        table.sortable thead th[data-sortable="true"] {
+            cursor: pointer;
+            user-select: none;
+        }
+        table.sortable thead th[data-sortable="true"]:hover {
+            background: #fbcfe8 !important;
+        }
+        table.sortable thead th[data-sortable="true"]::after {
+            content: " \2195";
+            opacity: .4;
+            font-size: .8em;
+        }
+        table.sortable thead th.sort-asc::after { content: " \25B2"; opacity: 1; }
+        table.sortable thead th.sort-desc::after { content: " \25BC"; opacity: 1; }
+        .admin-filter-btn {
+            background: #ff6b9d;
+            color: #000;
+            font-weight: 700;
+            border: 2px solid #000;
+        }
+        .admin-filter-btn:hover { background: #ff4d8b; }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('table.sortable').forEach(function (table) {
+                var ths = table.querySelectorAll('thead th');
+                ths.forEach(function (th, idx) {
+                    if (th.hasAttribute('data-nosort')) return;
+                    th.setAttribute('data-sortable', 'true');
+                    th.addEventListener('click', function () {
+                        var tbody = table.querySelector('tbody');
+                        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr')).filter(function (r) {
+                            return r.children.length === ths.length;
+                        });
+                        var asc = !th.classList.contains('sort-asc');
+                        ths.forEach(function (x) { x.classList.remove('sort-asc', 'sort-desc'); });
+                        th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+                        rows.sort(function (a, b) {
+                            var av = (a.children[idx].getAttribute('data-sort') || a.children[idx].textContent).trim();
+                            var bv = (b.children[idx].getAttribute('data-sort') || b.children[idx].textContent).trim();
+                            var na = parseFloat(av.replace(/[^\d.\-]/g, ''));
+                            var nb = parseFloat(bv.replace(/[^\d.\-]/g, ''));
+                            if (!isNaN(na) && !isNaN(nb) && av.match(/\d/) && bv.match(/\d/)) {
+                                return asc ? na - nb : nb - na;
+                            }
+                            return asc ? av.localeCompare(bv, 'id') : bv.localeCompare(av, 'id');
+                        });
+                        rows.forEach(function (r) { tbody.appendChild(r); });
+                    });
+                });
+            });
+        });
+    </script>
 </head>
 <body class="neo-body">
     <div class="flex min-h-screen">
@@ -40,7 +97,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
-                    MEMBERS
+                    MEMBER
                 </a>
                 <a href="{{ route('admin.generations.index') }}"
                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.generations.*') ? 'active' : '' }}">
@@ -67,7 +124,7 @@
 
             <div class="p-4 space-y-2" style="border-top:3px solid #000;">
                 <a href="{{ route('dashboard') }}" class="text-sm text-black font-bold hover:underline flex items-center gap-2">
-                    &larr; KEMBALI KE DASHBOARD
+                    &larr; KEMBALI KE BERANDA
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -81,7 +138,7 @@
         {{-- Main content --}}
         <div class="flex-1 overflow-x-auto">
             <header class="px-8 py-4" style="background:#fff;border-bottom:3px solid #000;">
-                <h1 class="text-2xl display text-black">@yield('page_title', 'Dashboard')</h1>
+                <h1 class="text-2xl display text-black">@yield('page_title', 'Beranda')</h1>
                 @hasSection('page_subtitle')
                     <p class="text-sm font-bold text-black mt-1">@yield('page_subtitle')</p>
                 @endif

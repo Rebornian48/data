@@ -12,15 +12,15 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+        <table class="w-full text-sm sortable">
+            <thead class="text-xs uppercase">
                 <tr>
                     <th class="px-4 py-3 text-left">Kode</th>
                     <th class="px-4 py-3 text-left">Nama</th>
                     <th class="px-4 py-3 text-left">Tanggal Masuk</th>
                     <th class="px-4 py-3 text-center">Total Member</th>
                     <th class="px-4 py-3 text-center">Aktif</th>
-                    <th class="px-4 py-3 text-right">Aksi</th>
+                    <th class="px-4 py-3 text-right" data-nosort>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -32,7 +32,7 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 font-medium text-slate-900">{{ $gen->name }}</td>
-                        <td class="px-4 py-3 text-slate-600">{{ $gen->join_date?->format('d M Y') ?? '-' }}</td>
+                        <td class="px-4 py-3 text-slate-600" data-sort="{{ $gen->join_date?->format('Y-m-d') ?? '' }}">{{ $gen->join_date?->format('d M Y') ?? '-' }}</td>
                         <td class="px-4 py-3 text-center font-semibold">{{ $gen->members_count }}</td>
                         <td class="px-4 py-3 text-center">
                             <span class="text-green-600 font-semibold">{{ $gen->active_count }}</span>

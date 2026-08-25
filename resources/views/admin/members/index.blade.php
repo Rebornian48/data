@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Members')
+@section('title', 'Member')
 @section('page_title', 'Kelola Member')
 @section('page_subtitle', 'Manajemen data seluruh member JKT48')
 
@@ -21,7 +21,7 @@
                 <option value="Aktif" @selected(request('status') == 'Aktif')>Aktif</option>
                 <option value="Lulus" @selected(request('status') == 'Lulus')>Lulus</option>
             </select>
-            <button class="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm hover:bg-slate-800">Filter</button>
+            <button class="admin-filter-btn px-4 py-2 rounded-lg text-sm">Filter</button>
         </form>
         <a href="{{ route('admin.members.create') }}" class="bg-brand text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 whitespace-nowrap">
             + Tambah Member
@@ -29,15 +29,15 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+        <table class="w-full text-sm sortable">
+            <thead class="text-xs uppercase">
                 <tr>
                     <th class="px-4 py-3 text-left">Nama</th>
                     <th class="px-4 py-3 text-left">Panggilan</th>
                     <th class="px-4 py-3 text-left">Generasi</th>
                     <th class="px-4 py-3 text-left">Bergabung</th>
                     <th class="px-4 py-3 text-left">Status</th>
-                    <th class="px-4 py-3 text-right">Aksi</th>
+                    <th class="px-4 py-3 text-right" data-nosort>Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -50,7 +50,7 @@
                                 {{ $member->generation->code }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-slate-600">{{ $member->join_date?->format('d M Y') ?? '-' }}</td>
+                        <td class="px-4 py-3 text-slate-600" data-sort="{{ $member->join_date?->format('Y-m-d') ?? '' }}">{{ $member->join_date?->format('d M Y') ?? '-' }}</td>
                         <td class="px-4 py-3">
                             <span class="text-xs px-2 py-0.5 rounded-full font-medium
                                 {{ $member->status === 'Aktif' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600' }}">

@@ -163,6 +163,27 @@ class DashboardController extends Controller
         return view('dashboard.singles', compact('singles'));
     }
 
+    public function restrukturisasi()
+    {
+        $start = '2021-03-11';
+        $end = '2021-03-14';
+
+        $members = Member::with('generation')
+            ->whereBetween('graduation_date', [$start, $end])
+            ->orderBy('name')
+            ->get();
+
+        $generations = $members->groupBy('generation_id')->map(function ($group) {
+            $gen = $group->first()->generation;
+            $gen->members_count = $group->count();
+            return $gen;
+        })->sortBy(function ($gen) {
+            return is_numeric($gen->code) ? (int) $gen->code : 999;
+        })->values();
+
+        return view('dashboard.restrukturisasi', compact('generations', 'members'));
+    }
+
     public function captains()
     {
         $captains = Captain::with('member.generation')

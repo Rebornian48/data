@@ -48,7 +48,7 @@
 
         <div class="text-center mt-6">
             <a href="{{ route('dashboard') }}" class="text-sm font-bold hover:underline">
-                &larr; KEMBALI KE DASHBOARD
+                &larr; KEMBALI KE BERANDA
             </a>
         </div>
     </div>

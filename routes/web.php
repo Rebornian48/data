@@ -21,6 +21,7 @@ Route::get('/members', [DashboardController::class, 'members'])->name('members.i
 Route::get('/members/{member}', [DashboardController::class, 'member'])->name('members.show');
 Route::get('/singles', [DashboardController::class, 'singles'])->name('singles.index');
 Route::get('/captains', [DashboardController::class, 'captains'])->name('captains.index');
+Route::get('/restrukturisasi', [DashboardController::class, 'restrukturisasi'])->name('restrukturisasi.index');
 
 // ---------- Sorter ----------
 Route::get('/sorter', [SorterController::class, 'index'])->name('sorter.index');
