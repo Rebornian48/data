@@ -32,7 +32,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 
 ### Changed
 - Arsitektur controller sorter type-dispatched via `data{Type}()` methods — plug-in sorter baru tanpa duplikasi.
-- Tombol **Undo** kedua ditambahkan di kolom tengah panel sorter (di atas tombol Seri) — akses lebih dekat ke area comparison, tanpa menghilangkan Undo di header.
+- Tombol **Undo** kedua di kolom tengah dihapus lagi — cukup satu Undo di header (dekat Restart). User sudah familiar posisinya.
 - **Neobrutalism UI** diterapkan ke **semua halaman** (dashboard, members, singles, captains, admin, login, sorter):
   - Global stylesheet `public/css/neo.css` — di-load dari `layouts/app.blade.php`, `layouts/admin.blade.php`, dan `auth/login.blade.php`.
   - Border hitam 3px seragam, hard offset shadow `4-6px 0 #000`, palet cream/kuning/pink/lime tanpa gradien.

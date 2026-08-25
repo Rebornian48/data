@@ -168,7 +168,6 @@
                 </button>
 
                 <div class="flex md:flex-col items-center justify-center gap-3">
-                    <button type="button" id="card-undo" class="neo-btn px-5 py-2.5 text-sm" disabled>UNDO</button>
                     <button type="button" id="card-tie" class="neo-btn neo-btn-yellow px-5 py-2.5 text-sm">SERI</button>
                     <div class="display text-xs hidden md:block">VS</div>
                 </div>
@@ -219,6 +218,6 @@
 <script>
     window.SORTER_ITEMS = @json($items);
 </script>
-<script src="{{ asset('js/sorter-member.js') }}?v=3"></script>
+<script src="{{ asset('js/sorter-member.js') }}?v=4"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 @endsection
