@@ -22,6 +22,7 @@ Route::get('/members/{member}', [DashboardController::class, 'member'])->name('m
 Route::get('/singles', [DashboardController::class, 'singles'])->name('singles.index');
 Route::get('/captains', [DashboardController::class, 'captains'])->name('captains.index');
 Route::get('/restrukturisasi', [DashboardController::class, 'restrukturisasi'])->name('restrukturisasi.index');
+Route::get('/kalender', [DashboardController::class, 'calendar'])->name('calendar.index');
 
 // ---------- Sorter ----------
 Route::get('/sorter', [SorterController::class, 'index'])->name('sorter.index');

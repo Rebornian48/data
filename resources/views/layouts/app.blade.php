@@ -42,6 +42,10 @@
                            class="text-sm font-bold {{ request()->routeIs('restrukturisasi.*') ? 'underline' : 'hover:underline' }}">
                             RESTRUKTURISASI
                         </a>
+                        <a href="{{ route('calendar.index') }}"
+                           class="text-sm font-bold {{ request()->routeIs('calendar.*') ? 'underline' : 'hover:underline' }}">
+                            KALENDER
+                        </a>
                         <a href="{{ route('sorter.index') }}"
                            class="text-sm font-bold {{ request()->routeIs('sorter.*') ? 'underline' : 'hover:underline' }}">
                             SORTER

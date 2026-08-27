@@ -184,6 +184,113 @@ class DashboardController extends Controller
         return view('dashboard.restrukturisasi', compact('generations', 'members'));
     }
 
+    public function calendar(Request $request)
+    {
+        $now = now();
+        $year = (int) $request->input('y', $now->year);
+        $month = (int) $request->input('m', $now->month);
+        if ($month < 1 || $month > 12) $month = $now->month;
+        if ($year < 1900 || $year > 2100) $year = $now->year;
+
+        $first = \Carbon\Carbon::create($year, $month, 1)->startOfDay();
+        $last = $first->copy()->endOfMonth();
+
+        // Bucket keyed by 'YYYY-MM-DD'
+        $events = [];
+        $push = function ($date, $entry) use (&$events) {
+            $key = $date instanceof \Carbon\Carbon ? $date->toDateString() : $date;
+            $events[$key][] = $entry;
+        };
+
+        // 1) Birthdays of members who were active on that date (or currently active)
+        $members = Member::whereNotNull('birth_date')->get();
+        foreach ($members as $m) {
+            $bd = $m->birth_date;
+            if ($bd->month !== $month) continue;
+
+            try {
+                $target = \Carbon\Carbon::create($year, $month, $bd->day);
+            } catch (\Exception $e) {
+                continue;
+            }
+            if (! $target || $target->month !== $month) continue;
+
+            $join = $m->effective_join_date;
+            $grad = $m->graduation_date;
+            $wasActiveOn = $join && $join->lte($target) && (! $grad || $grad->gte($target));
+            $stillActive = $m->status === 'Aktif';
+            if (! $wasActiveOn && ! $stillActive) continue;
+
+            $push($target, [
+                'type' => 'birthday',
+                'label' => $m->name . ' (' . ($year - $bd->year) . ')',
+                'url' => route('members.show', $m),
+            ]);
+        }
+
+        // 2) Generations that joined in this month/year
+        $gens = Generation::whereNotNull('join_date')
+            ->whereYear('join_date', $year)
+            ->whereMonth('join_date', $month)
+            ->get();
+        foreach ($gens as $g) {
+            $push($g->join_date, [
+                'type' => 'gen',
+                'label' => $g->code . ' masuk' . ($g->name ? ' (' . $g->name . ')' : ''),
+                'url' => null,
+            ]);
+        }
+
+        // 3) Members who graduated in this month/year
+        $grads = Member::whereNotNull('graduation_date')
+            ->whereYear('graduation_date', $year)
+            ->whereMonth('graduation_date', $month)
+            ->get();
+        foreach ($grads as $m) {
+            $push($m->graduation_date, [
+                'type' => 'graduate',
+                'label' => $m->name . ' lulus',
+                'url' => route('members.show', $m),
+            ]);
+        }
+
+        // Sort each day so gens > graduates > birthdays reads first
+        $order = ['gen' => 0, 'graduate' => 1, 'birthday' => 2];
+        foreach ($events as $k => $list) {
+            usort($events[$k], fn ($a, $b) => $order[$a['type']] <=> $order[$b['type']]);
+        }
+
+        // Build weeks grid (Sun-first)
+        $startDow = $first->dayOfWeek; // 0 = Sunday
+        $daysInMonth = $first->daysInMonth;
+        $cells = [];
+        for ($i = 0; $i < $startDow; $i++) $cells[] = null;
+        for ($d = 1; $d <= $daysInMonth; $d++) $cells[] = $d;
+        while (count($cells) % 7 !== 0) $cells[] = null;
+        $weeks = array_chunk($cells, 7);
+
+        $prev = $first->copy()->subMonth();
+        $next = $first->copy()->addMonth();
+
+        $monthNames = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+
+        return view('dashboard.calendar', [
+            'year' => $year,
+            'month' => $month,
+            'monthName' => $monthNames[$month],
+            'monthNames' => $monthNames,
+            'weeks' => $weeks,
+            'events' => $events,
+            'prev' => $prev,
+            'next' => $next,
+            'today' => $now->toDateString(),
+        ]);
+    }
+
     public function captains()
     {
         $captains = Captain::with('member.generation')
