@@ -11,7 +11,8 @@ git commit -m "Initial commit: JKT48 Database Laravel App"
 ```
 
 ### 2. Buat Repository di GitHub
-1. Login ke https://github.com
+
+1. Login ke <https://github.com>
 2. Click "New repository"
 3. Name: `jkt48-database`
 4. Pilih **Private** (agar code aman)
@@ -29,10 +30,12 @@ git push -u origin main
 ## 🌐 Setup Hosting Hostinger
 
 ### 1. Login ke hPanel
-1. Buka https://hpanel.hostinger.com
+
+1. Buka <https://hpanel.hostinger.com>
 2. Login dengan akun Hostinger kamu
 
 ### 2. Setup Domain/Subdomain
+
 1. Go to **Domains** → **Subdomains**
 2. Create subdomain:
    - Subdomain: `jkt48`
@@ -40,6 +43,7 @@ git push -u origin main
 3. Akan menjadi: `jkt48.rebornian48.my.id`
 
 ### 3. Setup Database MySQL
+
 1. Go to **Databases** → **MySQL Databases**
 2. Create new database:
    - Database name: `u1234567_jkt48` (akan ada prefix)
@@ -52,6 +56,7 @@ git push -u origin main
    - DB Host: `localhost`
 
 ### 4. Setup Git Deployment (SSH)
+
 1. Go to **Advanced** → **SSH Access**
 2. Enable SSH
 3. **CATAT** SSH credentials:
@@ -179,10 +184,12 @@ Pastikan ada:
 ## ⚙️ Setup Document Root di hPanel
 
 ### 1. Go to Websites
+
 1. Login ke hPanel
 2. Go to **Websites** → **Manage** (untuk jkt48.rebornian48.my.id)
 
 ### 3. Setup Document Root
+
 1. Go to **Advanced** → **Document Root**
 2. Set document root ke:
    ```
@@ -195,6 +202,7 @@ Pastikan ada:
 ## 🔒 Setup SSL Certificate
 
 ### 1. Enable SSL
+
 1. Go to **SSL/TLS** di hPanel
 2. Enable **Force HTTPS**
 3. Install **Let's Encrypt** SSL (gratis)
@@ -204,6 +212,7 @@ Pastikan ada:
 ## 🧪 Testing
 
 ### 1. Test Aplikasi
+
 Buka browser dan akses:
 ```
 https://jkt48.rebornian48.my.id/data
@@ -323,7 +332,9 @@ npm run build
 ```
 
 ### Via Git Push (Auto Deploy)
+
 Jika ingin auto-deploy saat push ke GitHub:
+
 1. Go to hPanel → **Git**
 2. Add repository
 3. Set branch: `main`
@@ -341,6 +352,7 @@ mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql
 ```
 
 ### Auto Backup di hPanel
+
 1. Go to **Databases** → **Backups**
 2. Enable auto backup
 3. Set schedule (daily/weekly)
@@ -372,6 +384,7 @@ mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql
 ## 🆘 Support
 
 Jika ada masalah:
+
 1. Cek log: `tail -f storage/logs/laravel.log`
 2. Cek error di browser console
 3. Pastikan permissions benar

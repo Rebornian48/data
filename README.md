@@ -9,6 +9,7 @@ Live: <https://jkt48.rebornian48.my.id>
 ## Fitur
 
 ### Dashboard publik (`/`)
+
 - Statistik ringkas: total member, aktif, lulus, generasi, singles.
 - Chart pertumbuhan member harian (Chart.js).
 - Top 10 tenure, top senbatsu, top center.
@@ -16,19 +17,24 @@ Live: <https://jkt48.rebornian48.my.id>
 - Kapten aktif per posisi.
 
 ### Daftar member (`/members`)
+
 - Grid kartu member dgn foto, generasi, status.
 - Filter: search text, generasi, status. Pagination.
 
 ### Detail member (`/members/{id}`)
+
 - Profil lengkap, timeline karier, daftar single, riwayat kapten.
 
 ### Singles (`/singles`)
+
 - List semua single dgn jumlah member per single.
 
 ### Captains (`/captains`)
+
 - Timeline kapten per posisi (chart) + riwayat berurutan.
 
 ### Sorter interaktif (`/sorter`)
+
 - **Neobrutalism UI** — border hitam tebal, hard shadow, palet cream/kuning/pink/lime, tipografi display *Archivo Black*.
 - **Member sorter** (`/sorter/member`) — merge sort interaktif berbasis perbandingan berpasangan.
   - Filter status (Aktif/Lulus) + generasi.
@@ -39,6 +45,7 @@ Live: <https://jkt48.rebornian48.my.id>
 - Arsitektur extensible — tinggal tambah tipe (`song`, `setlist`, dst) di `SorterController`.
 
 ### Panel admin (`/admin`)
+
 - Auth berbasis session (admin/data_jkt48 default).
 - CRUD members, singles, generations, captains.
 
@@ -113,6 +120,7 @@ php artisan serve
 Lihat [DEPLOY.md](DEPLOY.md).
 
 Ringkas:
+
 1. Hostinger hPanel → Git → connect repo GitHub `Rebornian48/data`.
 2. Branch `main`, deploy path `public_html`.
 3. Setelah first deploy, SSH ke server:

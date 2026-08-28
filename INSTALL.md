@@ -3,11 +3,12 @@
 ## Prerequisites
 
 Pastikan sudah terinstall:
-- **PHP 8.1+** - https://www.php.net/
-- **Composer** - https://getcomposer.org/
-- **Node.js 18+** - https://nodejs.org/
-- **MySQL/MariaDB** - https://www.mysql.com/
-- **Git** - https://git-scm.com/
+
+- **PHP 8.1+** - <https://www.php.net/>
+- **Composer** - <https://getcomposer.org/>
+- **Node.js 18+** - <https://nodejs.org/>
+- **MySQL/MariaDB** - <https://www.mysql.com/>
+- **Git** - <https://git-scm.com/>
 
 ---
 
@@ -90,8 +91,9 @@ php artisan serve
 ```
 
 Buka:
-- Dashboard: http://localhost:8000
-- Admin: http://localhost:8000/admin
+
+- Dashboard: <http://localhost:8000>
+- Admin: <http://localhost:8000/admin>
 
 ---
 

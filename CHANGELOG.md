@@ -8,6 +8,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 ## [Unreleased]
 
 ### Added
+
 - **Generasi 14** — seeder `Generation14MemberSeeder` menambahkan 11 trainee (Afera Thalia, Carissa Dini, Christabella Bonita, Fahira Putri, Fatimah Azzahra, Heidi Suyangga, Maegan Jovanka, Maxine Faye, Putry Jazyta, Ralyne Van Irwan, Sona Kalyana). Status: `Aktif` + `restructure_status: Trainee`. `GenerationSeeder` juga di-update mencakup kode `14`. Member `join_date` di-inherit dari generasi (`gen->join_date`) saat seed.
 - **`Member::effective_join_date` accessor** — fallback ke `generation.join_date` kalau kolom `join_date` member null. `ageAtJoin` & `daysInJkt48` sekarang pakai accessor ini — statistik tenure otomatis benar untuk member yang belum di-set join_date manual.
 - **`Generation` model observer** — saat `Generation.join_date` di-set/di-ubah (via admin edit atau seeder), semua member generasi tsb yg `join_date` masih null otomatis di-backfill dgn tanggal generasi. Member yg join_date-nya sudah di-set eksplisit tidak diganggu.
@@ -27,10 +28,12 @@ Tanggal dalam format `YYYY-MM-DD`.
 - `composer.lock` di-commit — deploy Hostinger reproducible, menghindari corrupted-zip error.
 
 ### Fixed
+
 - `.env.example` — kutip `APP_NAME` yang mengandung spasi (fix dotenv parse error).
 - `DEPLOY.md` — typo domain admin members URL (`jkt48.rebornian48.id` → `jkt48.rebornian48.my.id`).
 
 ### Changed
+
 - Arsitektur controller sorter type-dispatched via `data{Type}()` methods — plug-in sorter baru tanpa duplikasi.
 - Tombol **Undo** kedua di kolom tengah dihapus lagi — cukup satu Undo di header (dekat Restart). User sudah familiar posisinya.
 - **Neobrutalism UI** diterapkan ke **semua halaman** (dashboard, members, singles, captains, admin, login, sorter):
@@ -47,6 +50,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 ## 2026-08-24
 
 ### Changed
+
 - Root `.htaccess` diganti dgn PHP redirect `index.php` → arahkan visitor ke `/public/` (subdir Laravel).
 - Root `.htaccess` sebelumnya di-fix agar hanya rewrite empty path (bukan semua request).
 
@@ -55,12 +59,15 @@ Tanggal dalam format `YYYY-MM-DD`.
 ## 2026-08-23
 
 ### Added
+
 - Halaman publik **Captains** (`/captains`) dgn timeline chart per posisi.
 
 ### Changed
+
 - Growth chart di dashboard: dari kumulatif menjadi **daily active members**.
 
 ### Fixed
+
 - Admin create views — pass empty model instances agar tidak error di form.
 
 ---
@@ -68,11 +75,13 @@ Tanggal dalam format `YYYY-MM-DD`.
 ## 2026-08-22
 
 ### Added
+
 - Halaman **Singles** publik (`/singles`).
 - Dark mode toggle di nav bar (Alpine.js + localStorage).
 - Growth chart pertumbuhan member di dashboard.
 
 ### Changed
+
 - Auth admin disederhanakan ke session-based (menghilangkan 500 error dari middleware sebelumnya).
 
 ---
@@ -80,6 +89,7 @@ Tanggal dalam format `YYYY-MM-DD`.
 ## 2026-08-21
 
 ### Added
+
 - Rilis awal: Laravel 13 app dgn dashboard publik, daftar member, detail member, panel admin (CRUD members/singles/generations/captains).
 - Login admin default `admin` / `data_jkt48`.
 - Schema DB: `generations`, `singles`, `members`, `member_singles`, `captains`.
@@ -88,5 +98,6 @@ Tanggal dalam format `YYYY-MM-DD`.
 - Panduan `INSTALL.md` (setup lokal) & `DEPLOY.md` (Hostinger).
 
 ### Fixed
+
 - `config/app.php` kompatibel dgn Laravel 13.
 - Remove Tinker (Laravel 13 compat).
