@@ -14,3 +14,7 @@ exclude_paths:
   - "CHANGELOG.md"
   - "public/css/**"
   - "resources/css/**"
+  - "setup.ps1"
+  - "schema.sql"
+  - "index.php"
+  - "public/index.php"
