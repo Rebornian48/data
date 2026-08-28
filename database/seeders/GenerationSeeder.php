@@ -38,6 +38,6 @@ class GenerationSeeder extends Seeder
             );
         }
 
-        $this->command->info('Seeded ' . count($generations) . ' generations.');
+        $this->command->info('Seeded '.count($generations).' generations.');
     }
 }

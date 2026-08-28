@@ -302,7 +302,9 @@ class MemberSeeder extends Seeder
             $genCode = $data['gen'];
             unset($data['gen']);
 
-            if (!isset($genMap[$genCode])) continue;
+            if (! isset($genMap[$genCode])) {
+                continue;
+            }
 
             $data['generation_id'] = $genMap[$genCode];
 

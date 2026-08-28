@@ -1,3 +1,4 @@
+/* global html2canvas */
 (function () {
     'use strict';
 

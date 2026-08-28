@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Generation;
 use App\Models\Member;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SorterController extends Controller
@@ -43,23 +41,23 @@ class SorterController extends Controller
             ->get(['id', 'name', 'nickname', 'photo_url', 'status', 'generation_id']);
 
         $items = $members->map(fn ($m) => [
-            'id'         => $m->id,
-            'name'       => $m->nickname ?: $m->name,
-            'full_name'  => $m->name,
-            'photo'      => $m->photo_url ?: null,
-            'status'     => $m->status,
+            'id' => $m->id,
+            'name' => $m->nickname ?: $m->name,
+            'full_name' => $m->name,
+            'photo' => $m->photo_url ?: null,
+            'status' => $m->status,
             'generation' => $m->generation ? [
-                'id'   => $m->generation->id,
+                'id' => $m->generation->id,
                 'code' => $m->generation->code,
                 'name' => $m->generation->name,
             ] : null,
         ])->values();
 
         return [
-            'sorterTitle'    => 'JKT48 Member Sorter',
+            'sorterTitle' => 'JKT48 Member Sorter',
             'sorterSubtitle' => 'Urutkan member JKT48 favoritmu lewat perbandingan berpasangan.',
-            'items'          => $items,
-            'generations'    => $generations,
+            'items' => $items,
+            'generations' => $generations,
         ];
     }
 }

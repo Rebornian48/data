@@ -31,6 +31,7 @@ class MemberController extends Controller
         $generations = Generation::orderBy('id')->get();
         $singles = Single::orderBy('sequence')->get();
         $member = new Member;
+
         return view('admin.members.create', compact('generations', 'singles', 'member'));
     }
 
@@ -50,6 +51,7 @@ class MemberController extends Controller
     public function show(Member $member)
     {
         $member->load(['generation', 'singles', 'captains']);
+
         return view('admin.members.show', compact('member'));
     }
 
@@ -58,6 +60,7 @@ class MemberController extends Controller
         $generations = Generation::orderBy('id')->get();
         $singles = Single::orderBy('sequence')->get();
         $member->load('singles');
+
         return view('admin.members.edit', compact('member', 'generations', 'singles'));
     }
 
@@ -114,7 +117,9 @@ class MemberController extends Controller
     {
         $sync = [];
         foreach ($singles as $singleId => $role) {
-            if (! in_array($role, ['member', 'center'])) continue;
+            if (! in_array($role, ['member', 'center'])) {
+                continue;
+            }
             $sync[$singleId] = ['role' => $role];
         }
         $member->singles()->sync($sync);

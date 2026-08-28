@@ -14,8 +14,8 @@ class GenerationController extends Controller
             'members',
             'members as active_count' => fn ($q) => $q->where('status', 'Aktif'),
         ])
-        ->orderBy('id')
-        ->get();
+            ->orderBy('id')
+            ->get();
 
         return view('admin.generations.index', compact('generations'));
     }
@@ -23,6 +23,7 @@ class GenerationController extends Controller
     public function create()
     {
         $generation = new Generation;
+
         return view('admin.generations.create', compact('generation'));
     }
 

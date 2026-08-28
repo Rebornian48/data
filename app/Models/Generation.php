@@ -51,8 +51,12 @@ class Generation extends Model
     protected static function booted(): void
     {
         static::saved(function (Generation $gen) {
-            if (! $gen->join_date) return;
-            if (! $gen->wasChanged('join_date') && ! $gen->wasRecentlyCreated) return;
+            if (! $gen->join_date) {
+                return;
+            }
+            if (! $gen->wasChanged('join_date') && ! $gen->wasRecentlyCreated) {
+                return;
+            }
 
             Member::where('generation_id', $gen->id)
                 ->whereNull('join_date')

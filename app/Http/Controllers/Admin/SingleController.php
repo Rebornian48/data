@@ -14,8 +14,8 @@ class SingleController extends Controller
             'members',
             'members as center_count' => fn ($q) => $q->where('member_singles.role', 'center'),
         ])
-        ->orderBy('sequence')
-        ->paginate(20);
+            ->orderBy('sequence')
+            ->paginate(20);
 
         return view('admin.singles.index', compact('singles'));
     }
@@ -23,6 +23,7 @@ class SingleController extends Controller
     public function create()
     {
         $single = new Single;
+
         return view('admin.singles.create', compact('single'));
     }
 

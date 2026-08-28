@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Member extends Model
 {
@@ -87,11 +87,14 @@ class Member extends Model
 
     public function scopeSearch($query, ?string $term)
     {
-        if (! $term) return $query;
+        if (! $term) {
+            return $query;
+        }
+
         return $query->where(function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
-              ->orWhere('nickname', 'like', "%{$term}%")
-              ->orWhere('birth_place', 'like', "%{$term}%");
+                ->orWhere('nickname', 'like', "%{$term}%")
+                ->orWhere('birth_place', 'like', "%{$term}%");
         });
     }
 
@@ -134,10 +137,13 @@ class Member extends Model
     protected function currentAge(): Attribute
     {
         return Attribute::get(function () {
-            if (! $this->birth_date) return null;
+            if (! $this->birth_date) {
+                return null;
+            }
             $endDate = $this->status === 'Lulus' && $this->graduation_date
                 ? $this->graduation_date
                 : now();
+
             return round($this->birth_date->diffInDays($endDate) / 365.25, 2);
         });
     }
@@ -149,7 +155,10 @@ class Member extends Model
     {
         return Attribute::get(function () {
             $join = $this->effective_join_date;
-            if (! $this->birth_date || ! $join) return null;
+            if (! $this->birth_date || ! $join) {
+                return null;
+            }
+
             return $this->birth_date->diffInYears($join);
         });
     }
@@ -161,8 +170,11 @@ class Member extends Model
     {
         return Attribute::get(function () {
             $join = $this->effective_join_date;
-            if (! $join) return null;
+            if (! $join) {
+                return null;
+            }
             $endDate = $this->graduation_date ?? now();
+
             return $join->diffInDays($endDate);
         });
     }
@@ -174,6 +186,7 @@ class Member extends Model
     {
         return Attribute::get(function () {
             $days = $this->days_in_jkt48;
+
             return $days ? round($days / 365.25, 1) : null;
         });
     }

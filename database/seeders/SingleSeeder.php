@@ -46,6 +46,6 @@ class SingleSeeder extends Seeder
             );
         }
 
-        $this->command->info('Seeded ' . count($singles) . ' singles.');
+        $this->command->info('Seeded '.count($singles).' singles.');
     }
 }

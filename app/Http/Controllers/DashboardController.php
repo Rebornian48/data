@@ -6,6 +6,7 @@ use App\Models\Captain;
 use App\Models\Generation;
 use App\Models\Member;
 use App\Models\Single;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,13 +32,13 @@ class DashboardController extends Controller
             'members as active_count' => fn ($q) => $q->where('status', 'Aktif'),
             'members as graduated_count' => fn ($q) => $q->where('status', 'Lulus'),
         ])
-        ->orderByRaw("
+            ->orderByRaw("
             CASE
                 WHEN code REGEXP '^[0-9]+$' THEN CAST(code AS UNSIGNED)
                 ELSE 999
             END
         ")
-        ->get();
+            ->get();
 
         // Top 10 members by tenure
         $longestTenure = Member::with('generation')
@@ -74,10 +75,19 @@ class DashboardController extends Controller
             ->get()
             ->groupBy(function ($m) {
                 $age = $m->current_age;
-                if ($age < 18) return 'Under 18';
-                if ($age < 20) return '18-19';
-                if ($age < 22) return '20-21';
-                if ($age < 25) return '22-24';
+                if ($age < 18) {
+                    return 'Under 18';
+                }
+                if ($age < 20) {
+                    return '18-19';
+                }
+                if ($age < 22) {
+                    return '20-21';
+                }
+                if ($age < 25) {
+                    return '22-24';
+                }
+
                 return '25+';
             })
             ->map->count();
@@ -94,8 +104,12 @@ class DashboardController extends Controller
         $events = [];
         foreach ($allMembers as $m) {
             $events[] = ['date' => $m->join_date->toDateString(), 'type' => 'join'];
-            if ($m->graduation_date) $events[] = ['date' => $m->graduation_date->toDateString(), 'type' => 'leave'];
-            if ($m->cancelled_date) $events[] = ['date' => $m->cancelled_date->toDateString(), 'type' => 'leave'];
+            if ($m->graduation_date) {
+                $events[] = ['date' => $m->graduation_date->toDateString(), 'type' => 'leave'];
+            }
+            if ($m->cancelled_date) {
+                $events[] = ['date' => $m->cancelled_date->toDateString(), 'type' => 'leave'];
+            }
         }
         usort($events, fn ($a, $b) => $a['date'] <=> $b['date'] ?: $a['type'] <=> $b['type']);
 
@@ -132,6 +146,7 @@ class DashboardController extends Controller
     public function member(Member $member)
     {
         $member->load(['generation', 'singles', 'captains']);
+
         return view('dashboard.member', compact('member'));
     }
 
@@ -160,6 +175,7 @@ class DashboardController extends Controller
     public function singles()
     {
         $singles = Single::withCount('members')->orderBy('sequence')->get();
+
         return view('dashboard.singles', compact('singles'));
     }
 
@@ -176,6 +192,7 @@ class DashboardController extends Controller
         $generations = $members->groupBy('generation_id')->map(function ($group) {
             $gen = $group->first()->generation;
             $gen->members_count = $group->count();
+
             return $gen;
         })->sortBy(function ($gen) {
             return is_numeric($gen->code) ? (int) $gen->code : 999;
@@ -189,16 +206,20 @@ class DashboardController extends Controller
         $now = now();
         $year = (int) $request->input('y', $now->year);
         $month = (int) $request->input('m', $now->month);
-        if ($month < 1 || $month > 12) $month = $now->month;
-        if ($year < 1900 || $year > 2100) $year = $now->year;
+        if ($month < 1 || $month > 12) {
+            $month = $now->month;
+        }
+        if ($year < 1900 || $year > 2100) {
+            $year = $now->year;
+        }
 
-        $first = \Carbon\Carbon::create($year, $month, 1)->startOfDay();
+        $first = Carbon::create($year, $month, 1)->startOfDay();
         $last = $first->copy()->endOfMonth();
 
         // Bucket keyed by 'YYYY-MM-DD'
         $events = [];
         $push = function ($date, $entry) use (&$events) {
-            $key = $date instanceof \Carbon\Carbon ? $date->toDateString() : $date;
+            $key = $date instanceof Carbon ? $date->toDateString() : $date;
             $events[$key][] = $entry;
         };
 
@@ -206,24 +227,30 @@ class DashboardController extends Controller
         $members = Member::whereNotNull('birth_date')->get();
         foreach ($members as $m) {
             $bd = $m->birth_date;
-            if ($bd->month !== $month) continue;
+            if ($bd->month !== $month) {
+                continue;
+            }
 
             try {
-                $target = \Carbon\Carbon::create($year, $month, $bd->day);
+                $target = Carbon::create($year, $month, $bd->day);
             } catch (\Exception $e) {
                 continue;
             }
-            if (! $target || $target->month !== $month) continue;
+            if (! $target || $target->month !== $month) {
+                continue;
+            }
 
             $join = $m->effective_join_date;
             $grad = $m->graduation_date;
             $wasActiveOn = $join && $join->lte($target) && (! $grad || $grad->gte($target));
             $stillActive = $m->status === 'Aktif';
-            if (! $wasActiveOn && ! $stillActive) continue;
+            if (! $wasActiveOn && ! $stillActive) {
+                continue;
+            }
 
             $push($target, [
                 'type' => 'birthday',
-                'label' => $m->name . ' (' . ($year - $bd->year) . ')',
+                'label' => $m->name.' ('.($year - $bd->year).')',
                 'url' => route('members.show', $m),
             ]);
         }
@@ -236,7 +263,7 @@ class DashboardController extends Controller
         foreach ($gens as $g) {
             $push($g->join_date, [
                 'type' => 'gen',
-                'label' => $g->code . ' masuk' . ($g->name ? ' (' . $g->name . ')' : ''),
+                'label' => $g->code.' masuk'.($g->name ? ' ('.$g->name.')' : ''),
                 'url' => null,
             ]);
         }
@@ -249,7 +276,7 @@ class DashboardController extends Controller
         foreach ($grads as $m) {
             $push($m->graduation_date, [
                 'type' => 'graduate',
-                'label' => $m->name . ' lulus',
+                'label' => $m->name.' lulus',
                 'url' => route('members.show', $m),
             ]);
         }
@@ -264,9 +291,15 @@ class DashboardController extends Controller
         $startDow = $first->dayOfWeek; // 0 = Sunday
         $daysInMonth = $first->daysInMonth;
         $cells = [];
-        for ($i = 0; $i < $startDow; $i++) $cells[] = null;
-        for ($d = 1; $d <= $daysInMonth; $d++) $cells[] = $d;
-        while (count($cells) % 7 !== 0) $cells[] = null;
+        for ($i = 0; $i < $startDow; $i++) {
+            $cells[] = null;
+        }
+        for ($d = 1; $d <= $daysInMonth; $d++) {
+            $cells[] = $d;
+        }
+        while (count($cells) % 7 !== 0) {
+            $cells[] = null;
+        }
         $weeks = array_chunk($cells, 7);
 
         $prev = $first->copy()->subMonth();

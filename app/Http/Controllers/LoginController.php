@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
     private string $username = 'admin';
+
     private string $password = 'data_jkt48';
 
     public function showLoginForm()
@@ -15,6 +15,7 @@ class LoginController extends Controller
         if (session('admin_logged_in')) {
             return redirect()->route('admin.home');
         }
+
         return view('auth.login');
     }
 
@@ -28,6 +29,7 @@ class LoginController extends Controller
         if ($request->input('username') === $this->username && $request->input('password') === $this->password) {
             session(['admin_logged_in' => true]);
             $request->session()->regenerate();
+
             return redirect()->intended(route('admin.home'));
         }
 
@@ -41,6 +43,7 @@ class LoginController extends Controller
         session()->forget('admin_logged_in');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('login');
     }
 }

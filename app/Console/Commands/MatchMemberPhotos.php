@@ -13,6 +13,7 @@ class MatchMemberPhotos extends Command
                                                   {--url-prefix= : URL prefix written to photo_url (default: /{dir}). Use e.g. /public/img when the app is served from a /public sub-path.}
                                                   {--dry-run : Only report; do not write to DB}
                                                   {--overwrite : Replace existing photo_url values}';
+
     protected $description = 'Match files in public/{dir} to members by name and set photo_url.';
 
     /**
@@ -23,21 +24,21 @@ class MatchMemberPhotos extends Command
      */
     private array $overrides = [
         // Spelling / prefix / generation-code mismatches
-        'CELLINE_THEFANI.jpg'            => 'Celline Thefannie',
-        'Gen1_aki_takajo.jpg'            => 'Aki Takajo',
-        'Gen1_gabriella.jpg'             => 'Gabriela Margareth Warouw',
-        'Gen1_haruka_nakagawa.jpg'       => 'Haruka Nakagawa',
-        'Gen2_rina_chikano.jpg'          => 'Rina Chikano',
-        'Gen6_Saya_Kawamoto.webp'        => 'Saya Kawamoto',
+        'CELLINE_THEFANI.jpg' => 'Celline Thefannie',
+        'Gen1_aki_takajo.jpg' => 'Aki Takajo',
+        'Gen1_gabriella.jpg' => 'Gabriela Margareth Warouw',
+        'Gen1_haruka_nakagawa.jpg' => 'Haruka Nakagawa',
+        'Gen2_rina_chikano.jpg' => 'Rina Chikano',
+        'Gen6_Saya_Kawamoto.webp' => 'Saya Kawamoto',
         'Gen9_iris_vevina_prasetio.webp' => 'Iris Vevina Prasetio',
-        'JKT48VGen1_Kanaia_Asa.webp'     => 'Kanaia Asa',
-        'JKT48VGen1_Tana_Nona.jpg'       => 'Tana Nona',
-        'JKT48VGen2_Sami_Maono.png'      => 'Sami Maono',
+        'JKT48VGen1_Kanaia_Asa.webp' => 'Kanaia Asa',
+        'JKT48VGen1_Tana_Nona.jpg' => 'Tana Nona',
+        'JKT48VGen2_Sami_Maono.png' => 'Sami Maono',
 
         // Ambiguous — force preferred candidate
-        'AURELLIA.jpg'                   => 'Aurellia',
-        'DESY_NATALIA.jpg'               => 'Desy Natalia Ang',
-        'Gen2_thalia.webp'               => 'Thalia',
+        'AURELLIA.jpg' => 'Aurellia',
+        'DESY_NATALIA.jpg' => 'Desy Natalia Ang',
+        'Gen2_thalia.webp' => 'Thalia',
     ];
 
     public function handle(): int
@@ -47,19 +48,20 @@ class MatchMemberPhotos extends Command
 
         if (! is_dir($absDir)) {
             $this->error("Directory not found: {$absDir}");
+
             return self::FAILURE;
         }
 
         $files = collect(File::files($absDir))
-            ->filter(fn ($f) => in_array(strtolower($f->getExtension()), ['jpg','jpeg','png','webp','gif']));
+            ->filter(fn ($f) => in_array(strtolower($f->getExtension()), ['jpg', 'jpeg', 'png', 'webp', 'gif']));
 
         $members = Member::with('generation:id,code')->get(['id', 'name', 'nickname', 'photo_url', 'generation_id']);
 
-        $matches   = [];
-        $orphans   = [];
+        $matches = [];
+        $orphans = [];
         $ambiguous = [];
-        $updated   = 0;
-        $skipped   = 0;
+        $updated = 0;
+        $skipped = 0;
 
         foreach ($files as $file) {
             $filename = $file->getFilename();
@@ -70,6 +72,7 @@ class MatchMemberPhotos extends Command
                 $picked = $members->firstWhere('name', $this->overrides[$filename]);
                 if (! $picked) {
                     $orphans[] = "{$filename}  (override target '{$this->overrides[$filename]}' not in DB)";
+
                     continue;
                 }
             }
@@ -77,15 +80,21 @@ class MatchMemberPhotos extends Command
             // ---- 2. tokenized name match ----
             if (! $picked) {
                 $tokens = $this->fileTokens($filename);
-                if (! $tokens) { $orphans[] = $filename; continue; }
+                if (! $tokens) {
+                    $orphans[] = $filename;
+
+                    continue;
+                }
                 $genHint = $this->extractGenHint($filename);
 
                 $scored = $members->map(function (Member $m) use ($tokens, $genHint) {
-                    $nameNorm = $this->normalize($m->name . ' ' . ($m->nickname ?: ''));
+                    $nameNorm = $this->normalize($m->name.' '.($m->nickname ?: ''));
                     $nameWords = preg_split('/\s+/', $nameNorm);
 
                     foreach ($tokens as $t) {
-                        if (! Str::contains($nameNorm, $t)) return null;
+                        if (! Str::contains($nameNorm, $t)) {
+                            return null;
+                        }
                     }
 
                     // Score: fewer extra name words = better; gen hint match = bonus
@@ -94,15 +103,21 @@ class MatchMemberPhotos extends Command
                     if ($genHint !== null && $m->generation && stripos($m->generation->code, $genHint) !== false) {
                         $score += 5;
                     }
+
                     return ['member' => $m, 'score' => $score];
                 })->filter()->sortByDesc('score')->values();
 
-                if ($scored->isEmpty()) { $orphans[] = $filename; continue; }
+                if ($scored->isEmpty()) {
+                    $orphans[] = $filename;
+
+                    continue;
+                }
 
                 $top = $scored->first();
                 $tie = $scored->where('score', $top['score']);
                 if ($tie->count() > 1) {
                     $ambiguous[$filename] = $tie->pluck('member.name')->all();
+
                     continue;
                 }
                 $picked = $top['member'];
@@ -114,8 +129,16 @@ class MatchMemberPhotos extends Command
             $newUrl = $prefix.'/'.$filename;
             $current = $picked->photo_url;
 
-            if ($current === $newUrl) { $skipped++; continue; }
-            if ($current && ! $this->option('overwrite')) { $skipped++; continue; }
+            if ($current === $newUrl) {
+                $skipped++;
+
+                continue;
+            }
+            if ($current && ! $this->option('overwrite')) {
+                $skipped++;
+
+                continue;
+            }
 
             if (! $this->option('dry-run')) {
                 $picked->photo_url = $newUrl;
@@ -132,22 +155,24 @@ class MatchMemberPhotos extends Command
 
         // ---------- Report ----------
         $this->newLine();
-        $this->info("Scanned: " . $files->count() . " files in public/{$dir}");
-        $this->info("Matched: " . count($matches));
-        $this->info("Updated: {$updated}" . ($this->option('dry-run') ? ' (dry-run, not persisted)' : ''));
+        $this->info('Scanned: '.$files->count()." files in public/{$dir}");
+        $this->info('Matched: '.count($matches));
+        $this->info("Updated: {$updated}".($this->option('dry-run') ? ' (dry-run, not persisted)' : ''));
         $this->info("Skipped (already set): {$skipped}");
-        $this->warn("Orphan files (no member match): " . count($orphans));
-        foreach ($orphans as $o) $this->line("   - {$o}");
+        $this->warn('Orphan files (no member match): '.count($orphans));
+        foreach ($orphans as $o) {
+            $this->line("   - {$o}");
+        }
         if ($ambiguous) {
-            $this->warn("Ambiguous files (matched multiple members with equal score):");
+            $this->warn('Ambiguous files (matched multiple members with equal score):');
             foreach ($ambiguous as $f => $names) {
-                $this->line("   - {$f}  ->  " . implode(' | ', $names));
+                $this->line("   - {$f}  ->  ".implode(' | ', $names));
             }
         }
-        $this->warn("Members WITHOUT any photo: " . $membersWithoutPhoto->count());
-        foreach ($membersWithoutPhoto->sortBy(fn ($m) => ($m->generation->code ?? 'zzz') . '_' . $m->name) as $m) {
+        $this->warn('Members WITHOUT any photo: '.$membersWithoutPhoto->count());
+        foreach ($membersWithoutPhoto->sortBy(fn ($m) => ($m->generation->code ?? 'zzz').'_'.$m->name) as $m) {
             $gen = $m->generation->code ?? '-';
-            $this->line("   - [Gen {$gen}] {$m->name}" . ($m->nickname ? " ({$m->nickname})" : ''));
+            $this->line("   - [Gen {$gen}] {$m->name}".($m->nickname ? " ({$m->nickname})" : ''));
         }
 
         return self::SUCCESS;
@@ -161,6 +186,7 @@ class MatchMemberPhotos extends Command
         $base = strtolower($base);
         $base = str_replace(['-', '.'], '_', $base);
         $tokens = array_filter(explode('_', $base), fn ($t) => $t !== '' && strlen($t) >= 2);
+
         return array_values($tokens);
     }
 
@@ -168,9 +194,13 @@ class MatchMemberPhotos extends Command
     {
         if (preg_match('/^(?:JKT48)?V?Gen([A-Za-z0-9]+)_/i', $filename, $m)) {
             $code = $m[1];
-            if (ctype_digit($code)) $code = (string) intval($code);
+            if (ctype_digit($code)) {
+                $code = (string) intval($code);
+            }
+
             return $code;
         }
+
         return null;
     }
 

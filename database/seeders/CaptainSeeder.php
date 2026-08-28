@@ -47,8 +47,9 @@ class CaptainSeeder extends Seeder
         $count = 0;
         foreach ($captains as $data) {
             $member = Member::where('name', $data['name'])->first();
-            if (!$member) {
+            if (! $member) {
                 $this->command->warn("Member not found: {$data['name']}");
+
                 continue;
             }
 

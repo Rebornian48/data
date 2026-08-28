@@ -1,0 +1,10 @@
+---
+exclude_paths:
+  - "vendor/**"
+  - "node_modules/**"
+  - "storage/**"
+  - "bootstrap/cache/**"
+  - "public/build/**"
+  - "package-lock.json"
+  - "composer.lock"
+  - "database/migrations/**"

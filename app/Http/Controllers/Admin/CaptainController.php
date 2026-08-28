@@ -23,6 +23,7 @@ class CaptainController extends Controller
     {
         $members = Member::orderBy('name')->get();
         $captain = new Captain;
+
         return view('admin.captains.create', compact('members', 'captain'));
     }
 
@@ -39,6 +40,7 @@ class CaptainController extends Controller
     public function edit(Captain $captain)
     {
         $members = Member::orderBy('name')->get();
+
         return view('admin.captains.edit', compact('captain', 'members'));
     }
 
@@ -55,6 +57,7 @@ class CaptainController extends Controller
     public function destroy(Captain $captain)
     {
         $captain->delete();
+
         return redirect()
             ->route('admin.captains.index')
             ->with('success', 'Data kapten berhasil dihapus.');

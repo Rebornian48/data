@@ -34,17 +34,17 @@ class Generation14MemberSeeder extends Seeder
             Member::updateOrCreate(
                 ['name' => $name],
                 [
-                    'nickname'           => $nickname,
-                    'birth_place'        => $birthPlace,
-                    'birth_date'         => $birthDate,
-                    'generation_id'      => $gen14->id,
-                    'join_date'          => $gen14->join_date,
-                    'status'             => 'Aktif',
+                    'nickname' => $nickname,
+                    'birth_place' => $birthPlace,
+                    'birth_date' => $birthDate,
+                    'generation_id' => $gen14->id,
+                    'join_date' => $gen14->join_date,
+                    'status' => 'Aktif',
                     'restructure_status' => 'Trainee',
                 ]
             );
         }
 
-        $this->command->info('Seeded ' . count($members) . ' Generasi 14 members.');
+        $this->command->info('Seeded '.count($members).' Generasi 14 members.');
     }
 }

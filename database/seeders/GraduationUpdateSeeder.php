@@ -32,14 +32,15 @@ class GraduationUpdateSeeder extends Seeder
 
             if (! $member) {
                 $missing[] = "{$first} {$last}";
+
                 continue;
             }
 
             $member->fill([
-                'restructure_status'        => $team,
-                'graduation_announce_date'  => $announceDate,
+                'restructure_status' => $team,
+                'graduation_announce_date' => $announceDate,
                 'graduation_announce_event' => $announceEvent,
-                'graduation_date'           => $gradDate,
+                'graduation_date' => $gradDate,
             ])->save(); // status auto-flip via Member saving hook
 
             $updated++;
@@ -47,7 +48,7 @@ class GraduationUpdateSeeder extends Seeder
 
         $this->command->info("Updated graduation data for {$updated} member(s).");
         if ($missing) {
-            $this->command->warn('Not found: ' . implode(', ', $missing));
+            $this->command->warn('Not found: '.implode(', ', $missing));
         }
     }
 }

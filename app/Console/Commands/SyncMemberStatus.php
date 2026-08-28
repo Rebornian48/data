@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class SyncMemberStatus extends Command
 {
     protected $signature = 'members:sync-status';
+
     protected $description = 'Flip status to Lulus for any member whose graduation_date has arrived or passed.';
 
     public function handle(): int
@@ -20,6 +21,7 @@ class SyncMemberStatus extends Command
             ->update(['status' => 'Lulus']);
 
         $this->info("Updated {$count} member(s) to Lulus.");
+
         return self::SUCCESS;
     }
 }
