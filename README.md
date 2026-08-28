@@ -1,5 +1,8 @@
 # JKT48 Database
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/77054fe29cb445838dcf24018b94f6f7)](https://app.codacy.com/gh/Rebornian48/data/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![CodeFactor](https://www.codefactor.io/repository/github/rebornian48/data/badge)](https://www.codefactor.io/repository/github/rebornian48/data)
+
 Aplikasi web berbasis Laravel untuk mengelola database JKT48 — member, generasi, single (senbatsu), dan riwayat kapten — dengan dashboard publik, panel admin, serta sorter interaktif.
 
 Live: <https://jkt48.rebornian48.my.id>
