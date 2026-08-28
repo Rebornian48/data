@@ -169,31 +169,51 @@ class MatchMemberPhotos extends Command
 
     private function reportResults(int $scanned, string $dir, Collection $members, array $result): void
     {
+        $this->reportSummary($scanned, $dir, $result);
+        $this->reportOrphans($result['orphans']);
+        $this->reportAmbiguous($result['ambiguous']);
+        $this->reportMissing($members, $result['matches']);
+    }
+
+    private function reportSummary(int $scanned, string $dir, array $result): void
+    {
+        $suffix = $this->option('dry-run') ? ' (dry-run, not persisted)' : '';
         $this->newLine();
         $this->info("Scanned: {$scanned} files in public/{$dir}");
         $this->info('Matched: '.count($result['matches']));
-        $this->info("Updated: {$result['updated']}".($this->option('dry-run') ? ' (dry-run, not persisted)' : ''));
+        $this->info("Updated: {$result['updated']}{$suffix}");
         $this->info("Skipped (already set): {$result['skipped']}");
+    }
 
-        $this->warn('Orphan files (no member match): '.count($result['orphans']));
-        foreach ($result['orphans'] as $o) {
+    private function reportOrphans(array $orphans): void
+    {
+        $this->warn('Orphan files (no member match): '.count($orphans));
+        foreach ($orphans as $o) {
             $this->line("   - {$o}");
         }
+    }
 
-        if ($result['ambiguous']) {
-            $this->warn('Ambiguous files (matched multiple members with equal score):');
-            foreach ($result['ambiguous'] as $f => $names) {
-                $this->line("   - {$f}  ->  ".implode(' | ', $names));
-            }
+    private function reportAmbiguous(array $ambiguous): void
+    {
+        if (! $ambiguous) {
+            return;
         }
+        $this->warn('Ambiguous files (matched multiple members with equal score):');
+        foreach ($ambiguous as $f => $names) {
+            $this->line("   - {$f}  ->  ".implode(' | ', $names));
+        }
+    }
 
-        $matchedIds = collect($result['matches'])->pluck('id')->all();
+    private function reportMissing(Collection $members, array $matches): void
+    {
+        $matchedIds = collect($matches)->pluck('id')->all();
         $without = $members->filter(fn (Member $m) => ! in_array($m->id, $matchedIds, true) && empty($m->photo_url));
 
         $this->warn('Members WITHOUT any photo: '.$without->count());
         foreach ($without->sortBy(fn ($m) => ($m->generation->code ?? 'zzz').'_'.$m->name) as $m) {
             $gen = $m->generation->code ?? '-';
-            $this->line("   - [Gen {$gen}] {$m->name}".($m->nickname ? " ({$m->nickname})" : ''));
+            $nickname = $m->nickname ? " ({$m->nickname})" : '';
+            $this->line("   - [Gen {$gen}] {$m->name}{$nickname}");
         }
     }
 
