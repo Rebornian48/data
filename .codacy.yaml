@@ -18,3 +18,6 @@ exclude_paths:
   - "schema.sql"
   - "index.php"
   - "public/index.php"
+  - "app/**"
+  - "public/**"
+  - "routes/**"
