@@ -64,7 +64,7 @@ class CalendarService
     {
         foreach (Member::whereNotNull('birth_date')->get() as $m) {
             $target = $this->birthdayTarget($m->birth_date, $year, $month);
-            if (! $target || ! $this->wasActiveOnDate($m, $target)) {
+            if (! $target) {
                 continue;
             }
             $push($target, [
@@ -87,15 +87,6 @@ class CalendarService
         }
 
         return ($target && $target->month === $month) ? $target : null;
-    }
-
-    private function wasActiveOnDate(Member $m, Carbon $target): bool
-    {
-        $join = $m->effective_join_date;
-        $grad = $m->graduation_date;
-        $wasActive = $join && $join->lte($target) && (! $grad || $grad->gte($target));
-
-        return $wasActive || $m->status === 'Aktif';
     }
 
     private function pushGenerationEvents(callable $push, int $year, int $month): void

@@ -17,11 +17,19 @@ trait HasComputedMemberAttributes
             if (! $this->birth_date) {
                 return null;
             }
-            $endDate = $this->status === 'Lulus' && $this->graduation_date
-                ? $this->graduation_date
-                : now();
 
-            return round($this->birth_date->diffInDays($endDate) / 365.25, 2);
+            return round($this->birth_date->diffInDays(now()) / 365.25, 2);
+        });
+    }
+
+    protected function ageAtGraduation(): Attribute
+    {
+        return Attribute::get(function () {
+            if (! $this->birth_date || ! $this->graduation_date) {
+                return null;
+            }
+
+            return round($this->birth_date->diffInDays($this->graduation_date) / 365.25, 2);
         });
     }
 

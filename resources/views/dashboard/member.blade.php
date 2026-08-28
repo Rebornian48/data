@@ -81,13 +81,21 @@
                 <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">Timeline Karier</h2>
                 <div class="space-y-4">
                     @php
+                        $ageOn = function ($date) use ($member) {
+                            if (! $member->birth_date || ! $date) return null;
+                            return round($member->birth_date->diffInDays($date) / 365.25, 2);
+                        };
+                        $withAge = function (string $label, $date) use ($ageOn) {
+                            $age = $ageOn($date);
+                            return $age !== null ? $label . ' (' . number_format($age, 2, ',', '.') . ' tahun)' : $label;
+                        };
                         $events = [];
-                        if ($member->join_date) $events[] = ['date' => $member->join_date, 'label' => 'Bergabung dengan JKT48', 'color' => 'green'];
+                        if ($member->join_date) $events[] = ['date' => $member->join_date, 'label' => $withAge('Bergabung dengan JKT48', $member->join_date), 'color' => 'green'];
                         if ($member->cancelled_date) $events[] = ['date' => $member->cancelled_date, 'label' => 'Dibatalkan', 'color' => 'red'];
-                        if ($member->rejoin_date) $events[] = ['date' => $member->rejoin_date, 'label' => 'Masuk kembali', 'color' => 'blue'];
-                        if ($member->promotion_date) $events[] = ['date' => $member->promotion_date, 'label' => 'Promosi ke Tim Inti', 'color' => 'purple'];
+                        if ($member->rejoin_date) $events[] = ['date' => $member->rejoin_date, 'label' => $withAge('Masuk kembali', $member->rejoin_date), 'color' => 'blue'];
+                        if ($member->promotion_date) $events[] = ['date' => $member->promotion_date, 'label' => $withAge('Promosi ke Tim Inti', $member->promotion_date), 'color' => 'purple'];
                         if ($member->graduation_announce_date) $events[] = ['date' => $member->graduation_announce_date, 'label' => 'Mengumumkan kelulusan' . ($member->graduation_announce_event ? " di {$member->graduation_announce_event}" : ''), 'color' => 'amber'];
-                        if ($member->graduation_date) $events[] = ['date' => $member->graduation_date, 'label' => 'Lulus dari JKT48', 'color' => 'slate'];
+                        if ($member->graduation_date) $events[] = ['date' => $member->graduation_date, 'label' => $withAge('Lulus dari JKT48', $member->graduation_date), 'color' => 'slate'];
                         usort($events, fn ($a, $b) => $a['date'] <=> $b['date']);
                     @endphp
 
