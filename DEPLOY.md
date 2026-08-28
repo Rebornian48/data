@@ -3,6 +3,7 @@
 ## 📋 Persiapan Lokal
 
 ### 1. Inisialisasi Git Repository
+
 ```bash
 cd jkt48_data
 git init
@@ -19,6 +20,7 @@ git commit -m "Initial commit: JKT48 Database Laravel App"
 5. Click "Create repository"
 
 ### 3. Push ke GitHub
+
 ```bash
 git remote add origin https://github.com/username/jkt48-database.git
 git branch -M main
@@ -69,6 +71,7 @@ git push -u origin main
 ## 🖥️ Deploy via SSH
 
 ### 1. Connect to Server via SSH
+
 ```bash
 # Windows: Gunakan PuTTY atau Windows Terminal
 ssh u1234567@jkt48.rebornian48.my.id -p 65002
@@ -78,6 +81,7 @@ ssh -p 65002 u1234567@jkt48.rebornian48.my.id
 ```
 
 ### 2. Setup Working Directory
+
 ```bash
 # Buat directory untuk aplikasi
 mkdir -p ~/jkt48.rebornian48.my.id
@@ -91,6 +95,7 @@ composer install --optimize-autoloader --no-dev
 ```
 
 ### 3. Setup Environment
+
 ```bash
 # Copy .env.example ke .env
 cp .env.example .env
@@ -100,6 +105,7 @@ php artisan key:generate
 ```
 
 ### 4. Edit .env File
+
 ```bash
 nano .env
 ```
@@ -129,6 +135,7 @@ QUEUE_CONNECTION=sync
 ```
 
 ### 5. Setup Permissions
+
 ```bash
 # Set permissions untuk storage dan bootstrap/cache
 chmod -R 775 storage
@@ -140,6 +147,7 @@ php artisan storage:link
 ```
 
 ### 6. Run Migrations & Seed
+
 ```bash
 # Jalankan migrations
 php artisan migrate --force
@@ -149,6 +157,7 @@ php artisan db:seed --force
 ```
 
 ### 7. Build Frontend Assets
+
 ```bash
 # Install npm dependencies
 npm install
@@ -158,6 +167,7 @@ npm run build
 ```
 
 ### 8. Setup .htaccess untuk Subdirectory
+
 ```bash
 # Edit public/.htaccess
 nano public/.htaccess
@@ -219,11 +229,13 @@ https://jkt48.rebornian48.my.id/data
 ```
 
 ### 2. Test Admin Panel
+
 ```
 https://jkt48.rebornian48.my.id/data/admin
 ```
 
 ### 3. Buat Admin User
+
 ```bash
 # Login ke SSH
 ssh u1234567@jkt48.rebornian48.my.id -p 65002
@@ -246,6 +258,7 @@ User::create([
 ## 🔧 Troubleshooting
 
 ### Error 500
+
 ```bash
 # Cek permission
 chmod -R 775 storage
@@ -256,6 +269,7 @@ tail -f storage/logs/laravel.log
 ```
 
 ### Database Connection Error
+
 ```bash
 # Pastikan credentials benar di .env
 cat .env | grep DB_
@@ -266,6 +280,7 @@ DB::connection()->getPdo();
 ```
 
 ### Assets Tidak Load
+
 ```bash
 # Rebuild assets
 npm run build
@@ -277,6 +292,7 @@ php artisan view:clear
 ```
 
 ### Route Not Found
+
 ```bash
 # Pastikan .htaccess ada di public/
 cat public/.htaccess
@@ -322,6 +338,7 @@ php artisan queue:restart
 ## 🔄 Update Aplikasi
 
 ### Via SSH
+
 ```bash
 cd ~/jkt48.rebornian48.my.id
 git pull origin main
@@ -346,6 +363,7 @@ Jika ingin auto-deploy saat push ke GitHub:
 ## 📊 Database Backup
 
 ### Manual Backup via SSH
+
 ```bash
 # Backup database
 mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql

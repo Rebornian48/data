@@ -283,7 +283,7 @@ class DashboardController extends Controller
 
         // Sort each day so gens > graduates > birthdays reads first
         $order = ['gen' => 0, 'graduate' => 1, 'birthday' => 2];
-        foreach ($events as $k => $list) {
+        foreach (array_keys($events) as $k) {
             usort($events[$k], fn ($a, $b) => $order[$a['type']] <=> $order[$b['type']]);
         }
 
@@ -297,7 +297,8 @@ class DashboardController extends Controller
         for ($d = 1; $d <= $daysInMonth; $d++) {
             $cells[] = $d;
         }
-        while (count($cells) % 7 !== 0) {
+        $pad = (7 - count($cells) % 7) % 7;
+        for ($i = 0; $i < $pad; $i++) {
             $cells[] = null;
         }
         $weeks = array_chunk($cells, 7);

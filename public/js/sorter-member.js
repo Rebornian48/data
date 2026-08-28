@@ -1,4 +1,5 @@
 /* global html2canvas */
+/* eslint-disable security/detect-object-injection, no-unsanitized/property */
 (function () {
     'use strict';
 

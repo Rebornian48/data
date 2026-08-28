@@ -15,12 +15,14 @@ Pastikan sudah terinstall:
 ## 🚀 Quick Start
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/username/jkt48-database.git
 cd jkt48-database
 ```
 
 ### 2. Jalankan Setup Script
+
 ```bash
 # Linux/Mac
 chmod +x setup.sh
@@ -31,6 +33,7 @@ bash setup.sh
 ```
 
 ### 3. Manual Setup (Alternatif)
+
 ```bash
 # Install dependencies
 composer install
@@ -57,11 +60,13 @@ npm run build
 ## ⚙️ Konfigurasi Database
 
 ### 1. Buat Database
+
 ```sql
 CREATE DATABASE jkt48_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 ### 2. Edit .env
+
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -72,11 +77,13 @@ DB_PASSWORD=
 ```
 
 ### 3. Jalankan Migrations
+
 ```bash
 php artisan migrate
 ```
 
 ### 4. Seed dari Excel (Opsional)
+
 ```bash
 # Copy file Excel ke database/seeders/data/JKT48_Database.xlsx
 php artisan db:seed
@@ -100,6 +107,7 @@ Buka:
 ## 🔐 Setup Auth (Opsional)
 
 ### Install Laravel Breeze
+
 ```bash
 composer require laravel/breeze --dev
 php artisan breeze:install blade
@@ -108,6 +116,7 @@ php artisan migrate
 ```
 
 ### Buat Admin User
+
 ```bash
 php artisan tinker
 ```
@@ -205,12 +214,14 @@ php artisan tinker
 ## 🐛 Troubleshooting
 
 ### Permission Denied
+
 ```bash
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 ```
 
 ### Database Connection Failed
+
 ```bash
 # Check .env
 cat .env | grep DB_
@@ -221,12 +232,14 @@ DB::connection()->getPdo();
 ```
 
 ### Class Not Found
+
 ```bash
 composer dump-autoload
 composer install
 ```
 
 ### Token Mismatch
+
 ```bash
 # Clear session
 php artisan session:table

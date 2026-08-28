@@ -66,7 +66,7 @@ class MemberController extends Controller
 
     public function update(Request $request, Member $member)
     {
-        $data = $this->validateMember($request, $member);
+        $data = $this->validateMember($request);
         $singles = $request->input('singles', []);
 
         $member->update($data);
@@ -87,7 +87,7 @@ class MemberController extends Controller
             ->with('success', "Member '{$name}' berhasil dihapus.");
     }
 
-    private function validateMember(Request $request, ?Member $member = null): array
+    private function validateMember(Request $request): array
     {
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],

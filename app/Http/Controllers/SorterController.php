@@ -27,6 +27,9 @@ class SorterController extends Controller
         return view("sorter.{$type}", $payload);
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.UnusedPrivateMethod") Called via dynamic dispatch in show().
+     */
     private function dataMember(): array
     {
         $generations = Generation::orderByRaw("

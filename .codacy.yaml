@@ -11,3 +11,6 @@ exclude_paths:
   - "database/seeders/**"
   - "config/**"
   - "bootstrap/**"
+  - "CHANGELOG.md"
+  - "public/css/**"
+  - "resources/css/**"
