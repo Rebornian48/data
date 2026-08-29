@@ -104,7 +104,7 @@ class MemberController extends Controller
             'graduation_date' => ['nullable', 'date'],
             'status' => ['required', Rule::in(['Aktif', 'Lulus'])],
             'restructure_status' => ['nullable', 'string', 'max:100'],
-            'photo_url' => ['nullable', 'url', 'max:500'],
+            'photo_url' => ['nullable', 'string', 'max:500'],
             'bio' => ['nullable', 'string'],
         ]);
     }

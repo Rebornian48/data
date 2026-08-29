@@ -55,8 +55,8 @@
 
         <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Foto (URL)</label>
-            <input type="url" name="photo_url" value="{{ old('photo_url', $member->photo_url ?? '') }}"
-                   placeholder="https://..."
+            <input type="text" name="photo_url" value="{{ old('photo_url', $member->photo_url ?? '') }}"
+                   placeholder="https://... atau /public/img/nama.jpg"
                    class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
         </div>
 
