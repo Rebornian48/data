@@ -93,7 +93,7 @@
     {{-- Age & graduation stats table --}}
     <div class="mb-4">
         <h2 class="text-2xl font-bold text-slate-900 mb-1">Statistik Usia & Kelulusan per Generasi</h2>
-        <p class="text-xs text-slate-500">Format usia: (usia saat bergabung, usia saat ini / saat lulus)</p>
+        <p class="text-xs text-slate-500">Format usia: (usia saat ini untuk aktif, usia saat lulus untuk yang sudah lulus)</p>
     </div>
 
     <div class="bg-white overflow-x-auto" style="border:3px solid #000;box-shadow:6px 6px 0 #000;">

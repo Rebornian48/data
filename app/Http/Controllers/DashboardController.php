@@ -207,9 +207,9 @@ class DashboardController extends Controller
         $bulan = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
         $fmt = fn ($d) => $d ? $d->day.' '.$bulan[(int)$d->month].' '.$d->year : '';
 
-        $ageAtJoin = fn ($m) => (int) $m->birth_date->diffInYears($m->join_date);
-        $ageNowOrGrad = fn ($m) => (int) $m->birth_date->diffInYears($m->graduation_date ?? now());
-        $ageNow = fn ($m) => (int) $m->birth_date->diffInYears(now());
+        $ageFmt = fn ($years) => number_format((float) $years, 2, ',', '');
+        $ageNowOrGrad = fn ($m) => $ageFmt($m->birth_date->floatDiffInYears($m->graduation_date ?? now()));
+        $ageNow = fn ($m) => $ageFmt($m->birth_date->floatDiffInYears(now()));
 
         $out = [];
         foreach ($displayCodes as $code) {
@@ -233,8 +233,8 @@ class DashboardController extends Controller
             $fastest = $graduated->isEmpty() ? null : $graduated->sortBy(fn ($m) => $m->join_date->diffInDays($m->graduation_date))->first();
             $latest = $graduated->isEmpty() ? null : $graduated->sortByDesc(fn ($m) => $m->graduation_date->timestamp)->first();
 
-            $mkAge = fn ($m) => $m ? "{$m->name} ({$ageAtJoin($m)}, {$ageNowOrGrad($m)})" : '—';
-            $mkAgeActive = fn ($m) => $m ? "{$m->name} ({$ageAtJoin($m)}, {$ageNow($m)})" : '—';
+            $mkAge = fn ($m) => $m ? "{$m->name} ({$ageNowOrGrad($m)} tahun)" : '—';
+            $mkAgeActive = fn ($m) => $m ? "{$m->name} ({$ageNow($m)} tahun)" : '—';
             $mkDate = fn ($m) => $m ? "{$m->name} ({$fmt($m->graduation_date)})" : '—';
 
             $out[$code] = [
