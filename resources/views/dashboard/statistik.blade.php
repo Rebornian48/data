@@ -58,7 +58,7 @@
                             </td>
                             <td class="py-2 px-3 text-right text-slate-700">
                                 @if ($code === '10' || $r['survivors'] === 0)
-                                    <span class="text-slate-400">—</span>
+                                    <span class="text-slate-300"></span>
                                 @else
                                     <span class="font-bold">{{ $r['survivorsActive'] }}</span> / {{ $r['survivors'] }}
                                 @endif

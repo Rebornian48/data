@@ -125,22 +125,15 @@ class DashboardController extends Controller
             ->groupBy('generation_id')->pluck('c', 'generation_id');
 
         $numericCodes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
-        $vCodes = ['V1','V2'];
+        $displayCodes = array_merge($numericCodes, ['V1','V2']);
+        $labels = ['V1' => 'Virtual Gen 1', 'V2' => 'Virtual Gen 2'];
 
-        $bucketize = function (\Illuminate\Support\Collection $byGenId) use ($gens, $numericCodes, $vCodes) {
+        $bucketize = function (\Illuminate\Support\Collection $byGenId) use ($gens, $displayCodes) {
             $out = [];
-            foreach ($numericCodes as $code) {
+            foreach ($displayCodes as $code) {
                 $gen = $gens->get($code);
                 $out[$code] = $gen ? (int) ($byGenId[$gen->id] ?? 0) : 0;
             }
-            $vTotal = 0;
-            foreach ($vCodes as $code) {
-                $gen = $gens->get($code);
-                if ($gen) {
-                    $vTotal += (int) ($byGenId[$gen->id] ?? 0);
-                }
-            }
-            $out['V'] = $vTotal;
 
             return $out;
         };
@@ -151,8 +144,8 @@ class DashboardController extends Controller
         $survivorsActive = $bucketize($survivorsStillActiveByGen);
 
         $rows = [];
-        foreach (array_merge($numericCodes, ['V']) as $code) {
-            $label = $code === 'V' ? 'JKT48V' : 'Generasi '.$code;
+        foreach ($displayCodes as $code) {
+            $label = $labels[$code] ?? 'Generasi '.$code;
             $rows[$code] = [
                 'label' => $label,
                 'active' => $current[$code],
@@ -183,7 +176,8 @@ class DashboardController extends Controller
             '11' => '31 Oktober 2022',
             '12' => '18 November 2023',
             '13' => '31 Oktober 2024',
-            'V' => '22 Agustus 2023',
+            'V1' => '30 Juli 2023',
+            'V2' => '1 Januari 2024',
         ];
 
         return view('dashboard.statistik', compact('rows', 'totals', 'formationDates'));
