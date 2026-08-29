@@ -99,6 +99,96 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function statistik()
+    {
+        $newEraDate = '2021-03-14';
+
+        $gens = Generation::orderBy('id')->get()->keyBy('code');
+
+        $activeByGen = Member::where('status', 'Aktif')
+            ->selectRaw('generation_id, count(*) as c')
+            ->groupBy('generation_id')->pluck('c', 'generation_id');
+
+        $allByGen = Member::selectRaw('generation_id, count(*) as c')
+            ->groupBy('generation_id')->pluck('c', 'generation_id');
+
+        $survivorsByGen = Member::whereDate('join_date', '<=', $newEraDate)
+            ->where(function ($q) use ($newEraDate) {
+                $q->whereNull('graduation_date')->orWhereDate('graduation_date', '>', $newEraDate);
+            })
+            ->selectRaw('generation_id, count(*) as c')
+            ->groupBy('generation_id')->pluck('c', 'generation_id');
+
+        $survivorsStillActiveByGen = Member::where('status', 'Aktif')
+            ->whereDate('join_date', '<=', $newEraDate)
+            ->selectRaw('generation_id, count(*) as c')
+            ->groupBy('generation_id')->pluck('c', 'generation_id');
+
+        $numericCodes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
+        $vCodes = ['V1','V2'];
+
+        $bucketize = function (\Illuminate\Support\Collection $byGenId) use ($gens, $numericCodes, $vCodes) {
+            $out = [];
+            foreach ($numericCodes as $code) {
+                $gen = $gens->get($code);
+                $out[$code] = $gen ? (int) ($byGenId[$gen->id] ?? 0) : 0;
+            }
+            $vTotal = 0;
+            foreach ($vCodes as $code) {
+                $gen = $gens->get($code);
+                if ($gen) {
+                    $vTotal += (int) ($byGenId[$gen->id] ?? 0);
+                }
+            }
+            $out['V'] = $vTotal;
+
+            return $out;
+        };
+
+        $current = $bucketize($activeByGen);
+        $historical = $bucketize($allByGen);
+        $survivors = $bucketize($survivorsByGen);
+        $survivorsActive = $bucketize($survivorsStillActiveByGen);
+
+        $rows = [];
+        foreach (array_merge($numericCodes, ['V']) as $code) {
+            $label = $code === 'V' ? 'JKT48V' : 'Generasi '.$code;
+            $rows[$code] = [
+                'label' => $label,
+                'active' => $current[$code],
+                'total' => $historical[$code],
+                'survivors' => $survivors[$code],
+                'survivorsActive' => $survivorsActive[$code],
+            ];
+        }
+
+        $totals = [
+            'active' => array_sum($current),
+            'all' => array_sum($historical),
+            'survivors' => array_sum($survivors),
+            'survivorsActive' => array_sum($survivorsActive),
+        ];
+
+        $formationDates = [
+            '1' => '2 November 2011',
+            '2' => '3 November 2012',
+            '3' => '15 Maret 2014',
+            '4' => '16 Mei 2015',
+            '5' => '28 Mei 2016',
+            '6' => '8 April 2018',
+            '7' => '29 September 2018',
+            '8' => '27 April 2019',
+            '9' => '1 Desember 2019',
+            '10' => '27 Agustus 2020, dibubarkan 4 Desember 2020, dibentuk kembali pada 18 Desember 2021',
+            '11' => '31 Oktober 2022',
+            '12' => '18 November 2023',
+            '13' => '31 Oktober 2024',
+            'V' => '22 Agustus 2023',
+        ];
+
+        return view('dashboard.statistik', compact('rows', 'totals', 'formationDates'));
+    }
+
     public function captains()
     {
         $captains = Captain::with('member.generation')

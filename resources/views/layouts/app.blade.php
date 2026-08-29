@@ -38,6 +38,10 @@
                            class="text-sm font-bold {{ request()->routeIs('captains.*') ? 'underline' : 'hover:underline' }}">
                             KAPTEN
                         </a>
+                        <a href="{{ route('statistik.index') }}"
+                           class="text-sm font-bold {{ request()->routeIs('statistik.*') ? 'underline' : 'hover:underline' }}">
+                            STATISTIK
+                        </a>
                         <a href="{{ route('restrukturisasi.index') }}"
                            class="text-sm font-bold {{ request()->routeIs('restrukturisasi.*') ? 'underline' : 'hover:underline' }}">
                             RESTRUKTURISASI
