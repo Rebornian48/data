@@ -180,6 +180,18 @@ class DashboardController extends Controller
             'V2' => '1 Januari 2024',
         ];
 
+        $bulan = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        foreach ($displayCodes as $code) {
+            if (!empty($formationDates[$code])) {
+                continue;
+            }
+            $gen = $gens->get($code);
+            $d = $gen?->join_date ?? $gen?->announcement_date ?? null;
+            if ($d) {
+                $formationDates[$code] = $d->day.' '.$bulan[(int)$d->month].' '.$d->year;
+            }
+        }
+
         return view('dashboard.statistik', compact('rows', 'totals', 'formationDates'));
     }
 

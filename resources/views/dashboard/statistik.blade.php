@@ -63,7 +63,12 @@
                                     <span class="font-bold">{{ $r['survivorsActive'] }}</span> / {{ $r['survivors'] }}
                                 @endif
                             </td>
-                            <td class="py-2 px-3 text-slate-600 text-xs">{{ $formationDates[$code] ?? '—' }}</td>
+                            <td class="py-2 px-3 text-slate-600 text-xs">
+                                {{ $formationDates[$code] ?? '' }}
+                                @if (empty($formationDates[$code]))
+                                    <span class="text-slate-400 italic">belum diisi</span>
+                                @endif
+                            </td>
                         </tr>
                     @endif
                 @endforeach
