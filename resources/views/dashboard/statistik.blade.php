@@ -50,15 +50,20 @@
     </div>
 
     {{-- Section: new era survivors --}}
+    @php
+        $survTotal = $totals['survivors'] - ($rows['10']['survivors'] ?? 0);
+        $survActiveTotal = $totals['survivorsActive'] - ($rows['10']['survivorsActive'] ?? 0);
+    @endphp
     <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6"
          style="border:3px solid #000;box-shadow:6px 6px 0 #000;">
         <h2 class="text-lg font-bold text-slate-900 mb-4">
             Total member JKT48 yang bertahan semenjak JKT48 New Era (Maret 2021):
-            <span class="text-red-600">{{ $totals['survivorsActive'] }} dari {{ $totals['survivors'] }} member</span>
+            <span class="text-red-600">{{ $survActiveTotal }} dari {{ $survTotal }} member</span>
         </h2>
 
         <ul class="space-y-1 text-slate-800">
             @foreach ($rows as $code => $r)
+                @continue($code === '10')
                 @if ($r['survivors'] > 0)
                     <li class="flex justify-between border-b border-dashed border-slate-200 py-1">
                         <span class="font-medium">{{ $r['label'] }}</span>
