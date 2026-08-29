@@ -192,7 +192,63 @@ class DashboardController extends Controller
             }
         }
 
-        return view('dashboard.statistik', compact('rows', 'totals', 'formationDates'));
+        $ageStats = $this->buildAgeStats($gens, $displayCodes, $labels);
+
+        return view('dashboard.statistik', compact('rows', 'totals', 'formationDates', 'ageStats'));
+    }
+
+    private function buildAgeStats($gens, array $displayCodes, array $labels): array
+    {
+        $members = Member::with('generation')
+            ->whereNotNull('birth_date')
+            ->whereNotNull('join_date')
+            ->get();
+
+        $bulan = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        $fmt = fn ($d) => $d ? $d->day.' '.$bulan[(int)$d->month].' '.$d->year : '';
+
+        $ageAtJoin = fn ($m) => (int) $m->birth_date->diffInYears($m->join_date);
+        $ageNowOrGrad = fn ($m) => (int) $m->birth_date->diffInYears($m->graduation_date ?? now());
+        $ageNow = fn ($m) => (int) $m->birth_date->diffInYears(now());
+
+        $out = [];
+        foreach ($displayCodes as $code) {
+            $gen = $gens->get($code);
+            if (! $gen) {
+                continue;
+            }
+            $genMembers = $members->where('generation_id', $gen->id);
+            if ($genMembers->isEmpty()) {
+                continue;
+            }
+
+            $oldest = $genMembers->sortByDesc(fn ($m) => $m->birth_date->timestamp * -1)->first();
+            $youngest = $genMembers->sortByDesc(fn ($m) => $m->birth_date->timestamp)->first();
+
+            $active = $genMembers->where('status', 'Aktif');
+            $oldestActive = $active->isEmpty() ? null : $active->sortBy(fn ($m) => $m->birth_date->timestamp)->first();
+            $youngestActive = $active->isEmpty() ? null : $active->sortByDesc(fn ($m) => $m->birth_date->timestamp)->first();
+
+            $graduated = $genMembers->filter(fn ($m) => $m->graduation_date && $m->join_date);
+            $fastest = $graduated->isEmpty() ? null : $graduated->sortBy(fn ($m) => $m->join_date->diffInDays($m->graduation_date))->first();
+            $latest = $graduated->isEmpty() ? null : $graduated->sortByDesc(fn ($m) => $m->graduation_date->timestamp)->first();
+
+            $mkAge = fn ($m) => $m ? "{$m->name} ({$ageAtJoin($m)}, {$ageNowOrGrad($m)})" : '—';
+            $mkAgeActive = fn ($m) => $m ? "{$m->name} ({$ageAtJoin($m)}, {$ageNow($m)})" : '—';
+            $mkDate = fn ($m) => $m ? "{$m->name} ({$fmt($m->graduation_date)})" : '—';
+
+            $out[$code] = [
+                'label' => $labels[$code] ?? 'Generasi '.$code,
+                'oldest' => $mkAge($oldest),
+                'youngest' => $mkAge($youngest),
+                'oldestActive' => $mkAgeActive($oldestActive),
+                'youngestActive' => $mkAgeActive($youngestActive),
+                'fastestGrad' => $mkDate($fastest),
+                'latestGrad' => $mkDate($latest),
+            ];
+        }
+
+        return $out;
     }
 
     public function captains()

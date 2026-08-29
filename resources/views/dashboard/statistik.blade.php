@@ -86,8 +86,43 @@
         </table>
     </div>
 
-    <p class="text-xs text-slate-500">
+    <p class="text-xs text-slate-500 mb-8">
         Catatan: Generasi 10 dikecualikan dari kolom "Sejak New Era" karena dibubarkan Des 2020 lalu dibentuk kembali Des 2021.
     </p>
+
+    {{-- Age & graduation stats table --}}
+    <div class="mb-4">
+        <h2 class="text-2xl font-bold text-slate-900 mb-1">Statistik Usia & Kelulusan per Generasi</h2>
+        <p class="text-xs text-slate-500">Format usia: (usia saat bergabung, usia saat ini / saat lulus)</p>
+    </div>
+
+    <div class="bg-white overflow-x-auto" style="border:3px solid #000;box-shadow:6px 6px 0 #000;">
+        <table class="w-full text-xs">
+            <thead>
+                <tr class="bg-slate-900 text-white">
+                    <th class="text-left py-2 px-3 font-bold">Generasi</th>
+                    <th class="text-left py-2 px-3 font-bold">Tertua (semua)</th>
+                    <th class="text-left py-2 px-3 font-bold">Termuda (semua)</th>
+                    <th class="text-left py-2 px-3 font-bold">Tertua Aktif</th>
+                    <th class="text-left py-2 px-3 font-bold">Termuda Aktif</th>
+                    <th class="text-left py-2 px-3 font-bold">Tercepat Lulus</th>
+                    <th class="text-left py-2 px-3 font-bold">Terakhir Lulus</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($ageStats as $code => $s)
+                    <tr class="border-t border-slate-200 hover:bg-slate-50 align-top">
+                        <td class="py-2 px-3 font-bold whitespace-nowrap">{{ $s['label'] }}</td>
+                        <td class="py-2 px-3 text-slate-700">{{ $s['oldest'] }}</td>
+                        <td class="py-2 px-3 text-slate-700">{{ $s['youngest'] }}</td>
+                        <td class="py-2 px-3 text-slate-700">{{ $s['oldestActive'] }}</td>
+                        <td class="py-2 px-3 text-slate-700">{{ $s['youngestActive'] }}</td>
+                        <td class="py-2 px-3 text-slate-700">{{ $s['fastestGrad'] }}</td>
+                        <td class="py-2 px-3 text-slate-700">{{ $s['latestGrad'] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection
