@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             MemberSeeder::class,
             Generation14MemberSeeder::class,
             CaptainSeeder::class,
+            AdminUserSeeder::class,
         ]);
 
         $this->command->info('JKT48 database seeded successfully.');

@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Admin\CaptainController;
 use App\Http\Controllers\Admin\GenerationController;
+use App\Http\Controllers\Admin\MapController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
+use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\SingleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PetaController;
 use App\Http\Controllers\SorterController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +26,11 @@ Route::get('/singles', [DashboardController::class, 'singles'])->name('singles.i
 Route::get('/captains', [DashboardController::class, 'captains'])->name('captains.index');
 Route::get('/restrukturisasi', [DashboardController::class, 'restrukturisasi'])->name('restrukturisasi.index');
 Route::get('/kalender', [DashboardController::class, 'calendar'])->name('calendar.index');
+
+// ---------- Peta (public map) ----------
+Route::get('/peta',            [PetaController::class, 'show'])->name('peta.default');
+Route::get('/peta/{slug}',     [PetaController::class, 'show'])->name('peta.show');
+Route::get('/api/peta/{slug}', [PetaController::class, 'data'])->name('peta.data');
 
 // ---------- Sorter ----------
 Route::get('/sorter', [SorterController::class, 'index'])->name('sorter.index');
@@ -43,4 +51,8 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(functi
     Route::resource('singles', SingleController::class)->except(['show']);
     Route::resource('generations', GenerationController::class)->except(['show']);
     Route::resource('captains', CaptainController::class)->except(['show']);
+    Route::resource('maps', MapController::class)->except(['show']);
+
+    Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
+    Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
 });

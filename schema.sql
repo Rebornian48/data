@@ -7,6 +7,14 @@
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS `map_notes`;
+DROP TABLE IF EXISTS `map_polygon_settings`;
+DROP TABLE IF EXISTS `map_polygon_layers`;
+DROP TABLE IF EXISTS `map_polylines`;
+DROP TABLE IF EXISTS `map_points`;
+DROP TABLE IF EXISTS `map_settings`;
+DROP TABLE IF EXISTS `maps`;
+DROP TABLE IF EXISTS `admin_users`;
 DROP TABLE IF EXISTS `member_singles`;
 DROP TABLE IF EXISTS `captains`;
 DROP TABLE IF EXISTS `members`;
@@ -171,3 +179,105 @@ SELECT
 FROM generations g
 LEFT JOIN members m ON m.generation_id = g.id
 GROUP BY g.id, g.code, g.name, g.join_date;
+
+-- ============================================================================
+-- Admin / Auth
+-- ============================================================================
+
+CREATE TABLE `admin_users` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(64) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL COMMENT 'bcrypt hash',
+    `created_at` TIMESTAMP NULL DEFAULT NULL,
+    `updated_at` TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================================
+-- Peta JKT48 (map module — mirrors Google Sheets tabs)
+-- ============================================================================
+
+CREATE TABLE `maps` (
+    `id`              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `slug`            VARCHAR(64)  NOT NULL UNIQUE,
+    `title`           VARCHAR(255) NOT NULL,
+    `subtitle`        VARCHAR(255) NULL,
+    `google_sheet_id` VARCHAR(64)  NULL,
+    `is_published`    TINYINT(1)   NOT NULL DEFAULT 1,
+    `created_at`      TIMESTAMP    NULL DEFAULT NULL,
+    `updated_at`      TIMESTAMP    NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `map_settings` (
+    `id`     BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `map_id` BIGINT UNSIGNED NOT NULL,
+    `key`    VARCHAR(128) NOT NULL,
+    `value`  TEXT NULL,
+    UNIQUE KEY `uniq_map_setting` (`map_id`, `key`),
+    CONSTRAINT `fk_map_settings_map` FOREIGN KEY (`map_id`) REFERENCES `maps`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `map_points` (
+    `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `map_id`       BIGINT UNSIGNED NOT NULL,
+    `group`        VARCHAR(128) NULL,
+    `marker_icon`  VARCHAR(128) NULL,
+    `marker_color` VARCHAR(64)  NULL,
+    `icon_color`   VARCHAR(64)  NULL,
+    `custom_size`  VARCHAR(32)  NULL,
+    `name`         VARCHAR(255) NOT NULL,
+    `image`        VARCHAR(512) NULL,
+    `description`  TEXT NULL,
+    `location`     VARCHAR(512) NULL,
+    `latitude`     DECIMAL(10,7) NULL,
+    `longitude`    DECIMAL(10,7) NULL,
+    `extras`       JSON NULL,
+    `sort`         INT NOT NULL DEFAULT 0,
+    `created_at`   TIMESTAMP NULL DEFAULT NULL,
+    `updated_at`   TIMESTAMP NULL DEFAULT NULL,
+    KEY `idx_points_map_group` (`map_id`, `group`),
+    KEY `idx_points_latlng` (`latitude`, `longitude`),
+    CONSTRAINT `fk_points_map` FOREIGN KEY (`map_id`) REFERENCES `maps`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `map_polylines` (
+    `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `map_id`       BIGINT UNSIGNED NOT NULL,
+    `display_name` VARCHAR(255) NOT NULL,
+    `geojson_url`  VARCHAR(1024) NOT NULL,
+    `description`  TEXT NULL,
+    `color`        VARCHAR(32) NULL,
+    `sort`         INT NOT NULL DEFAULT 0,
+    `created_at`   TIMESTAMP NULL DEFAULT NULL,
+    `updated_at`   TIMESTAMP NULL DEFAULT NULL,
+    CONSTRAINT `fk_polylines_map` FOREIGN KEY (`map_id`) REFERENCES `maps`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `map_polygon_layers` (
+    `id`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `map_id`     BIGINT UNSIGNED NOT NULL,
+    `name`       VARCHAR(128) NOT NULL,
+    `sort`       INT NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP NULL DEFAULT NULL,
+    `updated_at` TIMESTAMP NULL DEFAULT NULL,
+    UNIQUE KEY `uniq_polygon_layer` (`map_id`, `name`),
+    CONSTRAINT `fk_polylayer_map` FOREIGN KEY (`map_id`) REFERENCES `maps`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `map_polygon_settings` (
+    `id`                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `polygon_layer_id`  BIGINT UNSIGNED NOT NULL,
+    `key`               VARCHAR(128) NOT NULL,
+    `value`             TEXT NULL,
+    UNIQUE KEY `uniq_poly_setting` (`polygon_layer_id`, `key`),
+    CONSTRAINT `fk_polysetting_layer` FOREIGN KEY (`polygon_layer_id`) REFERENCES `map_polygon_layers`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `map_notes` (
+    `id`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `map_id`     BIGINT UNSIGNED NOT NULL,
+    `body`       TEXT NULL,
+    `sort`       INT NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP NULL DEFAULT NULL,
+    `updated_at` TIMESTAMP NULL DEFAULT NULL,
+    CONSTRAINT `fk_notes_map` FOREIGN KEY (`map_id`) REFERENCES `maps`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

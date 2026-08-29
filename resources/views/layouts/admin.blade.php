@@ -120,6 +120,24 @@
                     </svg>
                     KAPTEN
                 </a>
+                <a href="{{ route('admin.maps.index') }}"
+                   class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.maps.*') ? 'active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                    </svg>
+                    PETA
+                </a>
+
+                <div class="px-4 mt-4 mb-2 text-xs font-bold text-black uppercase tracking-wider">
+                    Akun
+                </div>
+                <a href="{{ route('admin.password.edit') }}"
+                   class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.password.*') ? 'active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    UBAH PASSWORD
+                </a>
             </nav>
 
             <div class="p-4 space-y-2" style="border-top:3px solid #000;">
