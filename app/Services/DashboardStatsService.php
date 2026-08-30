@@ -114,15 +114,20 @@ class DashboardStatsService
 
     private function buildGrowthEvents(): array
     {
-        $rows = Member::whereNotNull('join_date')->select('join_date', 'graduation_date', 'cancelled_date')->get();
+        $rows = Member::whereNotNull('join_date')
+            ->select('status', 'join_date', 'graduation_date', 'cancelled_date')->get();
         $events = [];
         foreach ($rows as $m) {
             $events[] = ['date' => $m->join_date->toDateString(), 'type' => 'join'];
-            if ($m->graduation_date) {
-                $events[] = ['date' => $m->graduation_date->toDateString(), 'type' => 'leave'];
+            if ($m->status === 'Aktif') {
+                continue;
             }
-            if ($m->cancelled_date) {
-                $events[] = ['date' => $m->cancelled_date->toDateString(), 'type' => 'leave'];
+            $leave = $m->graduation_date;
+            if ($m->cancelled_date && (! $leave || $m->cancelled_date->lt($leave))) {
+                $leave = $m->cancelled_date;
+            }
+            if ($leave) {
+                $events[] = ['date' => $leave->toDateString(), 'type' => 'leave'];
             }
         }
 

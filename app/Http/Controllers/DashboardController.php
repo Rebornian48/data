@@ -235,7 +235,8 @@ class DashboardController extends Controller
 
             $mkAge = fn ($m) => $m ? "{$m->name} ({$ageNowOrGrad($m)} tahun)" : '—';
             $mkAgeActive = fn ($m) => $m ? "{$m->name} ({$ageNow($m)} tahun)" : '—';
-            $mkDate = fn ($m) => $m ? "{$m->name} ({$fmt($m->graduation_date)})" : '—';
+            $daysFmt = fn ($m) => number_format((int) $m->join_date->diffInDays($m->graduation_date), 0, ',', '.');
+            $mkDate = fn ($m) => $m ? "{$m->name} ({$fmt($m->graduation_date)}. lulus dalam {$daysFmt($m)} hari)" : '—';
 
             $out[$code] = [
                 'label' => $labels[$code] ?? 'Generasi '.$code,
