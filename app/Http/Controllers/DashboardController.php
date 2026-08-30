@@ -211,19 +211,22 @@ class DashboardController extends Controller
         $ageNowOrGrad = fn ($m) => $ageFmt($m->birth_date->floatDiffInYears($m->graduation_date ?? now()));
         $ageNow = fn ($m) => $ageFmt($m->birth_date->floatDiffInYears(now()));
 
+        $anyMemberByGen = Member::selectRaw('generation_id, count(*) as c')
+            ->groupBy('generation_id')->pluck('c', 'generation_id');
+
         $out = [];
         foreach ($displayCodes as $code) {
             $gen = $gens->get($code);
             if (! $gen) {
                 continue;
             }
-            $genMembers = $members->where('generation_id', $gen->id);
-            if ($genMembers->isEmpty()) {
+            if (($anyMemberByGen[$gen->id] ?? 0) === 0) {
                 continue;
             }
+            $genMembers = $members->where('generation_id', $gen->id);
 
-            $oldest = $genMembers->sortByDesc(fn ($m) => $m->birth_date->timestamp * -1)->first();
-            $youngest = $genMembers->sortByDesc(fn ($m) => $m->birth_date->timestamp)->first();
+            $oldest = $genMembers->isEmpty() ? null : $genMembers->sortByDesc(fn ($m) => $m->birth_date->timestamp * -1)->first();
+            $youngest = $genMembers->isEmpty() ? null : $genMembers->sortByDesc(fn ($m) => $m->birth_date->timestamp)->first();
 
             $active = $genMembers->where('status', 'Aktif');
             $oldestActive = $active->isEmpty() ? null : $active->sortBy(fn ($m) => $m->birth_date->timestamp)->first();
