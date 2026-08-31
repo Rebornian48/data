@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\MapController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\SingleController;
+use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PetaController;
@@ -52,6 +53,7 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(functi
     Route::resource('singles', SingleController::class)->except(['show']);
     Route::resource('generations', GenerationController::class)->except(['show']);
     Route::resource('captains', CaptainController::class)->except(['show']);
+    Route::resource('teams', TeamController::class)->except(['show']);
     Route::resource('maps', MapController::class)->except(['show']);
 
     Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');

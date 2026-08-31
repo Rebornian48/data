@@ -113,6 +113,13 @@
                     </svg>
                     SINGLE
                 </a>
+                <a href="{{ route('admin.teams.index') }}"
+                   class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.teams.*') ? 'active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M9 20H4v-2a3 3 0 015.356-1.857M15 7a3 3 0 11-6 0 3 3 0 016 0zM7 10a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4z"/>
+                    </svg>
+                    TIM
+                </a>
                 <a href="{{ route('admin.captains.index') }}"
                    class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.captains.*') ? 'active' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">

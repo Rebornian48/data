@@ -64,6 +64,16 @@ class Member extends Model
         return $this->hasMany(Captain::class);
     }
 
+    public function teamHistory(): HasMany
+    {
+        return $this->hasMany(MemberTeam::class)->orderBy('joined_date');
+    }
+
+    public function currentTeams(): HasMany
+    {
+        return $this->hasMany(MemberTeam::class)->whereNull('left_date');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'Aktif');

@@ -13,13 +13,25 @@
             @endforeach
         </select>
     </div>
-    <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Posisi *</label>
-        <select name="position" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
-            @foreach (['Kapten JKT48','Wakil Kapten JKT48','Kapten Tim J','Kapten Tim KIII','Kapten Tim T'] as $pos)
-                <option value="{{ $pos }}" @selected(old('position', $captain->position ?? '') === $pos)>{{ $pos }}</option>
-            @endforeach
-        </select>
+    <div class="grid grid-cols-2 gap-3">
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Peran *</label>
+            <select name="role" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                @foreach (['Kapten', 'Wakil Kapten'] as $role)
+                    <option value="{{ $role }}" @selected(old('role', $captain->role ?? '') === $role)>{{ $role }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Tim</label>
+            <select name="team_id" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                <option value="">— JKT48 (Umum) —</option>
+                @foreach ($teams as $t)
+                    <option value="{{ $t->id }}" @selected(old('team_id', $captain->team_id ?? '') == $t->id)>Tim {{ $t->code }} — {{ $t->name }}</option>
+                @endforeach
+            </select>
+            <p class="text-xs text-slate-500 mt-1">Kosongkan untuk Kapten / Wakil Kapten JKT48 keseluruhan.</p>
+        </div>
     </div>
     <div class="grid grid-cols-2 gap-3">
         <div>

@@ -129,6 +129,104 @@
     </div>
 </div>
 
+{{-- Team history section --}}
+@isset($teams)
+@php
+    $oldHistory = old('team_history');
+    if (is_array($oldHistory)) {
+        $historyRows = $oldHistory;
+    } else {
+        $historyRows = [];
+        if (isset($member) && $member->exists && $member->relationLoaded('teamHistory')) {
+            foreach ($member->teamHistory as $h) {
+                $historyRows[] = [
+                    'team_id' => $h->team_id,
+                    'joined_date' => $h->joined_date?->format('Y-m-d'),
+                    'left_date' => $h->left_date?->format('Y-m-d'),
+                    'notes' => $h->notes,
+                ];
+            }
+        }
+    }
+@endphp
+<div class="bg-white rounded-xl p-6 border border-slate-200 mt-6">
+    <div class="flex justify-between items-center border-b pb-2 mb-4">
+        <h2 class="font-bold text-slate-900">Riwayat Tim</h2>
+        <button type="button" onclick="addTeamHistoryRow()" class="px-3 py-1 text-xs bg-slate-100 text-slate-700 rounded hover:bg-slate-200">+ Baris</button>
+    </div>
+    <div id="team-history-rows" class="space-y-2">
+        @foreach ($historyRows as $idx => $row)
+            <div class="team-history-row grid grid-cols-12 gap-2 items-end border border-slate-200 rounded-lg p-3">
+                <div class="col-span-3">
+                    <label class="block text-xs text-slate-500 mb-1">Tim</label>
+                    <select name="team_history[{{ $idx }}][team_id]" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+                        <option value="">— pilih —</option>
+                        @foreach ($teams as $t)
+                            <option value="{{ $t->id }}" @selected(($row['team_id'] ?? '') == $t->id)>Tim {{ $t->code }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-span-3">
+                    <label class="block text-xs text-slate-500 mb-1">Masuk</label>
+                    <input type="date" name="team_history[{{ $idx }}][joined_date]" value="{{ $row['joined_date'] ?? '' }}" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+                </div>
+                <div class="col-span-3">
+                    <label class="block text-xs text-slate-500 mb-1">Keluar</label>
+                    <input type="date" name="team_history[{{ $idx }}][left_date]" value="{{ $row['left_date'] ?? '' }}" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-slate-500 mb-1">Catatan</label>
+                    <input type="text" name="team_history[{{ $idx }}][notes]" value="{{ $row['notes'] ?? '' }}" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+                </div>
+                <div class="col-span-1 flex justify-end">
+                    <button type="button" onclick="this.closest('.team-history-row').remove()" class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200">×</button>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    <p class="text-xs text-slate-500 mt-2">Kosongkan "Keluar" jika member masih di tim tersebut. Contoh: <em>1 Juni 2017 – Masuk Tim T</em>, lalu <em>1 Juni 2018 – Masuk Tim KIII</em>.</p>
+</div>
+<template id="team-history-template">
+    <div class="team-history-row grid grid-cols-12 gap-2 items-end border border-slate-200 rounded-lg p-3">
+        <div class="col-span-3">
+            <label class="block text-xs text-slate-500 mb-1">Tim</label>
+            <select name="team_history[__IDX__][team_id]" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+                <option value="">— pilih —</option>
+                @foreach ($teams as $t)
+                    <option value="{{ $t->id }}">Tim {{ $t->code }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-span-3">
+            <label class="block text-xs text-slate-500 mb-1">Masuk</label>
+            <input type="date" name="team_history[__IDX__][joined_date]" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+        </div>
+        <div class="col-span-3">
+            <label class="block text-xs text-slate-500 mb-1">Keluar</label>
+            <input type="date" name="team_history[__IDX__][left_date]" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+        </div>
+        <div class="col-span-2">
+            <label class="block text-xs text-slate-500 mb-1">Catatan</label>
+            <input type="text" name="team_history[__IDX__][notes]" class="w-full text-sm px-2 py-1.5 border border-slate-300 rounded">
+        </div>
+        <div class="col-span-1 flex justify-end">
+            <button type="button" onclick="this.closest('.team-history-row').remove()" class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200">×</button>
+        </div>
+    </div>
+</template>
+<script>
+    (function () {
+        window.__teamHistoryIdx = {{ count($historyRows) }};
+    })();
+    function addTeamHistoryRow() {
+        const tpl = document.getElementById('team-history-template').innerHTML;
+        const idx = window.__teamHistoryIdx++;
+        const html = tpl.replace(/__IDX__/g, idx);
+        document.getElementById('team-history-rows').insertAdjacentHTML('beforeend', html);
+    }
+</script>
+@endisset
+
 {{-- Singles section --}}
 @isset($singles)
 <div class="bg-white rounded-xl p-6 border border-slate-200 mt-6">

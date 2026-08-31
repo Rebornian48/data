@@ -26,7 +26,7 @@ class DashboardController extends Controller
             'longestTenure' => $this->stats->longestTenure(),
             'topSenbatsu' => $this->stats->topSenbatsu(),
             'topCenter' => $this->stats->topCenter(),
-            'activeCaptains' => Captain::with('member.generation')->active()->get(),
+            'activeCaptains' => Captain::with(['member.generation', 'team'])->active()->get(),
             'ageDistribution' => $this->stats->ageDistribution(),
             'birthPlaces' => $this->stats->topBirthPlaces(),
             'memberGrowth' => $this->stats->memberGrowth(),
@@ -35,7 +35,7 @@ class DashboardController extends Controller
 
     public function member(Member $member)
     {
-        $member->load(['generation', 'singles', 'captains']);
+        $member->load(['generation', 'singles', 'captains.team', 'teamHistory.team']);
 
         return view('dashboard.member', compact('member'));
     }
@@ -257,12 +257,13 @@ class DashboardController extends Controller
 
     public function captains()
     {
-        $captains = Captain::with('member.generation')
-            ->orderBy('position')
+        $captains = Captain::with(['member.generation', 'team'])
             ->orderBy('start_date')
             ->get();
 
-        $positions = $captains->groupBy('position')->map(fn ($g) => $g->sortBy('start_date')->values());
+        $positions = $captains->groupBy('position')
+            ->map(fn ($g) => $g->sortBy('start_date')->values())
+            ->sortKeys();
 
         $timelineData = $captains->map(fn ($c) => [
             'position' => $c->position,

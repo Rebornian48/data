@@ -135,6 +135,38 @@
                 </div>
             @endif
 
+            @if ($member->teamHistory->count() > 0)
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">Riwayat Tim</h2>
+                    <div class="space-y-3">
+                        @foreach ($member->teamHistory->sortBy('joined_date') as $mt)
+                            <div class="flex items-start gap-3">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-3 h-3 rounded-full" style="background: {{ $mt->team->color ?: '#94a3b8' }};"></div>
+                                    @if (! $loop->last)
+                                        <div class="w-0.5 flex-1 bg-slate-200 dark:bg-slate-600 mt-1" style="min-height: 32px;"></div>
+                                    @endif
+                                </div>
+                                <div class="flex-1 pb-2">
+                                    <div class="text-xs text-slate-500 dark:text-slate-400">{{ $mt->joined_date->format('d M Y') }}</div>
+                                    <div class="text-slate-900 dark:text-slate-100 font-medium">Masuk {{ $mt->team->name }}</div>
+                                    @if ($mt->notes)
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{{ $mt->notes }}</div>
+                                    @endif
+                                </div>
+                                @if ($mt->left_date)
+                                    <div class="text-xs text-slate-400">
+                                        s/d {{ $mt->left_date->format('d M Y') }}
+                                    </div>
+                                @else
+                                    <span class="text-xs font-medium text-green-600 dark:text-green-400">Aktif</span>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             @if ($member->captains->count() > 0)
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
                     <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">Riwayat Kapten</h2>

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Generation;
 use App\Models\Member;
+use App\Models\MemberTeam;
 use App\Models\Single;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -30,18 +32,21 @@ class MemberController extends Controller
     {
         $generations = Generation::orderBy('id')->get();
         $singles = Single::orderBy('sequence')->get();
+        $teams = Team::orderBy('code')->get();
         $member = new Member;
 
-        return view('admin.members.create', compact('generations', 'singles', 'member'));
+        return view('admin.members.create', compact('generations', 'singles', 'teams', 'member'));
     }
 
     public function store(Request $request)
     {
         $data = $this->validateMember($request);
         $singles = $request->input('singles', []);
+        $teamHistory = $this->validateTeamHistory($request);
 
         $member = Member::create($data);
         $this->syncSingles($member, $singles);
+        $this->syncTeamHistory($member, $teamHistory);
 
         return redirect()
             ->route('admin.members.index')
@@ -59,18 +64,21 @@ class MemberController extends Controller
     {
         $generations = Generation::orderBy('id')->get();
         $singles = Single::orderBy('sequence')->get();
-        $member->load('singles');
+        $teams = Team::orderBy('code')->get();
+        $member->load(['singles', 'teamHistory.team']);
 
-        return view('admin.members.edit', compact('member', 'generations', 'singles'));
+        return view('admin.members.edit', compact('member', 'generations', 'singles', 'teams'));
     }
 
     public function update(Request $request, Member $member)
     {
         $data = $this->validateMember($request);
         $singles = $request->input('singles', []);
+        $teamHistory = $this->validateTeamHistory($request);
 
         $member->update($data);
         $this->syncSingles($member, $singles);
+        $this->syncTeamHistory($member, $teamHistory);
 
         return redirect()
             ->route('admin.members.index')
@@ -123,5 +131,50 @@ class MemberController extends Controller
             $sync[$singleId] = ['role' => $role];
         }
         $member->singles()->sync($sync);
+    }
+
+    private function validateTeamHistory(Request $request): array
+    {
+        $rows = $request->input('team_history', []);
+        $clean = [];
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $teamId = $row['team_id'] ?? null;
+            $joined = $row['joined_date'] ?? null;
+            if (! $teamId || ! $joined) {
+                continue;
+            }
+            $clean[] = [
+                'team_id' => (int) $teamId,
+                'joined_date' => $joined,
+                'left_date' => $row['left_date'] ?: null,
+                'notes' => $row['notes'] ?? null,
+            ];
+        }
+
+        $request->merge(['team_history_clean' => $clean]);
+        $request->validate([
+            'team_history_clean.*.team_id' => ['required', 'exists:teams,id'],
+            'team_history_clean.*.joined_date' => ['required', 'date'],
+            'team_history_clean.*.left_date' => ['nullable', 'date'],
+        ]);
+
+        return $clean;
+    }
+
+    private function syncTeamHistory(Member $member, array $rows): void
+    {
+        $member->teamHistory()->delete();
+        foreach ($rows as $r) {
+            MemberTeam::create([
+                'member_id' => $member->id,
+                'team_id' => $r['team_id'],
+                'joined_date' => $r['joined_date'],
+                'left_date' => $r['left_date'],
+                'notes' => $r['notes'],
+            ]);
+        }
     }
 }
