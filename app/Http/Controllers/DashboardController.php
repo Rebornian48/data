@@ -192,9 +192,93 @@ class DashboardController extends Controller
             }
         }
 
+        $kaigaiCodes = ['Kaigai 1', 'Kaigai 2', 'Transfer'];
+        $merged = ['label' => 'Kaigai dan Transfer', 'active' => 0, 'total' => 0, 'survivors' => 0, 'survivorsActive' => 0];
+        $mergedFormation = [];
+        foreach ($kaigaiCodes as $code) {
+            $gen = $gens->get($code);
+            if (! $gen) {
+                continue;
+            }
+            $merged['active'] += (int) ($activeByGen[$gen->id] ?? 0);
+            $merged['total'] += (int) ($allByGen[$gen->id] ?? 0);
+            $merged['survivors'] += (int) ($survivorsByGen[$gen->id] ?? 0);
+            $merged['survivorsActive'] += (int) ($survivorsStillActiveByGen[$gen->id] ?? 0);
+            $d = $gen->join_date;
+            if ($d) {
+                $mergedFormation[] = $code.': '.$d->day.' '.$bulan[(int)$d->month].' '.$d->year;
+            }
+        }
+        if ($merged['total'] > 0 || $mergedFormation) {
+            $rows['KAIGAI_TRANSFER'] = $merged;
+            $formationDates['KAIGAI_TRANSFER'] = implode(' · ', $mergedFormation);
+            $totals['active'] += $merged['active'];
+            $totals['all'] += $merged['total'];
+            $totals['survivors'] += $merged['survivors'];
+            $totals['survivorsActive'] += $merged['survivorsActive'];
+        }
+
         $ageStats = $this->buildAgeStats($gens, $displayCodes, $labels);
+        $kaigaiAgeStat = $this->buildMergedAgeStat($gens, $kaigaiCodes, 'Kaigai dan Transfer');
+        if ($kaigaiAgeStat) {
+            $ageStats['KAIGAI_TRANSFER'] = $kaigaiAgeStat;
+        }
 
         return view('dashboard.statistik', compact('rows', 'totals', 'formationDates', 'ageStats'));
+    }
+
+    private function buildMergedAgeStat($gens, array $codes, string $label): ?array
+    {
+        $genIds = [];
+        foreach ($codes as $code) {
+            $gen = $gens->get($code);
+            if ($gen) {
+                $genIds[] = $gen->id;
+            }
+        }
+        if (! $genIds) {
+            return null;
+        }
+
+        $members = Member::whereIn('generation_id', $genIds)
+            ->whereNotNull('birth_date')
+            ->whereNotNull('join_date')
+            ->get();
+        if ($members->isEmpty()) {
+            return null;
+        }
+
+        $bulan = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        $fmt = fn ($d) => $d ? $d->day.' '.$bulan[(int)$d->month].' '.$d->year : '';
+        $ageFmt = fn ($years) => number_format((float) $years, 2, ',', '');
+        $ageNowOrGrad = fn ($m) => $ageFmt($m->birth_date->floatDiffInYears($m->graduation_date ?? now()));
+        $ageNow = fn ($m) => $ageFmt($m->birth_date->floatDiffInYears(now()));
+
+        $oldest = $members->sortByDesc(fn ($m) => $m->birth_date->timestamp * -1)->first();
+        $youngest = $members->sortByDesc(fn ($m) => $m->birth_date->timestamp)->first();
+
+        $active = $members->where('status', 'Aktif');
+        $oldestActive = $active->isEmpty() ? null : $active->sortBy(fn ($m) => $m->birth_date->timestamp)->first();
+        $youngestActive = $active->isEmpty() ? null : $active->sortByDesc(fn ($m) => $m->birth_date->timestamp)->first();
+
+        $graduated = $members->filter(fn ($m) => $m->graduation_date && $m->join_date);
+        $fastest = $graduated->isEmpty() ? null : $graduated->sortBy(fn ($m) => $m->join_date->diffInDays($m->graduation_date))->first();
+        $latest = $graduated->isEmpty() ? null : $graduated->sortByDesc(fn ($m) => $m->graduation_date->timestamp)->first();
+
+        $mkAge = fn ($m) => $m ? "{$m->name} ({$ageNowOrGrad($m)} tahun)" : '—';
+        $mkAgeActive = fn ($m) => $m ? "{$m->name} ({$ageNow($m)} tahun)" : '—';
+        $daysFmt = fn ($m) => number_format((int) $m->join_date->diffInDays($m->graduation_date), 0, ',', '.');
+        $mkDate = fn ($m) => $m ? "{$m->name} ({$fmt($m->graduation_date)}. lulus dalam {$daysFmt($m)} hari)" : '—';
+
+        return [
+            'label' => $label,
+            'oldest' => $mkAge($oldest),
+            'youngest' => $mkAge($youngest),
+            'oldestActive' => $mkAgeActive($oldestActive),
+            'youngestActive' => $mkAgeActive($youngestActive),
+            'fastestGrad' => $mkDate($fastest),
+            'latestGrad' => $mkDate($latest),
+        ];
     }
 
     private function buildAgeStats($gens, array $displayCodes, array $labels): array
