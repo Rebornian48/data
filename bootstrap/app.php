@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.auth' => EnsureAdminIsLoggedIn::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/telegram/*',
+            'webhooks/discord',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

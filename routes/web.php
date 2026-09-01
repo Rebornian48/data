@@ -11,6 +11,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PetaController;
 use App\Http\Controllers\SorterController;
+use App\Http\Controllers\Webhooks\DiscordWebhookController;
+use App\Http\Controllers\Webhooks\TelegramWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +39,10 @@ Route::get('/api/peta/{slug}', [PetaController::class, 'data'])->name('peta.data
 // ---------- Sorter ----------
 Route::get('/sorter', [SorterController::class, 'index'])->name('sorter.index');
 Route::get('/sorter/{type}', [SorterController::class, 'show'])->name('sorter.show');
+
+// ---------- Bot webhooks ----------
+Route::post('/webhooks/telegram/{secret}', TelegramWebhookController::class)->name('webhooks.telegram');
+Route::post('/webhooks/discord', DiscordWebhookController::class)->name('webhooks.discord');
 
 // ---------- Auth ----------
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

@@ -47,6 +47,46 @@ Live: <https://jkt48.rebornian48.my.id>
   - Salin teks, screenshot PNG (html2canvas).
 - Arsitektur extensible — tinggal tambah tipe (`song`, `setlist`, dst) di `SorterController`.
 
+### Bot notifikasi (Telegram + Discord)
+
+Broadcast otomatis ke Telegram dan/atau Discord ketika ada:
+
+- Ulang tahun member aktif (per hari).
+- Kelulusan member (per hari, berdasarkan `graduation_date`).
+
+Selain broadcast, bot juga menerima command inbound:
+
+| Command | Fungsi |
+|---|---|
+| `/help` | Bantuan |
+| `/ultah` | Member yang berulang tahun hari ini |
+| `/lulus` | Kelulusan bulan ini |
+| `/member <nama>` | Cari member (max 5 hasil) |
+| `/jadwal` | Semua event bulan ini |
+
+Nambah command baru: tambah case di `App\Services\Notifications\CommandRouter::handle()` — otomatis jalan di Telegram maupun Discord.
+
+**Setup singkat:**
+
+1. Isi `.env` (lihat blok `Bot notifications` di `.env.example`).
+2. `php artisan migrate` — buat tabel `notification_logs` (dedupe biar tidak dobel kirim).
+3. Aktifkan cron scheduler (Hostinger cron 1 menit sekali):
+   ```
+   * * * * * cd ~/domains/jkt48.rebornian48.my.id/public_html && php artisan schedule:run >> /dev/null 2>&1
+   ```
+4. **Telegram**: set webhook agar bot menerima command:
+   ```
+   curl "https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://<APP_URL>/webhooks/telegram/<TELEGRAM_WEBHOOK_SECRET>"
+   ```
+5. **Discord (webhook broadcast)**: cukup buat Incoming Webhook di channel → paste URL ke `DISCORD_WEBHOOK_URLS`.
+6. **Discord (slash command opsional)**: di Developer Portal → set Interactions Endpoint URL ke `https://<APP_URL>/webhooks/discord`, isi `DISCORD_PUBLIC_KEY`, lalu register command (`/ultah`, `/lulus`, `/member`, `/jadwal`, `/help`) via API. Signature Ed25519 diverifikasi di controller.
+
+Manual test broadcast hari ini:
+```
+php artisan notifications:daily
+php artisan notifications:daily --date=2026-09-15
+```
+
 ### Panel admin (`/admin`)
 
 - Auth berbasis session (admin/data_jkt48 default).
