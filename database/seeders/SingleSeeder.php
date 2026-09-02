@@ -33,6 +33,11 @@ class SingleSeeder extends Seeder
             ['code' => 'S20', 'title' => 'High Tension',                'release_date' => '2019-01-30', 'sequence' => 21],
             ['code' => 'S21', 'title' => 'Rapsodi',                     'release_date' => '2020-01-22', 'sequence' => 22],
             ['code' => 'S22', 'title' => 'Darashinai Aishikata',       'release_date' => '2021-03-16', 'sequence' => 23],
+            ['code' => 'S23', 'title' => 'Flying High',                'release_date' => null,         'sequence' => 24, 'notes' => 'Rilis 2022'],
+            ['code' => 'S24', 'title' => 'Sayonara Crawl',             'release_date' => null,         'sequence' => 25, 'notes' => 'Rilis 2023'],
+            ['code' => 'S25', 'title' => 'Magic Hour',                 'release_date' => null,         'sequence' => 26, 'notes' => 'Rilis 2024'],
+            ['code' => 'S26', 'title' => '#SukiNanda',                 'release_date' => null,         'sequence' => 27, 'notes' => 'Rilis 2025 (JP: #SukiNanda / ID: #KuSangatSuka)'],
+            ['code' => 'S27', 'title' => 'Idol Nanka Janakattara',     'release_date' => null,         'sequence' => 28, 'notes' => 'Rilis 2026 (ID: Andai \'Ku Bukan Idola)'],
         ];
 
         foreach ($singles as $single) {
@@ -42,6 +47,7 @@ class SingleSeeder extends Seeder
                     'title' => $single['title'],
                     'release_date' => $single['release_date'],
                     'sequence' => $single['sequence'],
+                    'notes' => $single['notes'] ?? null,
                 ]
             );
         }
