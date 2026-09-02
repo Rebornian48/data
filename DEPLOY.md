@@ -1,409 +1,337 @@
-# 🚀 Panduan Deploy ke Hostinger
+# Panduan Deploy ke Hostinger
 
-## 📋 Persiapan Lokal
-
-### 1. Inisialisasi Git Repository
-
-```bash
-cd jkt48_data
-git init
-git add .
-git commit -m "Initial commit: JKT48 Database Laravel App"
-```
-
-### 2. Buat Repository di GitHub
-
-1. Login ke <https://github.com>
-2. Click "New repository"
-3. Name: `jkt48-database`
-4. Pilih **Private** (agar code aman)
-5. Click "Create repository"
-
-### 3. Push ke GitHub
-
-```bash
-git remote add origin https://github.com/username/jkt48-database.git
-git branch -M main
-git push -u origin main
-```
+Deploy target: `https://jkt48.rebornian48.my.id` (root domain, bukan subdirektori).
+Metode: Git auto-deploy dari `main` → `~/domains/jkt48.rebornian48.my.id/public_html`.
 
 ---
 
-## 🌐 Setup Hosting Hostinger
+## Persiapan Lokal
 
-### 1. Login ke hPanel
+### 1. Pastikan repo push ke GitHub
 
-1. Buka <https://hpanel.hostinger.com>
-2. Login dengan akun Hostinger kamu
+Repo utama: <https://github.com/Rebornian48/data>.
 
-### 2. Setup Domain/Subdomain
+```bash
+git push origin main
+```
 
-1. Go to **Domains** → **Subdomains**
-2. Create subdomain:
-   - Subdomain: `jkt48`
-   - Domain: `rebornian48.my.id`
-3. Akan menjadi: `jkt48.rebornian48.my.id`
-
-### 3. Setup Database MySQL
-
-1. Go to **Databases** → **MySQL Databases**
-2. Create new database:
-   - Database name: `u1234567_jkt48` (akan ada prefix)
-   - Username: `u1234567_admin` (akan ada prefix)
-   - Password: **Buat password yang kuat**
-3. **CATAT** credentials ini:
-   - DB Name: `u1234567_jkt48`
-   - DB User: `u1234567_admin`
-   - DB Password: `password_kamu`
-   - DB Host: `localhost`
-
-### 4. Setup Git Deployment (SSH)
-
-1. Go to **Advanced** → **SSH Access**
-2. Enable SSH
-3. **CATAT** SSH credentials:
-   - Host: `jkt48.rebornian48.my.id`
-   - Port: `65002` (atau yang tertera)
-   - Username: `u1234567`
+Auto-deploy Hostinger akan pull dari `main` setiap push berikutnya.
 
 ---
 
-## 🖥️ Deploy via SSH
+## Setup Hostinger (One-Time)
 
-### 1. Connect to Server via SSH
+### 1. Subdomain
 
-```bash
-# Windows: Gunakan PuTTY atau Windows Terminal
-ssh u1234567@jkt48.rebornian48.my.id -p 65002
+hPanel → **Domains → Subdomains**:
 
-# Atau gunakan Git Bash
-ssh -p 65002 u1234567@jkt48.rebornian48.my.id
+- Subdomain: `jkt48`
+- Domain: `rebornian48.my.id`
+- Hasil: `jkt48.rebornian48.my.id`
+
+### 2. Database MySQL
+
+hPanel → **Databases → MySQL Databases** — buat DB baru. Catat:
+
+- DB Name: `u1234567_jkt48`
+- DB User: `u1234567_admin`
+- DB Password: **password kuat**
+- DB Host: `localhost`
+
+### 3. Enable SSH
+
+hPanel → **Advanced → SSH Access** — enable. Catat:
+
+- Host: `<SSH_HOST>` (biasanya berbeda dari domain — ada di hPanel)
+- Port: `65002`
+- User: `u1234567`
+
+### 4. Git Auto-Deploy
+
+hPanel → **Advanced → Git**:
+
+- Repository URL: `https://github.com/Rebornian48/data.git`
+- Branch: `main`
+- Deployment path: `/home/u1234567/domains/jkt48.rebornian48.my.id/public_html`
+- Enable **Deploy otomatis** (webhook GitHub).
+
+Klik **Deploy** pertama kali untuk clone repo.
+
+### 5. Document Root
+
+hPanel → **Websites → Manage** (`jkt48.rebornian48.my.id`) → **Advanced → Document Root**:
+
+```
+/home/u1234567/domains/jkt48.rebornian48.my.id/public_html/public
 ```
 
-### 2. Setup Working Directory
+Wajib nunjuk ke folder `public/` (Laravel front-controller).
+
+### 6. SSL
+
+hPanel → **SSL/TLS** → install Let's Encrypt → **Force HTTPS**.
+
+---
+
+## First-Time Server Setup (via SSH)
 
 ```bash
-# Buat directory untuk aplikasi
-mkdir -p ~/jkt48.rebornian48.my.id
-cd ~/jkt48.rebornian48.my.id
+ssh -p 65002 u1234567@<SSH_HOST>
+cd ~/domains/jkt48.rebornian48.my.id/public_html
+```
 
-# Clone repository
-git clone https://github.com/username/jkt48-database.git .
+### 1. Composer
 
-# Install Composer Dependencies
+Composer sudah tersedia di Hostinger. Kalau tidak:
+
+```bash
 composer install --optimize-autoloader --no-dev
 ```
 
-### 3. Setup Environment
+> `composer.lock` sudah di-commit — deploy reproducible.
+
+### 2. Environment
 
 ```bash
-# Copy .env.example ke .env
 cp .env.example .env
-
-# Generate APP_KEY
-php artisan key:generate
-```
-
-### 4. Edit .env File
-
-```bash
+php artisan key:generate --force
 nano .env
 ```
 
-Update bagian ini:
+Isi minimal:
+
 ```env
 APP_NAME="JKT48 Database"
 APP_ENV=production
-APP_KEY=base64:xxx (otomatis tergenerate)
+APP_KEY=base64:...          # auto dari key:generate
 APP_DEBUG=false
-APP_URL=https://jkt48.rebornian48.my.id/data
-
+APP_URL=https://jkt48.rebornian48.my.id
 APP_TIMEZONE=Asia/Jakarta
+APP_LOCALE=id
 
 DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_PORT=3306
 DB_DATABASE=u1234567_jkt48
 DB_USERNAME=u1234567_admin
-DB_PASSWORD=password_kamu
+DB_PASSWORD=<password_db>
 
 SESSION_DRIVER=file
-SESSION_LIFETIME=120
-
 CACHE_STORE=file
 QUEUE_CONNECTION=sync
+
+# Bot notifikasi (opsional)
+TELEGRAM_ENABLED=true
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_CHAT_IDS=...
+TELEGRAM_WEBHOOK_SECRET=random_string
+
+DISCORD_ENABLED=true
+DISCORD_WEBHOOK_URLS=https://discord.com/api/webhooks/...
+DISCORD_PUBLIC_KEY=...        # kalau pakai slash command
+
+NOTIFICATIONS_DAILY_TIME=08:00
+
+# Peta (opsional — cuma buat seeder JKT48MapSeeder)
+GOOGLE_SHEETS_API_KEY=...
+JKT48_MAP_SHEET_ID=1FinIC52jFCi5fL7oN5qZ-BKocZvBfxbiCTrzXetnANo
 ```
 
-### 5. Setup Permissions
+### 3. Permissions
 
 ```bash
-# Set permissions untuk storage dan bootstrap/cache
-chmod -R 775 storage
-chmod -R 775 bootstrap/cache
+mkdir -p storage/framework/{cache/data,sessions,views} storage/logs bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 chmod -R 755 public
-
-# Buat symlink untuk storage
-php artisan storage:link
 ```
 
-### 6. Run Migrations & Seed
+### 4. Migrate + Seed
 
 ```bash
-# Jalankan migrations
-php artisan migrate --force
-
-# Seed database (jika ada)
-php artisan db:seed --force
+php artisan migrate --seed --force
+php artisan config:clear
 ```
 
-### 7. Build Frontend Assets
+Seeder bikin admin default (`admin` / `data_jkt48`). Ganti password segera via `/admin/password`.
+
+### 5. Cron Scheduler (Bot Notifikasi)
+
+hPanel → **Advanced → Cron Jobs** → tambah:
+
+```
+* * * * * cd ~/domains/jkt48.rebornian48.my.id/public_html && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Cron 1 menit sekali. Laravel scheduler internal-nya yg atur `notifications:daily` jalan sekali di jam `NOTIFICATIONS_DAILY_TIME` (default 08:00 Asia/Jakarta).
+
+### 6. Set Telegram Webhook (kalau pakai Telegram bot)
 
 ```bash
-# Install npm dependencies
-npm install
-
-# Build assets
-npm run build
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://jkt48.rebornian48.my.id/webhooks/telegram/<TELEGRAM_WEBHOOK_SECRET>"
 ```
 
-### 8. Setup .htaccess untuk Subdirectory
+Cek:
 
 ```bash
-# Edit public/.htaccess
-nano public/.htaccess
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
-Pastikan ada:
-```apache
-<IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
+### 7. Set Discord Interactions Endpoint (kalau pakai slash command)
 
-    RewriteEngine On
+Developer Portal → aplikasi Discord → **Interactions Endpoint URL**:
 
-    # Handle Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
-</IfModule>
+```
+https://jkt48.rebornian48.my.id/webhooks/discord
+```
+
+Discord akan tes signature Ed25519 — pastikan `DISCORD_PUBLIC_KEY` di `.env` sudah benar. Register command (`/ultah`, `/lulus`, `/member`, `/jadwal`, `/help`) via HTTP API Discord.
+
+---
+
+## Testing Post-Deploy
+
+```
+https://jkt48.rebornian48.my.id                       # dashboard publik
+https://jkt48.rebornian48.my.id/members               # daftar member
+https://jkt48.rebornian48.my.id/statistik             # statistik per generasi
+https://jkt48.rebornian48.my.id/kalender              # kalender event
+https://jkt48.rebornian48.my.id/peta                  # peta interaktif
+https://jkt48.rebornian48.my.id/sorter/member         # sorter
+https://jkt48.rebornian48.my.id/admin                 # panel admin
+https://jkt48.rebornian48.my.id/api/docs              # Swagger UI
+https://jkt48.rebornian48.my.id/api/v1/members        # REST API v1
 ```
 
 ---
 
-## ⚙️ Setup Document Root di hPanel
-
-### 1. Go to Websites
-
-1. Login ke hPanel
-2. Go to **Websites** → **Manage** (untuk jkt48.rebornian48.my.id)
-
-### 3. Setup Document Root
-
-1. Go to **Advanced** → **Document Root**
-2. Set document root ke:
-   ```
-   /home/u1234567/jkt48.rebornian48.my.id/public
-   ```
-3. Save
-
----
-
-## 🔒 Setup SSL Certificate
-
-### 1. Enable SSL
-
-1. Go to **SSL/TLS** di hPanel
-2. Enable **Force HTTPS**
-3. Install **Let's Encrypt** SSL (gratis)
-
----
-
-## 🧪 Testing
-
-### 1. Test Aplikasi
-
-Buka browser dan akses:
-```
-https://jkt48.rebornian48.my.id/data
-```
-
-### 2. Test Admin Panel
-
-```
-https://jkt48.rebornian48.my.id/data/admin
-```
-
-### 3. Buat Admin User
-
-```bash
-# Login ke SSH
-ssh u1234567@jkt48.rebornian48.my.id -p 65002
-
-# Jalankan artisan tinker
-php artisan tinker
-```
-
-```php
-// Di tinker, jalankan:
-User::create([
-    'name' => 'Admin',
-    'email' => 'admin@jkt48.rebornian48.my.id',
-    'password' => bcrypt('password123'),
-]);
-```
-
----
-
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Error 500
 
 ```bash
-# Cek permission
-chmod -R 775 storage
-chmod -R 775 bootstrap/cache
+tail -f storage/logs/laravel.log
+chmod -R 775 storage bootstrap/cache
+```
+
+### Database connection error
+
+```bash
+cat .env | grep DB_
+php artisan tinker
+>>> DB::connection()->getPdo();
+```
+
+### Assets / CSS tidak load
+
+Frontend pakai Tailwind CDN — cek `public/css/neo.css` masih ada. `chmod -R 755 public` bila permission salah.
+
+### Route not found (404 di semua path)
+
+Pastikan document root nunjuk ke `.../public_html/public` (bukan `.../public_html`). Cek `public/.htaccess` ada.
+
+### Bot Telegram tidak reply
+
+```bash
+# Cek webhook terpasang
+curl "https://api.telegram.org/bot<TOKEN>/getWebhookInfo"
+
+# Cek log Laravel
+tail -f storage/logs/laravel.log
+```
+
+### Broadcast harian tidak jalan
+
+```bash
+# Test manual dulu
+php artisan notifications:daily --date=2026-09-15
+
+# Cek cron scheduler kepasang
+crontab -l
 
 # Cek log
 tail -f storage/logs/laravel.log
 ```
 
-### Database Connection Error
-
-```bash
-# Pastikan credentials benar di .env
-cat .env | grep DB_
-
-# Test koneksi
-php artisan tinker
-DB::connection()->getPdo();
-```
-
-### Assets Tidak Load
-
-```bash
-# Rebuild assets
-npm run build
-
-# Clear cache
-php artisan cache:clear
-php artisan config:clear
-php artisan view:clear
-```
-
-### Route Not Found
-
-```bash
-# Pastikan .htaccess ada di public/
-cat public/.htaccess
-
-# Rewrite URL
-php artisan route:cache
-```
-
 ---
 
-## 📝 Commands Cheat Sheet
+## Update Aplikasi
+
+### Via Git Auto-Deploy
+
+Cukup push ke `main` — Hostinger pull otomatis.
+
+Kalau ada migration baru, SSH sekali:
 
 ```bash
-# SSH
-ssh -p 65002 u1234567@jkt48.rebornian48.my.id
-
-# Navigate to app
-cd ~/jkt48.rebornian48.my.id
-
-# Pull updates
-git pull origin main
-
-# Install dependencies
+cd ~/domains/jkt48.rebornian48.my.id/public_html
 composer install --optimize-autoloader --no-dev
-
-# Update database
 php artisan migrate --force
-
-# Clear cache
-php artisan cache:clear
 php artisan config:clear
-php artisan view:clear
-
-# Check logs
-tail -f storage/logs/laravel.log
-
-# Restart queue (jika ada)
-php artisan queue:restart
+php artisan cache:clear
 ```
 
----
-
-## 🔄 Update Aplikasi
-
-### Via SSH
+### Via SSH Manual
 
 ```bash
-cd ~/jkt48.rebornian48.my.id
+cd ~/domains/jkt48.rebornian48.my.id/public_html
 git pull origin main
 composer install --optimize-autoloader --no-dev
 php artisan migrate --force
+php artisan config:clear
 php artisan cache:clear
-npm run build
 ```
-
-### Via Git Push (Auto Deploy)
-
-Jika ingin auto-deploy saat push ke GitHub:
-
-1. Go to hPanel → **Git**
-2. Add repository
-3. Set branch: `main`
-4. Set deployment path: `/home/u1234567/jkt48.rebornian48.my.id`
-5. Enable auto-deploy
 
 ---
 
-## 📊 Database Backup
+## Database Backup
 
-### Manual Backup via SSH
+### Manual via SSH
 
 ```bash
-# Backup database
 mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql
 ```
 
-### Auto Backup di hPanel
+### Auto di hPanel
 
-1. Go to **Databases** → **Backups**
-2. Enable auto backup
-3. Set schedule (daily/weekly)
+**Databases → Backups** → enable auto backup (daily/weekly).
 
 ---
 
-## 🎯 URL Structure
+## URL Structure
 
-| URL | Description |
-|-----|-------------|
-| `https://jkt48.rebornian48.my.id/data` | Dashboard Publik |
-| `https://jkt48.rebornian48.my.id/data/members` | Daftar Member |
-| `https://jkt48.rebornian48.my.id/data/members/{id}` | Detail Member |
-| `https://jkt48.rebornian48.my.id/data/admin` | Admin Panel |
-| `https://jkt48.rebornian48.my.id/data/admin/members` | Kelola Member |
+| URL | Deskripsi |
+|---|---|
+| `/` | Dashboard publik |
+| `/members`, `/members/{id}` | Daftar & detail member |
+| `/singles`, `/captains` | Singles & captains |
+| `/statistik`, `/restrukturisasi` | Ringkasan statistik |
+| `/kalender` | Kalender event (ultah, announce, lulus) |
+| `/peta`, `/peta/{slug}` | Peta interaktif |
+| `/sorter`, `/sorter/member` | Sorter merge sort |
+| `/api/docs` | Swagger UI |
+| `/api/v1/*` | REST API v1 |
+| `/webhooks/telegram/{secret}` | Telegram inbound (POST) |
+| `/webhooks/discord` | Discord Interactions (POST) |
+| `/admin` | Panel admin (login required) |
+| `/admin/{members,singles,generations,captains,teams,maps}` | CRUD resources |
+| `/admin/docs/{api,telegram,discord}` | Dokumentasi in-app |
+| `/admin/password` | Ganti password admin |
 
 ---
 
-## ⚠️ Important Notes
+## Important Notes
 
-1. **Jangan commit `.env` ke Git** - sudah ada di `.gitignore`
-2. **Backup database secara berkala**
-3. **Gunakan password yang kuat** untuk database dan admin
-4. **Enable SSL** untuk keamanan
-5. **Monitor log** jika ada error
+1. **Jangan commit `.env`** — sudah di `.gitignore`.
+2. **Backup DB berkala** — data member/generasi tidak trivial diseed ulang.
+3. **Ganti password admin default** (`data_jkt48`) segera via `/admin/password`.
+4. **Enable Force HTTPS** — Discord Interactions Endpoint wajib HTTPS.
+5. **Monitor log** — `storage/logs/laravel.log` untuk error runtime.
 
 ---
 
-## 🆘 Support
-
-Jika ada masalah:
+## Support
 
 1. Cek log: `tail -f storage/logs/laravel.log`
-2. Cek error di browser console
-3. Pastikan permissions benar
-4. Restart Apache/Nginx di hPanel
+2. Cek browser console untuk error frontend.
+3. Cek document root & permissions.
+4. Restart web server via hPanel bila perlu.
