@@ -79,12 +79,14 @@ php artisan migrate --seed
 Seeder `DatabaseSeeder` akan menjalankan berurutan:
 
 1. `GenerationSeeder` — generasi 0 s/d 14.
-2. `SingleSeeder` — daftar single.
+2. `SingleSeeder` — daftar single S1–S27 (S23–S27 belum ada tanggal rilis pasti; tahun disimpan di kolom `notes`).
 3. `MemberSeeder` — data member (butuh `database/seeders/data/JKT48_Database.xlsx` jika Excel-based; kalau tidak ada, seeder skip).
 4. `Generation14MemberSeeder` — 11 trainee Gen 14.
 5. `TeamSeeder` — master team (J, KIII, T, dst.).
-6. `CaptainSeeder` — riwayat kapten.
-7. `AdminUserSeeder` — bikin user admin default (`admin` / `data_jkt48`).
+6. `MemberTeamSeeder` — history perpindahan member antar team.
+7. `CaptainSeeder` — riwayat kapten.
+8. `MemberSingleSeeder` — isi pivot `member_singles` (center + senbatsu S1–S27) berdasarkan data spreadsheet. Idempotent per single.
+9. `AdminUserSeeder` — bikin user admin default (`admin` / `data_jkt48`).
 
 ### 4. (Opsional) Peta dari Google Sheets
 

@@ -154,6 +154,15 @@ php artisan config:clear
 
 Seeder bikin admin default (`admin` / `data_jkt48`). Ganti password segera via `/admin/password`.
 
+Untuk re-run seeder tertentu setelah update data (tanpa `migrate:fresh`):
+
+```bash
+php artisan db:seed --class=SingleSeeder --force
+php artisan db:seed --class=MemberSingleSeeder --force
+```
+
+`MemberSingleSeeder` idempotent per single — aman dijalankan ulang; pivot lama tiap single dihapus lalu di-insert lagi sesuai data terbaru.
+
 ### 5. Cron Scheduler (Bot Notifikasi)
 
 hPanel → **Advanced → Cron Jobs** → tambah:

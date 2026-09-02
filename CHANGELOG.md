@@ -11,6 +11,22 @@ _Tidak ada perubahan yang belum dirilis._
 
 ---
 
+## 2026-09-03
+
+### Added
+
+- **Halaman detail single** (`/singles/{id}`) — klik kartu single di `/singles` untuk membuka daftar senbatsu lengkap dengan foto + nama + generasi. Center ditampilkan di section terpisah paling atas (border merah + badge "CENTER" di kartu). Kedua section diurutkan berdasarkan nama lengkap (A–Z).
+- **`MemberSingleSeeder`** — isi tabel pivot `member_singles` untuk S1–S27 (center + senbatsu) berdasarkan data dari spreadsheet JKT48. Kolom `role` = `center` / `member`, `position` menyimpan urutan asli dari spreadsheet. Idempotent per single.
+  - Alias-map otomatis dari nickname spreadsheet ke DB: Aki→Akicha, Shania→Shanju, Yuvi→Yupi, Thalia→Tata, Chikano→Chikarina, Azizi→Zee, Pucchi→Puti, Meme→Melati, Mira→Amira.
+  - Name overrides untuk nickname ambigu: CinHap→Cindy Hapsari (Gen 4), Indah→Indah Cahya (Gen 9).
+- **5 single baru** di `SingleSeeder` — S23 Flying High, S24 Sayonara Crawl, S25 Magic Hour, S26 #SukiNanda, S27 Idol Nanka Janakattara. Untuk yang tanggal rilisnya belum diketahui, `release_date` = null dan tahun disimpan di kolom `notes`.
+
+### Fixed
+
+- Dashboard singles (`/singles`) tidak lagi crash 500 ketika `release_date` null — fallback ke `notes` atau `TBD`.
+
+---
+
 ## 2026-09-02
 
 ### Added

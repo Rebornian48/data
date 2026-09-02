@@ -29,9 +29,10 @@ API docs: <https://jkt48.rebornian48.my.id/api/docs>
 
 - Profil lengkap, timeline karier, daftar single, riwayat kapten, riwayat team.
 
-### Singles (`/singles`)
+### Singles (`/singles`, `/singles/{id}`)
 
 - List semua single dgn jumlah member per single.
+- Klik kartu single → halaman detail: judul, tanggal rilis, dan daftar senbatsu lengkap dgn foto + nama + generasi. Center ditampilkan di section terpisah paling atas (border merah + badge "CENTER"). Kedua section diurutkan berdasarkan nama lengkap (A–Z).
 
 ### Captains (`/captains`)
 
