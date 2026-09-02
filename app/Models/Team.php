@@ -27,6 +27,11 @@ class Team extends Model
         return $this->hasMany(Captain::class);
     }
 
+    public function memberTeams(): HasMany
+    {
+        return $this->hasMany(MemberTeam::class);
+    }
+
     public function memberships(): HasMany
     {
         return $this->hasMany(MemberTeam::class);

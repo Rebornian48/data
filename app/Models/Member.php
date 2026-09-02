@@ -64,6 +64,11 @@ class Member extends Model
         return $this->hasMany(Captain::class);
     }
 
+    public function memberTeams(): HasMany
+    {
+        return $this->hasMany(MemberTeam::class);
+    }
+
     public function teamHistory(): HasMany
     {
         return $this->hasMany(MemberTeam::class)->orderBy('joined_date');
@@ -72,6 +77,18 @@ class Member extends Model
     public function currentTeams(): HasMany
     {
         return $this->hasMany(MemberTeam::class)->whereNull('left_date');
+    }
+
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'member_teams')
+            ->withPivot(['joined_date', 'left_date', 'notes'])
+            ->withTimestamps();
+    }
+
+    public function currentTeamsList(): BelongsToMany
+    {
+        return $this->teams()->wherePivotNull('left_date');
     }
 
     public function scopeActive($query)
