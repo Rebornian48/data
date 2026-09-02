@@ -136,6 +136,31 @@
                 </a>
 
                 <div class="px-4 mt-4 mb-2 text-xs font-bold text-black uppercase tracking-wider">
+                    Dokumentasi
+                </div>
+                <a href="{{ route('admin.docs.api') }}"
+                   class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.docs.api') ? 'active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                    API
+                </a>
+                <a href="{{ route('admin.docs.telegram') }}"
+                   class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.docs.telegram') ? 'active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                    TELEGRAM BOT
+                </a>
+                <a href="{{ route('admin.docs.discord') }}"
+                   class="sidebar-link flex items-center gap-3 px-4 py-3 text-sm text-black font-bold hover:bg-yellow-100 {{ request()->routeIs('admin.docs.discord') ? 'active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.87 9.87 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    DISCORD BOT
+                </a>
+
+                <div class="px-4 mt-4 mb-2 text-xs font-bold text-black uppercase tracking-wider">
                     Akun
                 </div>
                 <a href="{{ route('admin.password.edit') }}"

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CaptainController;
+use App\Http\Controllers\Admin\DocsController as AdminDocsController;
 use App\Http\Controllers\Admin\GenerationController;
 use App\Http\Controllers\Admin\MapController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
@@ -61,6 +62,12 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(functi
     Route::resource('captains', CaptainController::class)->except(['show']);
     Route::resource('teams', TeamController::class)->except(['show']);
     Route::resource('maps', MapController::class)->except(['show']);
+
+    Route::prefix('docs')->name('docs.')->group(function () {
+        Route::get('/api',      [AdminDocsController::class, 'api'])->name('api');
+        Route::get('/telegram', [AdminDocsController::class, 'telegram'])->name('telegram');
+        Route::get('/discord',  [AdminDocsController::class, 'discord'])->name('discord');
+    });
 
     Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
