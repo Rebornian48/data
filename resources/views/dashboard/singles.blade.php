@@ -18,7 +18,7 @@
                         {{ $single->code }}
                     </span>
                     <span class="text-xs text-slate-500 dark:text-slate-400">
-                        {{ $single->release_date->format('d M Y') }}
+                        {{ $single->release_date?->format('d M Y') ?? ($single->notes ?? 'TBD') }}
                     </span>
                 </div>
                 <h3 class="font-bold text-slate-900 dark:text-slate-100 text-lg leading-tight mb-3">
