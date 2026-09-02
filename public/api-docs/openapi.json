@@ -1,0 +1,607 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "JKT48 Data API",
+    "description": "Read-only REST API untuk data JKT48: member, single, generasi, tim, kapten, dan statistik agregat. Semua endpoint mengembalikan JSON.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "JKT48 Data",
+      "email": "jkt48newfans@gmail.com"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    { "url": "/api", "description": "Current host" }
+  ],
+  "tags": [
+    { "name": "Members", "description": "Data member JKT48" },
+    { "name": "Singles", "description": "Daftar single & senbatsu" },
+    { "name": "Generations", "description": "Generasi member" },
+    { "name": "Teams", "description": "Tim (Team J, KIII, T, dsb.)" },
+    { "name": "Captains", "description": "Riwayat kapten tim / JKT48" },
+    { "name": "Statistics", "description": "Statistik agregat" }
+  ],
+  "paths": {
+    "/v1/members": {
+      "get": {
+        "tags": ["Members"],
+        "summary": "List members",
+        "description": "Ambil daftar member dengan filter opsional.",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter berdasarkan status member.",
+            "schema": { "type": "string", "enum": ["Aktif", "Lulus", "Trainee"] }
+          },
+          {
+            "name": "generation_id",
+            "in": "query",
+            "description": "Filter berdasarkan ID generasi.",
+            "schema": { "type": "integer", "example": 1 }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Pencarian pada name / nickname / birth_place.",
+            "schema": { "type": "string", "example": "shani" }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Kolom sort. Awali `-` untuk descending.",
+            "schema": {
+              "type": "string",
+              "enum": ["name", "join_date", "birth_date", "graduation_date", "-name", "-join_date", "-birth_date", "-graduation_date"],
+              "default": "name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedEnvelope" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/Member" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": { "$ref": "#/components/responses/ValidationError" }
+        }
+      }
+    },
+    "/v1/members/{id}": {
+      "get": {
+        "tags": ["Members"],
+        "summary": "Get member detail",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "$ref": "#/components/schemas/Member" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/singles": {
+      "get": {
+        "tags": ["Singles"],
+        "summary": "List singles",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Cari di title / code single.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["sequence", "release_date", "title", "-sequence", "-release_date", "-title"],
+              "default": "sequence"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedEnvelope" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": { "type": "array", "items": { "$ref": "#/components/schemas/Single" } }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/singles/{id}": {
+      "get": {
+        "tags": ["Singles"],
+        "summary": "Get single detail (with senbatsu members)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "data": { "$ref": "#/components/schemas/Single" } }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/generations": {
+      "get": {
+        "tags": ["Generations"],
+        "summary": "List generations",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["join_date", "announcement_date", "name", "-join_date", "-announcement_date", "-name"],
+              "default": "join_date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedEnvelope" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": { "type": "array", "items": { "$ref": "#/components/schemas/Generation" } }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/generations/{id}": {
+      "get": {
+        "tags": ["Generations"],
+        "summary": "Get generation detail (with members)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "data": { "$ref": "#/components/schemas/Generation" } }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/teams": {
+      "get": {
+        "tags": ["Teams"],
+        "summary": "List teams",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          {
+            "name": "active_only",
+            "in": "query",
+            "description": "Hanya tim yang belum disbanded.",
+            "schema": { "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedEnvelope" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": { "type": "array", "items": { "$ref": "#/components/schemas/Team" } }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teams/{id}": {
+      "get": {
+        "tags": ["Teams"],
+        "summary": "Get team detail (with current members & captains)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "data": { "$ref": "#/components/schemas/Team" } }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/captains": {
+      "get": {
+        "tags": ["Captains"],
+        "summary": "List captains (with member & team)",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          {
+            "name": "active_only",
+            "in": "query",
+            "description": "Hanya kapten yang masih menjabat.",
+            "schema": { "type": "boolean" }
+          },
+          {
+            "name": "team_id",
+            "in": "query",
+            "description": "Filter berdasarkan ID tim.",
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "description": "Filter berdasarkan role (mis. \"Kapten\", \"Wakil Kapten\").",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedEnvelope" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": { "type": "array", "items": { "$ref": "#/components/schemas/Captain" } }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/statistics": {
+      "get": {
+        "tags": ["Statistics"],
+        "summary": "Aggregate statistics",
+        "description": "Ringkasan total member, single, generasi, dan breakdown per generasi.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "totals": {
+                          "type": "object",
+                          "properties": {
+                            "members":     { "type": "integer" },
+                            "active":      { "type": "integer" },
+                            "graduated":   { "type": "integer" },
+                            "trainee":     { "type": "integer" },
+                            "singles":     { "type": "integer" },
+                            "teams":       { "type": "integer" },
+                            "generations": { "type": "integer" }
+                          }
+                        },
+                        "per_generation": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id":              { "type": "integer" },
+                              "code":            { "type": "string" },
+                              "name":            { "type": "string" },
+                              "join_date":       { "type": "string", "format": "date", "nullable": true },
+                              "members_count":   { "type": "integer" },
+                              "active_count":    { "type": "integer" },
+                              "graduated_count": { "type": "integer" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "description": "Nomor halaman (mulai dari 1).",
+        "schema": { "type": "integer", "minimum": 1, "default": 1 }
+      },
+      "PerPage": {
+        "name": "per_page",
+        "in": "query",
+        "description": "Jumlah item per halaman.",
+        "schema": { "type": "integer", "minimum": 1, "maximum": 200, "default": 25 }
+      },
+      "IdPath": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID resource.",
+        "schema": { "type": "integer", "example": 1 }
+      }
+    },
+    "responses": {
+      "NotFound": {
+        "description": "Resource tidak ditemukan.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "message": "No query results for model." }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Parameter tidak valid.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ValidationError" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "current_page": { "type": "integer" },
+          "from":         { "type": "integer", "nullable": true },
+          "to":           { "type": "integer", "nullable": true },
+          "per_page":     { "type": "integer" },
+          "last_page":    { "type": "integer" },
+          "total":        { "type": "integer" },
+          "path":         { "type": "string" }
+        }
+      },
+      "PaginationLinks": {
+        "type": "object",
+        "properties": {
+          "first": { "type": "string", "nullable": true },
+          "last":  { "type": "string", "nullable": true },
+          "prev":  { "type": "string", "nullable": true },
+          "next":  { "type": "string", "nullable": true }
+        }
+      },
+      "PaginatedEnvelope": {
+        "type": "object",
+        "properties": {
+          "data":  { "type": "array", "items": {} },
+          "links": { "$ref": "#/components/schemas/PaginationLinks" },
+          "meta":  { "$ref": "#/components/schemas/PaginationMeta" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "Member": {
+        "type": "object",
+        "properties": {
+          "id":                        { "type": "integer" },
+          "name":                      { "type": "string" },
+          "nickname":                  { "type": "string", "nullable": true },
+          "birth_place":               { "type": "string", "nullable": true },
+          "birth_date":                { "type": "string", "format": "date", "nullable": true },
+          "status":                    { "type": "string", "enum": ["Aktif", "Lulus", "Trainee"] },
+          "restructure_status":        { "type": "string", "nullable": true },
+          "photo_url":                 { "type": "string", "nullable": true },
+          "bio":                       { "type": "string", "nullable": true },
+          "join_date":                 { "type": "string", "format": "date", "nullable": true },
+          "effective_join_date":       { "type": "string", "format": "date", "nullable": true },
+          "cancelled_date":            { "type": "string", "format": "date", "nullable": true },
+          "rejoin_date":               { "type": "string", "format": "date", "nullable": true },
+          "promotion_date":            { "type": "string", "format": "date", "nullable": true },
+          "graduation_announce_date":  { "type": "string", "format": "date", "nullable": true },
+          "graduation_announce_event": { "type": "string", "nullable": true },
+          "graduation_date":           { "type": "string", "format": "date", "nullable": true },
+          "current_age":               { "type": "number", "format": "float", "nullable": true },
+          "age_at_join":               { "type": "integer", "nullable": true },
+          "age_at_graduation":         { "type": "number", "format": "float", "nullable": true },
+          "days_in_jkt48":             { "type": "integer", "nullable": true },
+          "generation": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id":   { "type": "integer" },
+              "code": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          }
+        }
+      },
+      "Single": {
+        "type": "object",
+        "properties": {
+          "id":           { "type": "integer" },
+          "code":         { "type": "string" },
+          "title":        { "type": "string" },
+          "release_date": { "type": "string", "format": "date", "nullable": true },
+          "sequence":     { "type": "integer", "nullable": true },
+          "notes":        { "type": "string", "nullable": true },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id":       { "type": "integer" },
+                "name":     { "type": "string" },
+                "nickname": { "type": "string", "nullable": true },
+                "role":     { "type": "string", "nullable": true, "example": "center" },
+                "position": { "type": "integer", "nullable": true }
+              }
+            }
+          }
+        }
+      },
+      "Generation": {
+        "type": "object",
+        "properties": {
+          "id":                { "type": "integer" },
+          "code":              { "type": "string" },
+          "name":              { "type": "string" },
+          "announcement_date": { "type": "string", "format": "date", "nullable": true },
+          "join_date":         { "type": "string", "format": "date", "nullable": true },
+          "description":       { "type": "string", "nullable": true },
+          "members_count":     { "type": "integer" },
+          "active_count":      { "type": "integer" },
+          "graduated_count":   { "type": "integer" }
+        }
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "id":                    { "type": "integer" },
+          "code":                  { "type": "string" },
+          "name":                  { "type": "string" },
+          "color":                 { "type": "string", "nullable": true },
+          "formed_at":             { "type": "string", "format": "date", "nullable": true },
+          "disbanded_at":          { "type": "string", "format": "date", "nullable": true },
+          "notes":                 { "type": "string", "nullable": true },
+          "current_members_count": { "type": "integer" }
+        }
+      },
+      "Captain": {
+        "type": "object",
+        "properties": {
+          "id":            { "type": "integer" },
+          "member_id":     { "type": "integer" },
+          "team_id":       { "type": "integer", "nullable": true },
+          "role":          { "type": "string" },
+          "position":      { "type": "string" },
+          "start_date":    { "type": "string", "format": "date" },
+          "end_date":      { "type": "string", "format": "date", "nullable": true },
+          "duration_days": { "type": "integer" },
+          "notes":         { "type": "string", "nullable": true },
+          "member": {
+            "type": "object",
+            "properties": {
+              "id":       { "type": "integer" },
+              "name":     { "type": "string" },
+              "nickname": { "type": "string", "nullable": true }
+            }
+          },
+          "team": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id":   { "type": "integer" },
+              "code": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
