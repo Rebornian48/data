@@ -12,7 +12,8 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         @forelse ($singles as $single)
-            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:-translate-y-0.5 transition">
+            <a href="{{ route('singles.show', $single) }}"
+               class="block bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg hover:-translate-y-0.5 transition">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-bold bg-brand text-white px-2.5 py-1 rounded-full">
                         {{ $single->code }}
@@ -32,7 +33,7 @@
                         #{{ $single->sequence }}
                     </div>
                 </div>
-            </div>
+            </a>
         @empty
             <div class="col-span-full bg-white dark:bg-slate-800 rounded-xl p-12 text-center border border-slate-200 dark:border-slate-700">
                 <div class="text-slate-400 text-lg">Belum ada single yang tercatat.</div>

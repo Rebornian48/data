@@ -64,6 +64,18 @@ class DashboardController extends Controller
         return view('dashboard.singles', compact('singles'));
     }
 
+    public function single(Single $single)
+    {
+        $single->load(['members' => function ($q) {
+            $q->with('generation')->orderBy('name');
+        }]);
+
+        $centers = $single->members->filter(fn ($m) => $m->pivot->role === 'center')->values();
+        $senbatsu = $single->members->filter(fn ($m) => $m->pivot->role !== 'center')->values();
+
+        return view('dashboard.single', compact('single', 'centers', 'senbatsu'));
+    }
+
     public function restrukturisasi()
     {
         $members = Member::with('generation')
