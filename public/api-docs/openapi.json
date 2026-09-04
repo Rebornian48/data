@@ -662,7 +662,7 @@
       "PaginatedEnvelope": {
         "type": "object",
         "properties": {
-          "data":  { "type": "array", "items": {} },
+          "data":  { "type": "array", "items": { "type": "object" } },
           "links": { "$ref": "#/components/schemas/PaginationLinks" },
           "meta":  { "$ref": "#/components/schemas/PaginationMeta" }
         }
