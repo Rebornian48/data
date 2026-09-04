@@ -84,11 +84,17 @@ API docs: <https://jkt48.rebornian48.my.id/api/docs>
   - Progress bar + undo 1 langkah (tombol di header & di kolom tengah, dekat Seri).
   - Hasil: toggle ranking Unik / Tie 1,1,2,3 / Tie 1,1,3,4.
   - Salin teks, screenshot PNG (html2canvas).
-- Arsitektur extensible — tinggal tambah tipe (`song`, `setlist`, dst) di `SorterController`.
+- **Song sorter** (`/sorter/song`) — merge sort untuk katalog 425+ lagu diskografi.
+  - Filter status rilis (Sudah/Belum) + asal grup (Original, JKT48, AKB48, dsb.) + search judul.
+  - Kartu battle menampilkan cover art single (fallback initial), subtitle `AsalGrup • SingleTitle`.
+  - Semua fitur core sama dengan Member sorter (undo, ranking mode, salin, screenshot).
+- **Arsitektur extensible** — algoritma & UI dishare di `public/js/sorter-core.js`. Nambah tipe baru cukup: (1) tambah case di `SorterController::SUPPORTED_TYPES` + method `data{Type}()`, (2) buat `sorter/{type}.blade.php` (filter panel), (3) `public/js/sorter-{type}.js` (wiring filter → `SorterCore.start({items, filter, formatSubtitle?, formatBadge?})`).
 
 ### REST API v1 (`/api/v1/*`)
 
 Read-only JSON API, JSON:API-ish envelope (`data` + `meta` pagination). No auth (public dataset). Base URL: `https://jkt48.rebornian48.my.id/api`.
+
+> **JKT48 Data API** disusun oleh **Rebornian48**.
 
 | Endpoint | Fungsi |
 |---|---|
@@ -208,10 +214,12 @@ jkt48_data/
 │   ├── admin/         CRUD + docs + password
 │   ├── auth/          login
 │   ├── peta/          peta interaktif
-│   └── sorter/        index / member
+│   └── sorter/        index / member / song
 ├── public/
 │   ├── css/neo.css                     # global Neobrutalism overrides
-│   ├── js/sorter-member.js             # algoritma merge sort interaktif
+│   ├── js/sorter-core.js               # merge sort core + render/undo/copy/screenshot
+│   ├── js/sorter-member.js             # filter wiring member (status + generasi)
+│   ├── js/sorter-song.js               # filter wiring song (rilis + asal grup + search)
 │   ├── img/                            # foto member (257 file)
 │   └── .htaccess                       # Laravel front-controller
 ├── routes/
@@ -272,12 +280,14 @@ Ringkas:
 
 ## Extensibility Sorter
 
-Nambah sorter baru (contoh `song`):
+Nambah sorter baru (contoh `setlist`):
 
-1. `SorterController.php` — tambah `'song'` ke `SUPPORTED_TYPES`, buat method `dataSong()` yang return array dgn key: `sorterTitle`, `sorterSubtitle`, `items` (schema `{id, name, photo, ...}`).
-2. Copy `resources/views/sorter/member.blade.php` → `song.blade.php`, sesuaikan filter panel.
-3. Reuse `public/js/sorter-member.js` (atau generalize jadi `sorter-core.js` kalau logic sama persis).
-4. URL `/sorter/song` otomatis jalan lewat route dinamis existing.
+1. `SorterController.php` — tambah `'setlist'` ke `SUPPORTED_TYPES`, buat method `dataSetlist()` yang return array dgn key: `sorterTitle`, `sorterSubtitle`, `items` (schema `{id, name, photo, ...}`), plus data filter (mis. `types`).
+2. Copy `resources/views/sorter/song.blade.php` → `setlist.blade.php`, sesuaikan filter panel + load `sorter-setlist.js`.
+3. Buat `public/js/sorter-setlist.js`: wiring filter khusus setlist → `SorterCore.start({items, filter: {compute, watch}, formatSubtitle?, formatBadge?})`.
+4. URL `/sorter/setlist` otomatis jalan lewat route dinamis existing.
+
+Contoh implementasi: [`sorter-song.js`](public/js/sorter-song.js) + [`sorter/song.blade.php`](resources/views/sorter/song.blade.php).
 
 ---
 

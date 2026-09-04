@@ -211,7 +211,8 @@ https://jkt48.rebornian48.my.id/setlists              # setlist reguler + specia
 https://jkt48.rebornian48.my.id/statistik             # statistik per generasi
 https://jkt48.rebornian48.my.id/kalender              # kalender event
 https://jkt48.rebornian48.my.id/peta                  # peta interaktif
-https://jkt48.rebornian48.my.id/sorter/member         # sorter
+https://jkt48.rebornian48.my.id/sorter/member         # member sorter
+https://jkt48.rebornian48.my.id/sorter/song           # song sorter
 https://jkt48.rebornian48.my.id/admin                 # panel admin
 https://jkt48.rebornian48.my.id/api/docs              # Swagger UI
 https://jkt48.rebornian48.my.id/api/v1/members        # REST API v1 (core)
@@ -326,7 +327,7 @@ mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql
 | `/statistik`, `/restrukturisasi` | Ringkasan statistik |
 | `/kalender` | Kalender event (ultah, announce, lulus) |
 | `/peta`, `/peta/{slug}` | Peta interaktif |
-| `/sorter`, `/sorter/member` | Sorter merge sort |
+| `/sorter`, `/sorter/{type}` | Sorter merge sort (types: `member`, `song`) |
 | `/api/docs` | Swagger UI |
 | `/api/v1/*` | REST API v1 |
 | `/webhooks/telegram/{secret}` | Telegram inbound (POST) |

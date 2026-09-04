@@ -9,6 +9,17 @@ Tanggal dalam format `YYYY-MM-DD`.
 
 ### Added
 
+- **Song Sorter** (`/sorter/song`) — merge sort interaktif untuk katalog 425+ lagu diskografi. Filter status rilis (Sudah/Belum) + asal grup (Original, JKT48, AKB48, dsb.) + search judul. Kartu battle menampilkan cover art single (fallback initial), subtitle `AsalGrup • SingleTitle`. Semua fitur core sama dengan Member sorter (undo, ranking mode, salin teks, screenshot).
+- **`public/js/sorter-core.js`** — ekstrak algoritma merge sort + rendering + keyboard + copy + screenshot ke module bersama. API: `SorterCore.start({items, filter: {compute, watch}, formatSubtitle?, formatBadge?})`. Nambah sorter baru cukup buat filter wiring per-type (`sorter-{type}.js`) + blade filter panel.
+- **Kredit "disusun oleh Rebornian48"** di OpenAPI info (`description` + `contact.name`) dan header Swagger UI (`/api/docs`).
+
+### Changed
+
+- `public/js/sorter-member.js` dipangkas dari ~450 baris jadi wiring filter member saja; algoritma pindah ke `sorter-core.js`.
+- Landing `/sorter` — tile Song Sorter aktif (menggantikan placeholder "Segera Hadir").
+
+### Added (diskografi)
+
 - **Integrasi data `Diskografi.xlsx`** — 7 sheet dinormalisasi jadi 8 tabel baru + kolom baru di `singles`:
   - `singles` bertambah kolom: `title_jp`, `origin_group`, `release_year`, `mv_title`, `mv_url`, `cover_art_url`, `audio_file`.
   - Tabel baru: `songs` (425 lagu master), `albums` + `album_tracks` (5 studio + 1 EP + tracklist ter-link ke `songs`), `sub_units` + `sub_unit_songs` (5 unit, 23 lagu), `coupling_songs` + `coupling_song_members` (11 lagu B-side dengan senbatsu di-link ke `members`), `setlists` + `setlist_songs` (17 reguler + 10 special), `mv_locations` (44 baris lokasi syuting).

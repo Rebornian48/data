@@ -2,10 +2,10 @@
   "openapi": "3.0.3",
   "info": {
     "title": "JKT48 Data API",
-    "description": "Read-only REST API untuk data JKT48: member, single, generasi, tim, kapten, statistik agregat, serta katalog diskografi (lagu, album, coupling, setlist, sub-unit, lokasi syuting MV). Semua endpoint mengembalikan JSON.",
+    "description": "Read-only REST API untuk data JKT48: member, single, generasi, tim, kapten, statistik agregat, serta katalog diskografi (lagu, album, coupling, setlist, sub-unit, lokasi syuting MV). Semua endpoint mengembalikan JSON.\n\n_JKT48 Data API disusun oleh **Rebornian48**._",
     "version": "1.1.0",
     "contact": {
-      "name": "JKT48 Data",
+      "name": "Rebornian48",
       "email": "jkt48newfans@gmail.com"
     },
     "license": {

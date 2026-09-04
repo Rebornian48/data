@@ -120,9 +120,12 @@ Buka:
 
 - Dashboard: <http://localhost:8000>
 - Members / Singles / Albums / Setlists: `/members`, `/singles`, `/albums`, `/setlists`
+- Sorter: `/sorter/member`, `/sorter/song`
 - Admin: <http://localhost:8000/admin> — login `admin` / `data_jkt48`
 - API docs (Swagger): <http://localhost:8000/api/docs>
 - REST API v1: <http://localhost:8000/api/v1/members> — atau `/songs`, `/albums`, `/setlists`, `/coupling-songs`, `/sub-units`, `/mv-locations`
+
+> **JKT48 Data API** disusun oleh **Rebornian48**.
 
 ---
 

@@ -22,7 +22,7 @@
 <body>
     <header class="app-header">
         <h1>JKT48 Data API</h1>
-        <small>Swagger UI · OpenAPI 3.0</small>
+        <small>Swagger UI · OpenAPI 3.0 · disusun oleh Rebornian48</small>
         <a href="{{ route('api.docs.spec') }}" target="_blank" rel="noopener">openapi.json</a>
     </header>
 
