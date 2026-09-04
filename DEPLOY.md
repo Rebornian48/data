@@ -159,9 +159,12 @@ Untuk re-run seeder tertentu setelah update data (tanpa `migrate:fresh`):
 ```bash
 php artisan db:seed --class=SingleSeeder --force
 php artisan db:seed --class=MemberSingleSeeder --force
+php artisan db:seed --class=DiskografiSeeder --force
 ```
 
 `MemberSingleSeeder` idempotent per single — aman dijalankan ulang; pivot lama tiap single dihapus lalu di-insert lagi sesuai data terbaru.
+
+`DiskografiSeeder` juga idempotent — baca ulang `database/data/diskografi/*.json` dan sinkronkan `songs`, `albums`, `setlists`, `coupling_songs`, `sub_units`, `mv_locations`. Aman di-rerun setelah update JSON tanpa `migrate:fresh`.
 
 ### 5. Cron Scheduler (Bot Notifikasi)
 
@@ -202,13 +205,17 @@ Discord akan tes signature Ed25519 — pastikan `DISCORD_PUBLIC_KEY` di `.env` s
 ```
 https://jkt48.rebornian48.my.id                       # dashboard publik
 https://jkt48.rebornian48.my.id/members               # daftar member
+https://jkt48.rebornian48.my.id/singles               # daftar single (+ coupling)
+https://jkt48.rebornian48.my.id/albums                # album + EP
+https://jkt48.rebornian48.my.id/setlists              # setlist reguler + special
 https://jkt48.rebornian48.my.id/statistik             # statistik per generasi
 https://jkt48.rebornian48.my.id/kalender              # kalender event
 https://jkt48.rebornian48.my.id/peta                  # peta interaktif
 https://jkt48.rebornian48.my.id/sorter/member         # sorter
 https://jkt48.rebornian48.my.id/admin                 # panel admin
 https://jkt48.rebornian48.my.id/api/docs              # Swagger UI
-https://jkt48.rebornian48.my.id/api/v1/members        # REST API v1
+https://jkt48.rebornian48.my.id/api/v1/members        # REST API v1 (core)
+https://jkt48.rebornian48.my.id/api/v1/songs          # REST API v1 (diskografi)
 ```
 
 ---
@@ -312,7 +319,10 @@ mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql
 |---|---|
 | `/` | Dashboard publik |
 | `/members`, `/members/{id}` | Daftar & detail member |
-| `/singles`, `/captains` | Singles & captains |
+| `/singles`, `/singles/{id}` | Singles + detail (cover, senbatsu, daftar lagu, coupling) |
+| `/albums`, `/albums/{id}` | Album + EP dgn tracklist |
+| `/setlists`, `/setlists/{id}` | Setlist reguler + special |
+| `/captains` | Captains |
 | `/statistik`, `/restrukturisasi` | Ringkasan statistik |
 | `/kalender` | Kalender event (ultah, announce, lulus) |
 | `/peta`, `/peta/{slug}` | Peta interaktif |
@@ -322,7 +332,8 @@ mysqldump -u u1234567_admin -p u1234567_jkt48 > backup_$(date +%Y%m%d).sql
 | `/webhooks/telegram/{secret}` | Telegram inbound (POST) |
 | `/webhooks/discord` | Discord Interactions (POST) |
 | `/admin` | Panel admin (login required) |
-| `/admin/{members,singles,generations,captains,teams,maps}` | CRUD resources |
+| `/admin/{members,singles,generations,captains,teams,maps}` | CRUD core |
+| `/admin/{songs,albums,setlists,coupling-songs,sub-units,mv-locations}` | CRUD diskografi |
 | `/admin/docs/{api,telegram,discord}` | Dokumentasi in-app |
 | `/admin/password` | Ganti password admin |
 

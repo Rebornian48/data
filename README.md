@@ -3,7 +3,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/77054fe29cb445838dcf24018b94f6f7)](https://app.codacy.com/gh/Rebornian48/data/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/rebornian48/data/badge)](https://www.codefactor.io/repository/github/rebornian48/data)
 
-Aplikasi web berbasis Laravel untuk mengelola database JKT48 — member, generasi, single (senbatsu), team, riwayat kapten, peta member — dengan dashboard publik, panel admin, sorter interaktif, REST API terbuka, dan bot notifikasi (Telegram + Discord).
+Aplikasi web berbasis Laravel untuk mengelola database JKT48 — member, generasi, single (senbatsu), team, riwayat kapten, peta member, dan **diskografi lengkap** (songs, albums, setlists, coupling songs, sub-units, MV locations) — dengan dashboard publik, panel admin, sorter interaktif, REST API terbuka, dan bot notifikasi (Telegram + Discord).
 
 Live: <https://jkt48.rebornian48.my.id>
 API docs: <https://jkt48.rebornian48.my.id/api/docs>
@@ -32,7 +32,19 @@ API docs: <https://jkt48.rebornian48.my.id/api/docs>
 ### Singles (`/singles`, `/singles/{id}`)
 
 - List semua single dgn jumlah member per single.
-- Klik kartu single → halaman detail: judul, tanggal rilis, dan daftar senbatsu lengkap dgn foto + nama + generasi. Center ditampilkan di section terpisah paling atas (border merah + badge "CENTER"). Kedua section diurutkan berdasarkan nama lengkap (A–Z).
+- Klik kartu single → halaman detail: cover art, judul + judul JP, asal grup, tanggal rilis, daftar senbatsu lengkap dgn foto + nama + generasi (center border merah + badge "CENTER", diurutkan A–Z), section **Daftar Lagu** (link preview YouTube), dan section **Coupling Songs** (center + member list dgn kartu foto).
+
+### Albums & EP (`/albums`, `/albums/{id}`)
+
+- Grid berkelompok **Album Studio** vs **Mini Album/EP**.
+- Detail album: tracklist ter-link ke katalog `songs` (judul asal, asal grup, link preview YouTube).
+- 5 studio album + 1 EP di seeder awal.
+
+### Setlists (`/setlists`, `/setlists/{id}`)
+
+- Grid berkelompok **Reguler** vs **Special**.
+- Detail setlist: daftar lagu berurutan (judul asal, asal grup, single terkait, link preview YouTube).
+- 17 setlist reguler + 10 special di seeder awal.
 
 ### Captains (`/captains`)
 
@@ -90,6 +102,12 @@ Read-only JSON API, JSON:API-ish envelope (`data` + `meta` pagination). No auth 
 | `GET /api/v1/teams/{id}` | Detail team + member aktif |
 | `GET /api/v1/captains` | List kapten (per posisi/team) |
 | `GET /api/v1/statistics` | Statistik gabungan per generasi |
+| `GET /api/v1/songs` · `/songs/{id}` | Katalog 425 lagu (filter: `q`, `single_id`, `origin_group`, `released`; sort: `external_id`, `title`, `debut_date`) |
+| `GET /api/v1/albums` · `/albums/{id}` | Album + EP (filter `type=album\|ep`, include tracks) |
+| `GET /api/v1/setlists` · `/setlists/{id}` | Setlist (filter `type=regular\|special`) |
+| `GET /api/v1/coupling-songs` · `/coupling-songs/{id}` | Coupling songs (filter `single_id`, include members + role) |
+| `GET /api/v1/sub-units` · `/sub-units/{id}` | Sub-unit + lagu-nya |
+| `GET /api/v1/mv-locations` · `/mv-locations/{id}` | Lokasi syuting MV (filter `category`, `year`, `has_coords`) |
 
 **Swagger UI**: <https://jkt48.rebornian48.my.id/api/docs> — spec OpenAPI di `/api/docs/openapi.json`.
 
@@ -138,7 +156,9 @@ php artisan notifications:daily --date=2026-09-15
 ### Panel admin (`/admin`)
 
 - Auth berbasis session dgn `admin_users` table (bcrypt). Default: `admin` / `data_jkt48`.
-- CRUD: members, singles, generations, captains, **teams**, **maps** (peta).
+- CRUD inti: **members**, **singles**, **generations**, **captains**, **teams**, **maps** (peta).
+- CRUD **Diskografi**: **songs**, **albums** (tracklist inline), **setlists** (multi-select lagu, urutan = position), **coupling-songs** (multi-select member + center → sync ke pivot), **sub-units** (lagu inline), **mv-locations** (lat/long).
+- Form Single diperluas: `title_jp`, `origin_group`, `release_year`, `mv_title`, `mv_url`, `cover_art_url`, `audio_file`.
 - **Ganti password** (`/admin/password`).
 - **Dokumentasi in-app** (`/admin/docs/{api,telegram,discord}`) — panduan API, setup bot Telegram, setup bot Discord.
 
@@ -171,12 +191,16 @@ jkt48_data/
 │   ├── Models/
 │   │   ├── Member.php  Generation.php  Single.php  Captain.php
 │   │   ├── Team.php    MemberTeam.php  AdminUser.php
-│   │   └── Map.php     MapPoint.php    MapPolyline.php ...
+│   │   ├── Map.php     MapPoint.php    MapPolyline.php ...
+│   │   └── Song.php    Album.php  AlbumTrack.php  Setlist.php  SetlistSong.php
+│   │       CouplingSong.php  CouplingSongMember.php
+│   │       SubUnit.php  SubUnitSong.php  MvLocation.php
 │   └── Services/Notifications/         # Broadcaster + CommandRouter
 ├── database/
 │   ├── migrations/                     # schema Laravel
+│   ├── data/diskografi/*.json          # sumber data diskografi (parsed dari Excel)
 │   └── seeders/                        # generasi, member, single, team,
-│                                       # captain, admin user, map
+│                                       # captain, admin user, map, diskografi
 ├── resources/views/
 │   ├── layouts/       app.blade.php   admin.blade.php
 │   ├── dashboard/     index members member singles captains

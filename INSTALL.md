@@ -87,6 +87,7 @@ Seeder `DatabaseSeeder` akan menjalankan berurutan:
 7. `CaptainSeeder` — riwayat kapten.
 8. `MemberSingleSeeder` — isi pivot `member_singles` (center + senbatsu S1–S27) berdasarkan data spreadsheet. Idempotent per single.
 9. `AdminUserSeeder` — bikin user admin default (`admin` / `data_jkt48`).
+10. `DiskografiSeeder` — import katalog diskografi dari `database/data/diskografi/*.json`: 425 lagu (`songs`), 5 studio album + 1 EP (`albums`/`album_tracks`), 5 sub-unit (`sub_units`/`sub_unit_songs`), 11 coupling songs (`coupling_songs`/`coupling_song_members`), 17 setlist reguler + 10 special (`setlists`/`setlist_songs`), 44 lokasi MV (`mv_locations`). Idempotent — aman di-rerun. Alias member: `Vienny→Viny`, `Cindy→Cindy Hapsari`, `Ella→Gabriela Abigail Mewengkang`.
 
 ### 4. (Opsional) Peta dari Google Sheets
 
@@ -97,6 +98,14 @@ JKT48_MAP_SHEET_ID=1FinIC52jFCi5fL7oN5qZ-BKocZvBfxbiCTrzXetnANo
 
 ```bash
 php artisan db:seed --class=JKT48MapSeeder
+```
+
+### 5. (Opsional) Re-seed Diskografi
+
+Idempotent — aman di-rerun setelah data JSON di-update:
+
+```bash
+php artisan db:seed --class=DiskografiSeeder
 ```
 
 ---
@@ -110,9 +119,10 @@ php artisan serve
 Buka:
 
 - Dashboard: <http://localhost:8000>
+- Members / Singles / Albums / Setlists: `/members`, `/singles`, `/albums`, `/setlists`
 - Admin: <http://localhost:8000/admin> — login `admin` / `data_jkt48`
 - API docs (Swagger): <http://localhost:8000/api/docs>
-- REST API v1: <http://localhost:8000/api/v1/members>
+- REST API v1: <http://localhost:8000/api/v1/members> — atau `/songs`, `/albums`, `/setlists`, `/coupling-songs`, `/sub-units`, `/mv-locations`
 
 ---
 
