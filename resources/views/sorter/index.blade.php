@@ -39,12 +39,22 @@
             </div>
         </a>
 
+        <a href="{{ route('sorter.show', 'song') }}" class="neo-tile bg-neo-pink p-6 block">
+            <div class="flex items-start gap-4">
+                <div class="w-14 h-14 bg-black text-white flex items-center justify-center text-2xl display shrink-0" style="border: 3px solid #000;">S</div>
+                <div>
+                    <div class="display text-xl text-black">SONG SORTER</div>
+                    <div class="text-sm text-black mt-1 font-medium">Urutkan lagu-lagu JKT48 favoritmu. Filter per asal grup, status rilis, dan pencarian judul.</div>
+                </div>
+            </div>
+        </a>
+
         <div class="neo-tile bg-neo-white p-6" style="opacity: .75;">
             <div class="flex items-start gap-4">
                 <div class="w-14 h-14 bg-black text-white flex items-center justify-center text-2xl display shrink-0" style="border: 3px solid #000;">?</div>
                 <div>
                     <div class="display text-xl text-black">SEGERA HADIR</div>
-                    <div class="text-sm text-black mt-1 font-medium">Sorter lagu, setlist, dan koleksi lain akan menyusul.</div>
+                    <div class="text-sm text-black mt-1 font-medium">Sorter setlist, album, dan koleksi lain akan menyusul.</div>
                 </div>
             </div>
         </div>

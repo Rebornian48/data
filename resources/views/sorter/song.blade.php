@@ -81,7 +81,7 @@
         <div class="text-xs font-bold mb-2">
             <a href="{{ route('sorter.index') }}" class="underline">SORTER</a>
             <span class="mx-1">/</span>
-            <span>MEMBER</span>
+            <span>SONG</span>
         </div>
         <h1 class="text-4xl sm:text-5xl mb-2">{{ $sorterTitle }}</h1>
         <p class="font-medium">{{ $sorterSubtitle }}</p>
@@ -89,43 +89,48 @@
 
     {{-- ============ STAGE: FILTER ============ --}}
     <section id="stage-filter" class="neo-card p-6">
-        <h2 class="text-xl mb-5">PILIH MEMBER YANG IKUT DI-SORT</h2>
+        <h2 class="text-xl mb-5">PILIH LAGU YANG IKUT DI-SORT</h2>
 
         <div class="mb-5">
-            <div class="display text-sm mb-3">STATUS</div>
+            <div class="display text-sm mb-3">STATUS RILIS</div>
             <div class="flex flex-wrap gap-3">
                 <label class="inline-flex items-center gap-2 cursor-pointer neo-chip px-3 py-2">
-                    <input type="checkbox" id="filter-status-aktif" class="filter-status neo-check" value="Aktif" checked>
-                    <span class="font-bold">AKTIF</span>
+                    <input type="checkbox" class="filter-released neo-check" value="released" checked>
+                    <span class="font-bold">SUDAH RILIS</span>
                 </label>
                 <label class="inline-flex items-center gap-2 cursor-pointer neo-chip px-3 py-2">
-                    <input type="checkbox" id="filter-status-lulus" class="filter-status neo-check" value="Lulus">
-                    <span class="font-bold">LULUS</span>
+                    <input type="checkbox" class="filter-released neo-check" value="unreleased">
+                    <span class="font-bold">BELUM RILIS</span>
                 </label>
             </div>
         </div>
 
         <div class="mb-5">
             <div class="flex items-center justify-between mb-3">
-                <div class="display text-sm">GENERASI</div>
+                <div class="display text-sm">ASAL GRUP</div>
                 <div class="flex gap-2">
-                    <button type="button" id="gen-all" class="neo-btn neo-btn-lime px-3 py-1 text-xs">PILIH SEMUA</button>
-                    <button type="button" id="gen-none" class="neo-btn px-3 py-1 text-xs">KOSONGKAN</button>
+                    <button type="button" id="origin-all" class="neo-btn neo-btn-lime px-3 py-1 text-xs">PILIH SEMUA</button>
+                    <button type="button" id="origin-none" class="neo-btn px-3 py-1 text-xs">KOSONGKAN</button>
                 </div>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                @foreach ($generations as $gen)
+                @foreach ($originGroups as $og)
                     <label class="inline-flex items-center gap-2 cursor-pointer neo-chip px-3 py-2">
-                        <input type="checkbox" class="filter-gen neo-check" value="{{ $gen->id }}" checked>
-                        <span class="truncate font-bold">{{ $gen->name }}</span>
+                        <input type="checkbox" class="filter-origin neo-check" value="{{ $og }}" checked>
+                        <span class="truncate font-bold">{{ $og }}</span>
                     </label>
                 @endforeach
             </div>
         </div>
 
+        <div class="mb-5">
+            <div class="display text-sm mb-3">CARI JUDUL</div>
+            <input type="text" id="filter-search" class="neo-input w-full" placeholder="Cari lagu (contoh: Heavy Rotation)">
+        </div>
+
         <div class="flex items-center justify-between border-t-[3px] border-black pt-4">
             <div class="font-bold">
-                <span id="filter-count" class="display text-2xl">0</span> MEMBER TERPILIH
+                <span id="filter-count" class="display text-2xl">0</span> LAGU TERPILIH
                 <span id="filter-hint" class="text-xs font-medium ml-2">(minimal 2)</span>
             </div>
             <button type="button" id="btn-start" class="neo-btn neo-btn-pink px-6 py-3 text-sm" disabled>
@@ -159,12 +164,12 @@
 
             <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 items-stretch">
                 <button type="button" id="card-left" class="neo-tile p-5 flex flex-col items-center">
-                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden neo-avatar mb-3">
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 overflow-hidden neo-avatar mb-3">
                         <img id="img-left" alt="" class="w-full h-full object-cover hidden">
                         <div id="ph-left" class="w-full h-full flex items-center justify-center text-4xl display text-black"></div>
                     </div>
                     <div id="name-left" class="display text-lg text-center"></div>
-                    <div id="sub-left" class="text-xs font-bold mt-1"></div>
+                    <div id="sub-left" class="text-xs font-bold mt-1 text-center"></div>
                 </button>
 
                 <div class="flex md:flex-col items-center justify-center gap-3">
@@ -173,12 +178,12 @@
                 </div>
 
                 <button type="button" id="card-right" class="neo-tile p-5 flex flex-col items-center">
-                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden neo-avatar mb-3">
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 overflow-hidden neo-avatar mb-3">
                         <img id="img-right" alt="" class="w-full h-full object-cover hidden">
                         <div id="ph-right" class="w-full h-full flex items-center justify-center text-4xl display text-black"></div>
                     </div>
                     <div id="name-right" class="display text-lg text-center"></div>
-                    <div id="sub-right" class="text-xs font-bold mt-1"></div>
+                    <div id="sub-right" class="text-xs font-bold mt-1 text-center"></div>
                 </button>
             </div>
 
@@ -220,5 +225,5 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 <script src="{{ asset('js/sorter-core.js') }}?v=1"></script>
-<script src="{{ asset('js/sorter-member.js') }}?v=5"></script>
+<script src="{{ asset('js/sorter-song.js') }}?v=1"></script>
 @endsection
