@@ -53,6 +53,19 @@
                         ['GET', '/v1/teams/{id}',              'Detail tim + current member + kapten'],
                         ['GET', '/v1/captains',                'List kapten (filter: active_only, team_id, role)'],
                         ['GET', '/v1/statistics',              'Statistik total & breakdown per generasi'],
+                        // ----- Diskografi -----
+                        ['GET', '/v1/songs',                   'List lagu (filter: search, single_id, origin_group, released, sort)'],
+                        ['GET', '/v1/songs/{id}',              'Detail lagu + single terkait'],
+                        ['GET', '/v1/albums',                  'List album/EP (filter: type=album|ep)'],
+                        ['GET', '/v1/albums/{id}',             'Detail album + tracklist (auto-link ke katalog songs)'],
+                        ['GET', '/v1/setlists',                'List setlist (filter: type=regular|special, search)'],
+                        ['GET', '/v1/setlists/{id}',           'Detail setlist + daftar lagu berurutan'],
+                        ['GET', '/v1/coupling-songs',          'List coupling B-side (filter: single_id)'],
+                        ['GET', '/v1/coupling-songs/{id}',     'Detail coupling + daftar member (center/member + posisi)'],
+                        ['GET', '/v1/sub-units',               'List sub-unit + jumlah lagu'],
+                        ['GET', '/v1/sub-units/{id}',          'Detail sub-unit + daftar lagunya'],
+                        ['GET', '/v1/mv-locations',            'List lokasi syuting MV (filter: category, year, has_coords)'],
+                        ['GET', '/v1/mv-locations/{id}',       'Detail satu lokasi syuting'],
                     ];
                 @endphp
                 @foreach ($rows as $r)
@@ -79,6 +92,14 @@
 <pre class="text-xs p-3 overflow-x-auto" style="background:#0f172a;color:#e2e8f0;border:2px solid #000;">const res = await fetch('{{ $baseUrl }}/v1/statistics');
 const { data } = await res.json();
 console.log(data.totals);</pre>
+        </div>
+        <div>
+            <div class="text-xs font-bold uppercase mb-1">Lagu original JKT48</div>
+            <pre class="text-xs p-3 overflow-x-auto" style="background:#0f172a;color:#e2e8f0;border:2px solid #000;">curl "{{ $baseUrl }}/v1/songs?origin_group=Original&per_page=50"</pre>
+        </div>
+        <div>
+            <div class="text-xs font-bold uppercase mb-1">Coupling per single</div>
+            <pre class="text-xs p-3 overflow-x-auto" style="background:#0f172a;color:#e2e8f0;border:2px solid #000;">curl "{{ $baseUrl }}/v1/coupling-songs?single_id=5"</pre>
         </div>
     </div>
 </div>

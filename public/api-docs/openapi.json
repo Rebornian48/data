@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "JKT48 Data API",
-    "description": "Read-only REST API untuk data JKT48: member, single, generasi, tim, kapten, dan statistik agregat. Semua endpoint mengembalikan JSON.",
-    "version": "1.0.0",
+    "description": "Read-only REST API untuk data JKT48: member, single, generasi, tim, kapten, statistik agregat, serta katalog diskografi (lagu, album, coupling, setlist, sub-unit, lokasi syuting MV). Semua endpoint mengembalikan JSON.",
+    "version": "1.1.0",
     "contact": {
       "name": "JKT48 Data",
       "email": "jkt48newfans@gmail.com"
@@ -21,7 +21,13 @@
     { "name": "Generations", "description": "Generasi member" },
     { "name": "Teams", "description": "Tim (Team J, KIII, T, dsb.)" },
     { "name": "Captains", "description": "Riwayat kapten tim / JKT48" },
-    { "name": "Statistics", "description": "Statistik agregat" }
+    { "name": "Statistics", "description": "Statistik agregat" },
+    { "name": "Songs", "description": "Katalog 425+ lagu (Diskografi)" },
+    { "name": "Albums", "description": "Album studio & mini album/EP + tracklist" },
+    { "name": "Setlists", "description": "Setlist teater reguler & special" },
+    { "name": "Coupling Songs", "description": "Coupling B-side setiap single beserta member" },
+    { "name": "Sub-Units", "description": "Sub-unit dan lagu-lagunya" },
+    { "name": "MV Locations", "description": "Lokasi syuting music video" }
   ],
   "paths": {
     "/v1/members": {
@@ -341,6 +347,201 @@
         }
       }
     },
+    "/v1/songs": {
+      "get": {
+        "tags": ["Songs"],
+        "summary": "List songs",
+        "description": "Katalog master 425+ lagu JKT48 (dari sheet 'Semua Lagu' Diskografi.xlsx).",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          { "name": "search",       "in": "query", "description": "Cari di title / title_original.", "schema": { "type": "string" } },
+          { "name": "single_id",    "in": "query", "description": "Filter berdasarkan single.", "schema": { "type": "integer" } },
+          { "name": "origin_group", "in": "query", "description": "Filter asal grup.", "schema": { "type": "string", "enum": ["AKB48","SKE48","NMB48","HKT48","NGT48","Original"] } },
+          { "name": "released",     "in": "query", "description": "true = sudah rilis, false = belum.", "schema": { "type": "boolean" } },
+          { "name": "sort",         "in": "query", "schema": { "type": "string", "enum": ["external_id","title","debut_date","-external_id","-title","-debut_date"], "default": "external_id" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "allOf": [
+              { "$ref": "#/components/schemas/PaginatedEnvelope" },
+              { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Song" } } } }
+            ] } } }
+          },
+          "422": { "$ref": "#/components/responses/ValidationError" }
+        }
+      }
+    },
+    "/v1/songs/{id}": {
+      "get": {
+        "tags": ["Songs"],
+        "summary": "Get song detail",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/Song" } } } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/albums": {
+      "get": {
+        "tags": ["Albums"],
+        "summary": "List albums & EPs",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          { "name": "type", "in": "query", "description": "Filter tipe rilis.", "schema": { "type": "string", "enum": ["album","ep"] } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "allOf": [
+              { "$ref": "#/components/schemas/PaginatedEnvelope" },
+              { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Album" } } } }
+            ] } } }
+          }
+        }
+      }
+    },
+    "/v1/albums/{id}": {
+      "get": {
+        "tags": ["Albums"],
+        "summary": "Get album detail (with tracklist)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/Album" } } } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/setlists": {
+      "get": {
+        "tags": ["Setlists"],
+        "summary": "List setlists",
+        "description": "17 setlist reguler + 10 setlist special dari sheet 'Semua Lagu'.",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          { "name": "type",   "in": "query", "schema": { "type": "string", "enum": ["regular","special"] } },
+          { "name": "search", "in": "query", "description": "Cari di nama setlist.", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "allOf": [
+              { "$ref": "#/components/schemas/PaginatedEnvelope" },
+              { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Setlist" } } } }
+            ] } } }
+          }
+        }
+      }
+    },
+    "/v1/setlists/{id}": {
+      "get": {
+        "tags": ["Setlists"],
+        "summary": "Get setlist detail (with ordered songs)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/Setlist" } } } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/coupling-songs": {
+      "get": {
+        "tags": ["Coupling Songs"],
+        "summary": "List coupling songs (B-side)",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          { "name": "single_id", "in": "query", "description": "Filter berdasarkan single induk.", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "allOf": [
+              { "$ref": "#/components/schemas/PaginatedEnvelope" },
+              { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/CouplingSong" } } } }
+            ] } } }
+          }
+        }
+      }
+    },
+    "/v1/coupling-songs/{id}": {
+      "get": {
+        "tags": ["Coupling Songs"],
+        "summary": "Get coupling song detail (with members)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/CouplingSong" } } } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/sub-units": {
+      "get": {
+        "tags": ["Sub-Units"],
+        "summary": "List sub-units",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "allOf": [
+              { "$ref": "#/components/schemas/PaginatedEnvelope" },
+              { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/SubUnit" } } } }
+            ] } } }
+          }
+        }
+      }
+    },
+    "/v1/sub-units/{id}": {
+      "get": {
+        "tags": ["Sub-Units"],
+        "summary": "Get sub-unit detail (with songs)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/SubUnit" } } } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/v1/mv-locations": {
+      "get": {
+        "tags": ["MV Locations"],
+        "summary": "List MV shooting locations",
+        "parameters": [
+          { "$ref": "#/components/parameters/Page" },
+          { "$ref": "#/components/parameters/PerPage" },
+          { "name": "category",   "in": "query", "description": "Kategori (Single / Album Studio / dsb.)", "schema": { "type": "string" } },
+          { "name": "year",       "in": "query", "schema": { "type": "integer", "example": 2024 } },
+          { "name": "has_coords", "in": "query", "description": "Hanya yang sudah di-geocode.", "schema": { "type": "boolean" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "allOf": [
+              { "$ref": "#/components/schemas/PaginatedEnvelope" },
+              { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/MvLocation" } } } }
+            ] } } }
+          }
+        }
+      }
+    },
+    "/v1/mv-locations/{id}": {
+      "get": {
+        "tags": ["MV Locations"],
+        "summary": "Get MV location detail",
+        "parameters": [{ "$ref": "#/components/parameters/IdPath" }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/MvLocation" } } } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
     "/v1/statistics": {
       "get": {
         "tags": ["Statistics"],
@@ -523,12 +724,19 @@
       "Single": {
         "type": "object",
         "properties": {
-          "id":           { "type": "integer" },
-          "code":         { "type": "string" },
-          "title":        { "type": "string" },
-          "release_date": { "type": "string", "format": "date", "nullable": true },
-          "sequence":     { "type": "integer", "nullable": true },
-          "notes":        { "type": "string", "nullable": true },
+          "id":            { "type": "integer" },
+          "code":          { "type": "string" },
+          "title":         { "type": "string" },
+          "title_jp":      { "type": "string", "nullable": true },
+          "origin_group":  { "type": "string", "nullable": true, "enum": ["AKB48","SKE48","NMB48","HKT48","NGT48","Original"] },
+          "release_date":  { "type": "string", "format": "date", "nullable": true },
+          "release_year":  { "type": "integer", "nullable": true },
+          "sequence":      { "type": "integer", "nullable": true },
+          "notes":         { "type": "string", "nullable": true },
+          "mv_title":      { "type": "string", "nullable": true },
+          "mv_url":        { "type": "string", "nullable": true },
+          "cover_art_url": { "type": "string", "nullable": true },
+          "audio_file":    { "type": "string", "nullable": true },
           "members": {
             "type": "array",
             "items": {
@@ -542,6 +750,170 @@
               }
             }
           }
+        }
+      },
+      "SingleRef": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id":    { "type": "integer" },
+          "code":  { "type": "string" },
+          "title": { "type": "string" }
+        }
+      },
+      "Song": {
+        "type": "object",
+        "properties": {
+          "id":                 { "type": "integer" },
+          "external_id":        { "type": "integer", "description": "ID asli dari sheet Diskografi (bukan unik — ada 2 pasang ID kembar)" },
+          "title":              { "type": "string" },
+          "title_original":     { "type": "string", "nullable": true },
+          "origin_group":       { "type": "string", "nullable": true },
+          "single_id":          { "type": "integer", "nullable": true },
+          "single":             { "$ref": "#/components/schemas/SingleRef" },
+          "single_ref_raw":     { "type": "string", "nullable": true, "description": "Nama single dari spreadsheet, dipertahankan bila mapping ambigu" },
+          "other_compilations": { "type": "string", "nullable": true },
+          "setlist":            { "type": "string", "nullable": true },
+          "special_setlist":    { "type": "string", "nullable": true },
+          "debut_date":         { "type": "string", "format": "date", "nullable": true },
+          "debut_at":           { "type": "string", "nullable": true, "description": "Nama acara/venue debut" },
+          "released":           { "type": "boolean" },
+          "preview_url":        { "type": "string", "nullable": true, "description": "URL YouTube preview (untuk Request Hour)" },
+          "mv_title":           { "type": "string", "nullable": true }
+        }
+      },
+      "AlbumTrack": {
+        "type": "object",
+        "properties": {
+          "position": { "type": "integer" },
+          "title":    { "type": "string" },
+          "song_id":  { "type": "integer", "nullable": true, "description": "Ter-link ke katalog songs bila judul cocok" },
+          "song": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id":             { "type": "integer" },
+              "title_original": { "type": "string", "nullable": true },
+              "origin_group":   { "type": "string", "nullable": true },
+              "preview_url":    { "type": "string", "nullable": true }
+            }
+          }
+        }
+      },
+      "Album": {
+        "type": "object",
+        "properties": {
+          "id":           { "type": "integer" },
+          "code":         { "type": "string", "description": "Slug kode: album-1, ep-1, dst." },
+          "type":         { "type": "string", "enum": ["album","ep"] },
+          "title":        { "type": "string" },
+          "title_jp":     { "type": "string", "nullable": true },
+          "sequence":     { "type": "integer" },
+          "release_date": { "type": "string", "format": "date", "nullable": true },
+          "cover_url":    { "type": "string", "nullable": true },
+          "tracks": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AlbumTrack" }
+          }
+        }
+      },
+      "SetlistSong": {
+        "type": "object",
+        "properties": {
+          "id":             { "type": "integer" },
+          "position":       { "type": "integer" },
+          "title":          { "type": "string" },
+          "title_original": { "type": "string", "nullable": true },
+          "origin_group":   { "type": "string", "nullable": true },
+          "single":         { "$ref": "#/components/schemas/SingleRef" },
+          "preview_url":    { "type": "string", "nullable": true }
+        }
+      },
+      "Setlist": {
+        "type": "object",
+        "properties": {
+          "id":          { "type": "integer" },
+          "name":        { "type": "string" },
+          "type":        { "type": "string", "enum": ["regular","special"] },
+          "description": { "type": "string", "nullable": true },
+          "songs_count": { "type": "integer", "description": "Hanya muncul di list" },
+          "songs": {
+            "type": "array",
+            "description": "Hanya muncul di endpoint detail",
+            "items": { "$ref": "#/components/schemas/SetlistSong" }
+          }
+        }
+      },
+      "CouplingMember": {
+        "type": "object",
+        "properties": {
+          "id":       { "type": "integer" },
+          "name":     { "type": "string" },
+          "nickname": { "type": "string", "nullable": true },
+          "role":     { "type": "string", "enum": ["member","center"] },
+          "position": { "type": "integer", "nullable": true }
+        }
+      },
+      "CouplingSong": {
+        "type": "object",
+        "properties": {
+          "id":           { "type": "integer" },
+          "single_id":    { "type": "integer" },
+          "single":       { "$ref": "#/components/schemas/SingleRef" },
+          "title":        { "type": "string" },
+          "title_jp":     { "type": "string", "nullable": true },
+          "origin_group": { "type": "string", "nullable": true },
+          "release_year": { "type": "integer", "nullable": true },
+          "mv_title":     { "type": "string", "nullable": true },
+          "mv_url":       { "type": "string", "nullable": true },
+          "audio_file":   { "type": "string", "nullable": true },
+          "members": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CouplingMember" }
+          }
+        }
+      },
+      "SubUnitSong": {
+        "type": "object",
+        "properties": {
+          "id":             { "type": "integer" },
+          "title":          { "type": "string" },
+          "title_original": { "type": "string", "nullable": true },
+          "origin_group":   { "type": "string", "nullable": true },
+          "debut_date":     { "type": "string", "format": "date", "nullable": true },
+          "debut_at":       { "type": "string", "nullable": true },
+          "released":       { "type": "boolean" },
+          "has_mv":         { "type": "boolean" },
+          "preview_url":    { "type": "string", "nullable": true }
+        }
+      },
+      "SubUnit": {
+        "type": "object",
+        "properties": {
+          "id":          { "type": "integer" },
+          "name":        { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "songs_count": { "type": "integer", "description": "Hanya muncul di list" },
+          "songs": {
+            "type": "array",
+            "description": "Hanya muncul di endpoint detail",
+            "items": { "$ref": "#/components/schemas/SubUnitSong" }
+          }
+        }
+      },
+      "MvLocation": {
+        "type": "object",
+        "properties": {
+          "id":            { "type": "integer" },
+          "category":      { "type": "string", "nullable": true, "description": "Single / Album Studio / Sub Unit" },
+          "song_title":    { "type": "string" },
+          "song_title_jp": { "type": "string", "nullable": true },
+          "release_year":  { "type": "integer", "nullable": true },
+          "location":      { "type": "string" },
+          "position":      { "type": "integer", "description": "1-based bila 1 MV punya beberapa lokasi" },
+          "latitude":      { "type": "number", "format": "float", "nullable": true },
+          "longitude":     { "type": "number", "format": "float", "nullable": true },
+          "notes":         { "type": "string", "nullable": true }
         }
       },
       "Generation": {
