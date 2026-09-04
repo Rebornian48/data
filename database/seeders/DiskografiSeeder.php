@@ -346,9 +346,10 @@ class DiskografiSeeder extends Seeder
         $refMap = $this->singleRefMap();
 
         DB::transaction(function () use ($rows, $singleIdByCode) {
-            // Bersihkan tabel supaya idempotent (record kecil, aman).
-            DB::table('coupling_song_members')->truncate();
-            CouplingSong::truncate();
+            // Bersihkan tabel supaya idempotent — pakai delete() (bukan truncate)
+            // agar aman terhadap FK constraint di MySQL.
+            DB::table('coupling_song_members')->delete();
+            DB::table('coupling_songs')->delete();
 
             foreach ($rows as $row) {
                 $singleId = $singleIdByCode[$row['single_code']] ?? null;
@@ -448,7 +449,7 @@ class DiskografiSeeder extends Seeder
         $rows = $this->loadJson('mv_locations.json');
 
         DB::transaction(function () use ($rows) {
-            MvLocation::truncate();
+            DB::table('mv_locations')->delete();
             foreach ($rows as $row) {
                 $locations = $row['locations'] ?: [null];
                 $pos = 1;
