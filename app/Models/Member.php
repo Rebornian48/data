@@ -59,6 +59,13 @@ class Member extends Model
             ->wherePivot('role', 'center');
     }
 
+    public function couplingSongs(): BelongsToMany
+    {
+        return $this->belongsToMany(CouplingSong::class, 'coupling_song_members')
+            ->withPivot(['role', 'position'])
+            ->withTimestamps();
+    }
+
     public function captains(): HasMany
     {
         return $this->hasMany(Captain::class);

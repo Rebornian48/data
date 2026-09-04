@@ -1,0 +1,337 @@
+[
+  {
+    "single_code": "S5",
+    "single_sequence": 5.0,
+    "title": "Malu-Malu Lollipop",
+    "title_jp": "Hanikami Lollipop",
+    "origin_group": "SKE48",
+    "release_year": 2014,
+    "centers": [
+      "Beby"
+    ],
+    "members": [
+      "Beby",
+      "Della",
+      "Gaby",
+      "Hanna",
+      "Ikha",
+      "Nadila",
+      "Natalia",
+      "Noella",
+      "Rona",
+      "Sinka",
+      "Sonia",
+      "Tata"
+    ],
+    "mv_title": "[MV] Malu Malu Lollypop - JKT48",
+    "audio_file": "02 - Hanikami Lollypop.flac"
+  },
+  {
+    "single_code": "S6",
+    "single_sequence": 6.0,
+    "title": "Kilat yang Indah",
+    "title_jp": "Utsukushii Inazuma",
+    "origin_group": "SKE48",
+    "release_year": 2014,
+    "centers": [
+      "Dhike",
+      "Naomi"
+    ],
+    "members": [
+      "Acha",
+      "Delima",
+      "Dhike",
+      "Frieska",
+      "Gaby",
+      "Ikha",
+      "Nadila",
+      "Naomi",
+      "Natalia",
+      "Novinta",
+      "Rona",
+      "Saktia",
+      "Sendy",
+      "Sinka",
+      "Sisil",
+      "Sonia",
+      "Vanka"
+    ],
+    "mv_title": null,
+    "audio_file": "02 - Utsukushii Inazuma.flac"
+  },
+  {
+    "single_code": "S8",
+    "single_sequence": 8.0,
+    "title": "Ciuman Juga Kidal",
+    "title_jp": "Kiss Datte Hidarikiki",
+    "origin_group": "SKE48",
+    "release_year": 2014,
+    "centers": [
+      "Rona",
+      "Andela"
+    ],
+    "members": [
+      "Acha",
+      "Andela",
+      "Dena",
+      "Elaine",
+      "Hanna",
+      "Ikha",
+      "Lidya",
+      "Manda",
+      "Michelle",
+      "Nadila",
+      "Rachel",
+      "Rona",
+      "Shani",
+      "Sinka",
+      "Vanka"
+    ],
+    "mv_title": null,
+    "audio_file": "02 - Ciuman Juga Kidal.flac"
+  },
+  {
+    "single_code": "S9",
+    "single_sequence": 9.0,
+    "title": "Buah Mawar",
+    "title_jp": "Bara No Kajitsu",
+    "origin_group": "AKB48",
+    "release_year": 2015,
+    "centers": [
+      "Ghaida"
+    ],
+    "members": [
+      "Acha",
+      "Ayana",
+      "Chika",
+      "Chikarina",
+      "Desy",
+      "Ghaida",
+      "Gracia",
+      "Ikha",
+      "Lidya",
+      "Manda",
+      "Nadse",
+      "Natalia",
+      "Novinta",
+      "Shani",
+      "Sinka",
+      "Yona"
+    ],
+    "mv_title": null,
+    "audio_file": "02 - Buah Mawar - Bara No Kajitsu.flac"
+  },
+  {
+    "single_code": "S10",
+    "single_sequence": 10.0,
+    "title": "Value Milikku Saja",
+    "title_jp": "Boku Dake no value",
+    "origin_group": "AKB48",
+    "release_year": 2015,
+    "centers": [
+      "Elaine"
+    ],
+    "members": [
+      "Chikarina",
+      "Desy",
+      "Dhike",
+      "Elaine",
+      "Frieska",
+      "Hanna",
+      "Jeje",
+      "Lidya",
+      "Michelle",
+      "Naomi",
+      "Rona",
+      "Shani",
+      "Sinka",
+      "Tata",
+      "Uty",
+      "Yona"
+    ],
+    "mv_title": "[MV] Value Milikku Saja - JKT48",
+    "audio_file": "02 - Value Milikku Saja.flac"
+  },
+  {
+    "single_code": "S12",
+    "single_sequence": 12.0,
+    "title": "Punggung Milikmu",
+    "title_jp": "Kimi no Senaka",
+    "origin_group": "AKB48",
+    "release_year": 2016,
+    "centers": [
+      "Gracia"
+    ],
+    "members": [
+      "Angel",
+      "Beby",
+      "Della",
+      "Desy",
+      "Feni",
+      "Gaby",
+      "Ghaida",
+      "Gracia",
+      "Okta",
+      "Rona",
+      "Saktia",
+      "Sinka",
+      "Sisca",
+      "Sisil",
+      "Sofia",
+      "Uty"
+    ],
+    "mv_title": null,
+    "audio_file": "02 - Punggung Milikmu.flac"
+  },
+  {
+    "single_code": "S13",
+    "single_sequence": 13.0,
+    "title": "Tidak Boleh Pelukan",
+    "title_jp": "Dakishimecha Ikenai",
+    "origin_group": "AKB48",
+    "release_year": 2016,
+    "centers": [
+      "Sinka"
+    ],
+    "members": [
+      "Aurel",
+      "Ayana",
+      "Beby",
+      "Della",
+      "Ikha",
+      "Jeje",
+      "Nadila",
+      "Nadse",
+      "Naomi",
+      "Natalia",
+      "Saktia",
+      "Sendy",
+      "Shani",
+      "Sinka",
+      "Vienny",
+      "Yona"
+    ],
+    "mv_title": "[MV] Dakishimecha Ikenai (Tidak Boleh Pelukan) - JKT48",
+    "audio_file": "02 - Tidak Boleh Pelukan.flac"
+  },
+  {
+    "single_code": "S17",
+    "single_sequence": 17.0,
+    "title": "Sedikit Saja I Love You!",
+    "title_jp": "Hikaeme I love you!",
+    "origin_group": "HKT48",
+    "release_year": 2017,
+    "centers": [
+      "Okta"
+    ],
+    "members": [
+      "Acha",
+      "Angel",
+      "Aya",
+      "Celine",
+      "Cindy",
+      "Della",
+      "Dena",
+      "Desy",
+      "Lidya",
+      "Melati",
+      "Okta",
+      "Shafa",
+      "Vienny",
+      "Violet",
+      "Yona",
+      "Zara"
+    ],
+    "mv_title": "[MV] Sedikit Saja I Love You - JKT48",
+    "audio_file": "02 - Sedikit Saja I Love You! - Hikaeme I Love You!.flac"
+  },
+  {
+    "single_code": "S20",
+    "single_sequence": 20.0,
+    "title": "Musim yang Selanjutnya",
+    "title_jp": "Tsugi no Season",
+    "origin_group": "AKB48",
+    "release_year": 2019,
+    "centers": [
+      "Vanka"
+    ],
+    "members": [
+      "Celine",
+      "Cindy",
+      "Desy",
+      "Eve",
+      "Fia",
+      "Frieska",
+      "Gaby",
+      "Melati",
+      "Nadila",
+      "Natalia",
+      "Rona",
+      "Shania",
+      "Sisca",
+      "Sonia",
+      "Vanka",
+      "Zara"
+    ],
+    "mv_title": "[MV] Musim yang Selanjutnya (Tsugi no Season) - JKT48",
+    "audio_file": "02 - Musim Yang Selanjutnya - Tsugi no Season.flac"
+  },
+  {
+    "single_code": "S21",
+    "single_sequence": 21.0,
+    "title": "Sweet and Bitter",
+    "title_jp": "Sweet and Bitter",
+    "origin_group": "AKB48",
+    "release_year": 2020,
+    "centers": [
+      "Desy"
+    ],
+    "members": [
+      "Anin",
+      "Ariel",
+      "Aurel",
+      "Chika",
+      "Desy",
+      "Dey",
+      "Febi",
+      "Fia",
+      "Frieska",
+      "Gaby",
+      "Julie",
+      "Lala",
+      "Nanda",
+      "Pucchi",
+      "Rona",
+      "Yori"
+    ],
+    "mv_title": "[MV] Sweet & Bitter - JKT48",
+    "audio_file": "02 - Sweet & Bitter.flac"
+  },
+  {
+    "single_code": "S26",
+    "single_sequence": 26.0,
+    "title": "Bibir yang Telah Dicuri",
+    "title_jp": "Nusumareta Kuchibiru",
+    "origin_group": "AKB48",
+    "release_year": 2025,
+    "centers": [
+      "Indah"
+    ],
+    "members": [
+      "Cathy",
+      "Delynn",
+      "Eli",
+      "Ella",
+      "Erine",
+      "Gracie",
+      "Greesel",
+      "Indah",
+      "Indira",
+      "Kathrina",
+      "Lana",
+      "Olla"
+    ],
+    "mv_title": "[MV] Bibir yang Telah Dicuri - JKT48",
+    "audio_file": "02 - Bibir yang Telah Dicuri.flac"
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "sequence": 1,
+    "type": "ep",
+    "title": "THIS IS JKT48 NEW ERA",
+    "title_jp": null,
+    "release_date": "2023-03-14",
+    "tracks": [
+      {
+        "position": 1,
+        "title": "109 - Marukyuu (New Era Version)"
+      },
+      {
+        "position": 2,
+        "title": "Virgin Love (New Era Version)"
+      },
+      {
+        "position": 3,
+        "title": "Only Today (New Era Version)"
+      },
+      {
+        "position": 4,
+        "title": "Musim Panas Yang Kacau - Fushidara na Natsu (New Era Version)"
+      },
+      {
+        "position": 5,
+        "title": "Dialog dengan Kenari - Kurumi to Dialogue (New Era Version)"
+      },
+      {
+        "position": 6,
+        "title": "Eureka Milik Kita - Bokura no Eureka (New Era Version)"
+      },
+      {
+        "position": 7,
+        "title": "Benang Sari, Putik, dan Kupu-Kupu Malam - Oshibe to Meshibe to Yoru no Chouchou (New Era Version)"
+      }
+    ],
+    "cover_url": null
+  }
+]

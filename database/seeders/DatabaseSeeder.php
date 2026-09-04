@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             MemberTeamSeeder::class,
             CaptainSeeder::class,
             MemberSingleSeeder::class,
+            DiskografiSeeder::class,
             AdminUserSeeder::class,
         ]);
 

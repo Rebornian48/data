@@ -34,6 +34,14 @@
                            class="text-sm font-bold {{ request()->routeIs('singles.*') ? 'underline' : 'hover:underline' }}">
                             SINGLE
                         </a>
+                        <a href="{{ route('albums.index') }}"
+                           class="text-sm font-bold {{ request()->routeIs('albums.*') ? 'underline' : 'hover:underline' }}">
+                            ALBUM
+                        </a>
+                        <a href="{{ route('setlists.index') }}"
+                           class="text-sm font-bold {{ request()->routeIs('setlists.*') ? 'underline' : 'hover:underline' }}">
+                            SETLIST
+                        </a>
                         <a href="{{ route('captains.index') }}"
                            class="text-sm font-bold {{ request()->routeIs('captains.*') ? 'underline' : 'hover:underline' }}">
                             KAPTEN

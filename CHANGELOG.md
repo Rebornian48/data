@@ -7,7 +7,17 @@ Tanggal dalam format `YYYY-MM-DD`.
 
 ## [Unreleased]
 
-_Tidak ada perubahan yang belum dirilis._
+### Added
+
+- **Integrasi data `Diskografi.xlsx`** — 7 sheet dinormalisasi jadi 8 tabel baru + kolom baru di `singles`:
+  - `singles` bertambah kolom: `title_jp`, `origin_group`, `release_year`, `mv_title`, `mv_url`, `cover_art_url`, `audio_file`.
+  - Tabel baru: `songs` (425 lagu master), `albums` + `album_tracks` (5 studio + 1 EP + tracklist ter-link ke `songs`), `sub_units` + `sub_unit_songs` (5 unit, 23 lagu), `coupling_songs` + `coupling_song_members` (11 lagu B-side dengan senbatsu di-link ke `members`), `setlists` + `setlist_songs` (17 reguler + 10 special), `mv_locations` (44 baris lokasi syuting).
+  - Sumber JSON di `database/data/diskografi/*.json` (di-parse dari Excel via `scratchpad/parse_diskografi.py`), dieksekusi oleh `DiskografiSeeder` yang idempotent.
+  - Alias baru untuk resolusi member: `Vienny → Viny`, plus `Cindy → Cindy Hapsari` dan `Ella → Gabriela Abigail Mewengkang` untuk kasus nickname ambigu di coupling.
+- **Halaman detail single diperkaya** — `/singles/{id}` sekarang menampilkan cover art, judul JP, asal grup, section "Daftar Lagu" (dengan link preview YouTube), dan section "Coupling Songs" (center + member list).
+- **Halaman Album & EP** (`/albums`, `/albums/{id}`) — grid berkelompok Album Studio vs Mini Album/EP, halaman detail dengan tracklist ter-link ke katalog `songs` (judul asal, asal grup, link preview YouTube).
+- **Halaman Setlist** (`/setlists`, `/setlists/{id}`) — grid berkelompok reguler vs special, halaman detail dengan daftar lagu berurutan (kolom judul asal, asal grup, single terkait, link preview YouTube).
+- Menu navigasi utama ditambah link **ALBUM** dan **SETLIST**.
 
 ---
 

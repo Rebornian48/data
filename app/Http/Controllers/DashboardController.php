@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Album;
 use App\Models\Captain;
 use App\Models\Generation;
 use App\Models\Member;
+use App\Models\Setlist;
 use App\Models\Single;
 use App\Services\CalendarService;
 use App\Services\DashboardStatsService;
@@ -66,14 +68,51 @@ class DashboardController extends Controller
 
     public function single(Single $single)
     {
-        $single->load(['members' => function ($q) {
-            $q->with('generation')->orderBy('name');
-        }]);
+        $single->load([
+            'members' => fn ($q) => $q->with('generation')->orderBy('name'),
+            'songs' => fn ($q) => $q->orderBy('external_id'),
+            'couplingSongs.members' => fn ($q) => $q->with('generation'),
+        ]);
 
         $centers = $single->members->filter(fn ($m) => $m->pivot->role === 'center')->values();
         $senbatsu = $single->members->filter(fn ($m) => $m->pivot->role !== 'center')->values();
 
         return view('dashboard.single', compact('single', 'centers', 'senbatsu'));
+    }
+
+    public function albums()
+    {
+        $albums = Album::withCount('tracks')
+            ->orderBy('type')
+            ->orderBy('sequence')
+            ->get();
+
+        return view('dashboard.albums', compact('albums'));
+    }
+
+    public function album(Album $album)
+    {
+        $album->load(['tracks' => fn ($q) => $q->with('song')->orderBy('position')]);
+
+        return view('dashboard.album', compact('album'));
+    }
+
+    public function setlists()
+    {
+        $setlists = Setlist::withCount('songs')
+            ->orderBy('type')
+            ->orderBy('name')
+            ->get()
+            ->groupBy('type');
+
+        return view('dashboard.setlists', compact('setlists'));
+    }
+
+    public function setlist(Setlist $setlist)
+    {
+        $setlist->load(['songs' => fn ($q) => $q->with('single')->orderBy('setlist_songs.position')]);
+
+        return view('dashboard.setlist', compact('setlist'));
     }
 
     public function restrukturisasi()
