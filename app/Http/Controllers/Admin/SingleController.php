@@ -67,9 +67,16 @@ class SingleController extends Controller
         return $request->validate([
             'code' => ['required', 'string', 'max:20'],
             'title' => ['required', 'string', 'max:255'],
+            'title_jp' => ['nullable', 'string', 'max:255'],
+            'origin_group' => ['nullable', 'string', 'max:32'],
             'release_date' => ['nullable', 'date'],
+            'release_year' => ['nullable', 'integer', 'min:2000', 'max:2100'],
             'sequence' => ['required', 'integer', 'min:1'],
             'notes' => ['nullable', 'string'],
+            'mv_title' => ['nullable', 'string', 'max:255'],
+            'mv_url' => ['nullable', 'string', 'max:2048'],
+            'cover_art_url' => ['nullable', 'string', 'max:2048'],
+            'audio_file' => ['nullable', 'string', 'max:255'],
         ]);
     }
 }

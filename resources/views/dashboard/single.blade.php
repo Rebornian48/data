@@ -148,31 +148,48 @@
                 <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">Coupling Songs</h2>
                 <span class="text-xs text-slate-500 dark:text-slate-400">{{ $single->couplingSongs->count() }} lagu B-side</span>
             </div>
-            <div class="grid gap-4 md:grid-cols-2">
+            <div class="space-y-8">
                 @foreach ($single->couplingSongs as $coupling)
-                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
-                        <h3 class="font-bold text-slate-800 dark:text-slate-200">{{ $coupling->title }}</h3>
-                        @if ($coupling->title_jp)
-                            <div class="text-xs italic text-slate-500 dark:text-slate-400 mb-2">
-                                {{ $coupling->title_jp }} &middot; {{ $coupling->origin_group }}
+                    @php
+                        $couplingCenters = $coupling->members->filter(fn ($m) => $m->pivot->role === 'center')->sortBy('name')->values();
+                        $couplingMembers = $coupling->members->filter(fn ($m) => $m->pivot->role !== 'center')->sortBy('name')->values();
+                    @endphp
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+                        <div class="mb-4">
+                            <h3 class="font-bold text-slate-900 dark:text-slate-100 text-lg">{{ $coupling->title }}</h3>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                @if ($coupling->title_jp)
+                                    <span class="italic">{{ $coupling->title_jp }}</span> &middot;
+                                @endif
+                                {{ $coupling->origin_group }}
+                                @if ($coupling->release_year)
+                                    &middot; {{ $coupling->release_year }}
+                                @endif
+                                &middot; {{ $coupling->members->count() }} member
                             </div>
-                        @endif
-                        @php
-                            $couplingCenters = $coupling->members->filter(fn ($m) => $m->pivot->role === 'center');
-                            $couplingMembers = $coupling->members->filter(fn ($m) => $m->pivot->role !== 'center');
-                        @endphp
-                        @if ($couplingCenters->isNotEmpty())
-                            <div class="text-xs text-slate-500 dark:text-slate-400 mb-1">
-                                <span class="font-medium text-slate-700 dark:text-slate-300">Center:</span>
-                                {{ $couplingCenters->pluck('nickname')->filter()->implode(', ') }}
-                            </div>
-                        @endif
-                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                            <span class="font-medium text-slate-700 dark:text-slate-300">
-                                Member ({{ $coupling->members->count() }}):
-                            </span>
-                            {{ $coupling->members->sortBy('pivot.position')->pluck('nickname')->filter()->implode(', ') }}
                         </div>
+
+                        @if ($couplingCenters->isNotEmpty())
+                            <div class="mb-4">
+                                <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Center</div>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                    @foreach ($couplingCenters as $member)
+                                        @include('dashboard.partials.single-member-card', ['member' => $member, 'isCenter' => true])
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($couplingMembers->isNotEmpty())
+                            <div>
+                                <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Member</div>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                    @foreach ($couplingMembers as $member)
+                                        @include('dashboard.partials.single-member-card', ['member' => $member, 'isCenter' => false])
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @endforeach
             </div>

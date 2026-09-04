@@ -1,12 +1,18 @@
 <?php
 
+use App\Http\Controllers\Admin\AlbumController as AdminAlbumController;
 use App\Http\Controllers\Admin\CaptainController;
+use App\Http\Controllers\Admin\CouplingSongController as AdminCouplingSongController;
 use App\Http\Controllers\Admin\DocsController as AdminDocsController;
 use App\Http\Controllers\Admin\GenerationController;
 use App\Http\Controllers\Admin\MapController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
+use App\Http\Controllers\Admin\MvLocationController as AdminMvLocationController;
 use App\Http\Controllers\Admin\PasswordController;
+use App\Http\Controllers\Admin\SetlistController as AdminSetlistController;
 use App\Http\Controllers\Admin\SingleController;
+use App\Http\Controllers\Admin\SongController as AdminSongController;
+use App\Http\Controllers\Admin\SubUnitController as AdminSubUnitController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
@@ -67,6 +73,18 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(functi
     Route::resource('captains', CaptainController::class)->except(['show']);
     Route::resource('teams', TeamController::class)->except(['show']);
     Route::resource('maps', MapController::class)->except(['show']);
+    Route::resource('songs', AdminSongController::class)->except(['show']);
+    Route::resource('albums', AdminAlbumController::class)->except(['show']);
+    Route::resource('setlists', AdminSetlistController::class)->except(['show']);
+    Route::resource('coupling-songs', AdminCouplingSongController::class)
+        ->parameters(['coupling-songs' => 'couplingSong'])
+        ->except(['show']);
+    Route::resource('sub-units', AdminSubUnitController::class)
+        ->parameters(['sub-units' => 'subUnit'])
+        ->except(['show']);
+    Route::resource('mv-locations', AdminMvLocationController::class)
+        ->parameters(['mv-locations' => 'mvLocation'])
+        ->except(['show']);
 
     Route::prefix('docs')->name('docs.')->group(function () {
         Route::get('/api',      [AdminDocsController::class, 'api'])->name('api');

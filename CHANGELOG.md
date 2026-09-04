@@ -18,6 +18,23 @@ Tanggal dalam format `YYYY-MM-DD`.
 - **Halaman Album & EP** (`/albums`, `/albums/{id}`) — grid berkelompok Album Studio vs Mini Album/EP, halaman detail dengan tracklist ter-link ke katalog `songs` (judul asal, asal grup, link preview YouTube).
 - **Halaman Setlist** (`/setlists`, `/setlists/{id}`) — grid berkelompok reguler vs special, halaman detail dengan daftar lagu berurutan (kolom judul asal, asal grup, single terkait, link preview YouTube).
 - Menu navigasi utama ditambah link **ALBUM** dan **SETLIST**.
+- **Coupling songs pakai member card** di halaman detail single — foto + nama + generasi, seperti section senbatsu (center border merah + badge, member grid).
+- **API v1 diperkaya 12 endpoint read-only** untuk data diskografi:
+  - `GET /api/v1/songs` + `{song}` (filter: search, single_id, origin_group, released; sort external_id/title/debut_date)
+  - `GET /api/v1/albums` + `{album}` (filter type=album|ep, include tracks)
+  - `GET /api/v1/setlists` + `{setlist}` (filter type=regular|special)
+  - `GET /api/v1/coupling-songs` + `{couplingSong}` (filter single_id, include members+role)
+  - `GET /api/v1/sub-units` + `{subUnit}` (include songs)
+  - `GET /api/v1/mv-locations` + `{mvLocation}` (filter category/year/has_coords)
+- **Admin CRUD lengkap** untuk 6 resource baru + enrich form Single:
+  - `admin/songs` — index dengan filter (single, asal grup), form lengkap
+  - `admin/albums` — tracklist inline (satu baris = satu track, format `Judul || song_id`)
+  - `admin/setlists` — multi-select lagu, urutan pilih = position
+  - `admin/coupling-songs` — multi-select member + multi-select center, sync ke pivot
+  - `admin/sub-units` — index + form dengan lagu inline (add/edit/hapus per baris)
+  - `admin/mv-locations` — CRUD + input lat/long untuk geocoding
+  - Sidebar admin dapat section **Diskografi** dengan 6 link
+  - Form admin/singles diperluas: title_jp, origin_group, release_year, mv_title, mv_url, cover_art_url, audio_file
 
 ---
 
